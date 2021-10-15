@@ -1,4 +1,7 @@
 package com.company;
+import graphics.Model;
+import graphics.Shader;
+import graphics.Texture;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -24,6 +27,9 @@ public class Main {
             // Free the Window callbacks and destroy window after loop ends
             glfwFreeCallbacks(window);
             glfwDestroyWindow(window);
+
+            glfwTerminate();
+            glfwSetErrorCallback(null).free();
         }
 
         // Error Checking & initialization
@@ -79,15 +85,49 @@ public class Main {
             // Imperative this is at the top, sets capabilities so window can make squares, textures etc.
             GL.createCapabilities();
 
+            glEnable(GL_TEXTURE_2D);
+
+            // Forms Tile Structure
+            float[] vertices = new float[] {
+                    // VERTICES ARE TWO RIGHT TRIANGLES
+                    -.5f, .5f, 0, // TOP LEFT 0
+                    .5f, .5f, 0, // TOP RIGHT 1
+                    .5f, -.5f, 0, // BOTTOM RIGHT 2
+                    -.5f, -.5f,0, // BOTTOM LEFT 3
+            };
+
+            float[] texture = new float[] {
+                    // Coordinates of Texture location on Model/Vertex Structure. (0,0 BL, 1,1 TR).
+                    0,0, // 0
+                    1,0, // 1
+                    1,1, // 2
+                    0,1, // 3
+            };
+
+            int[] indices = new int[] {
+                    0,1,2,
+                    2,3,0,
+            };
+
+            Model model = new Model(vertices, texture, indices);
+            Shader shader = new Shader("shader");
+
+           Texture tile = new Texture("./res/grass.png");
+
             glClearColor(0.0f,0.0f,0.0f,0.0f); // Window Initial Color
 
             while (!glfwWindowShouldClose(window)) {
                 // Keeps Window Running
-                glClear(GL_COLOR_BUFFER_BIT);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear Framebuffer
                 glfwPollEvents();
-                glfwSwapBuffers(window);
 
                 // Add Loop Code Here
+                tile.bind(0);
+                shader.bind();
+                shader.setUniform("sampler", 0);
+                model.render(); // Renders Tiles (grass)
+
+                glfwSwapBuffers(window); // MUST BE AT END OF LOOP (STARTS END OF FRAME)
             }
         }
 
