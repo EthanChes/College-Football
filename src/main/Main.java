@@ -1,7 +1,8 @@
-package com.company;
+package main;
 import graphics.Model;
 import graphics.Shader;
 import graphics.Texture;
+import org.joml.Matrix4f;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -111,8 +112,12 @@ public class Main {
 
             Model model = new Model(vertices, texture, indices);
             Shader shader = new Shader("shader");
-
            Texture tile = new Texture("./res/grass.png");
+           Matrix4f projection = new Matrix4f().ortho2D(-1000/2, 1000/2, -1000/2, 1000/2);
+           Matrix4f scale = new Matrix4f().scale(64); // Set Scale of Tile
+           Matrix4f target = new Matrix4f();
+
+           projection.mul(scale,target);
 
             glClearColor(0.0f,0.0f,0.0f,0.0f); // Window Initial Color
 
@@ -124,7 +129,8 @@ public class Main {
                 // Add Loop Code Here
                 tile.bind(0);
                 shader.bind();
-                shader.setUniform("sampler", 0);
+                shader.setUniform("sampler", projection);
+                shader.setUniform("projection", target);
                 model.render(); // Renders Tiles (grass)
 
                 glfwSwapBuffers(window); // MUST BE AT END OF LOOP (STARTS END OF FRAME)
