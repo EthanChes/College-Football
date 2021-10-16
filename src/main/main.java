@@ -4,8 +4,13 @@ import graphics.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.*;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.*;
+import world.Tile;
 import world.TileRenderer;
+import world.World;
+
+import java.util.Vector;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -34,34 +39,12 @@ public class main {
 
             TileRenderer tiles = new TileRenderer();
 
-            /*// Forms Tile Structure (Don't use this with current Tilerenderer
-            float[] vertices = new float[]{
-                    // VERTICES ARE TWO RIGHT TRIANGLES, Locations of the Corners of the Square formed by the Right Triangles are found below.
-                    -.5f, .5f, 0, // TOP LEFT 0 (x,y,z) is the formatting
-                    .5f, .5f, 0, // TOP RIGHT 1
-                    .5f, -.5f, 0, // BOTTOM RIGHT 2
-                    -.5f, -.5f, 0, // BOTTOM LEFT 3
-            };
-
-            float[] texture = new float[]{
-                    // Coordinates of Texture location on Model/Vertex Structure. (0,0 BL, 1,1 TR).
-                    0, 0, // 0, (x,y), this the location on the model or square produced in the Model Class, that the texture's vertices will occupy.
-                    1, 0, // 1
-                    1, 1, // 2
-                    0, 1, // 3
-            };
-
-            int[] indices = new int[]{ // Indices of the triangles. See Texture and Vertices comments. Each index corresponds to a vertex defined above.
-                    0, 1, 2,
-                    2, 3, 0,
-            };
-
-            Model model = new Model(vertices, texture, indices); // Draws the square using 2 right triangles to put the tile image on. */
             Shader shader = new Shader("shader"); // Creates a new shader, filename is singular, because in the directory, the shader files start with "shader" Shader Class Handles Names.
-            Texture texture_grass = new Texture("grass.png"); // Creates a texture of grass/field
-            Matrix4f scale = new Matrix4f().translate(new Vector3f(0, 0, 0)).scale(16); // Set Scale of Tile, Use .translate(x,y,z) to translate.
-            Matrix4f target = new Matrix4f(); // Makes target a new Matrix.
-            camera.setPosition(new Vector3f(0, 0, 0)); // Sets Camera Position. Notice that the tile is translated 100 right, but by moving the camera it appears in the center.
+            World world = new World();
+
+            world.setTile(Tile.test_tile2,0,0); // Imports redgrass color into tile (0,0)
+            world.setTile(Tile.test_tile2, 63, 63);
+
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Window Initial Color
 
             double frame_cap = 1.0 / 60.0; // Max frames per second
@@ -85,16 +68,33 @@ public class main {
                 while (unprocessed >= frame_cap) { // Loop at rate of fps, only occurs when the unprocessed time is greater than time available for a frame.
                     unprocessed -= frame_cap; // The amount of unprocessed time decreases by 1 frames amount of time.
                     can_render = true; // If this is set to true, then images may render. Thus it only renders at frame_cap speed. Line 166, this is used for controlling rendering at fps.
-                    target = scale; // Sets Object location to a target Matrix. Since scale is a matrix, we could just use scale, but this makes the code look cleaner and easier to understand the loop.
 
                     // Window Closes when Key Escape is Pressed
                     if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
                         glfwSetWindowShouldClose(window.getWindow(), true);
                     }
 
+                    // Moves Camera various WASD directions using vectors.
+                    if (window.getInput().isKeyDown(GLFW_KEY_S)) { // When S is pressed, camera shifts down 5, reversed due to correctCamera() setting positions -1* what they really are
+                        camera.addPosition(new Vector3f(0,5,0));
+                    }
+                    if (window.getInput().isKeyDown(GLFW_KEY_A)) { // When A is pressed, camera shifts left 5
+                        camera.addPosition(new Vector3f(5,0,0));
+                    }
+                    if (window.getInput().isKeyDown(GLFW_KEY_W)) { // When W is pressed, camera shifts up 5
+                        camera.addPosition(new Vector3f(0,-5,0));
+                    }
+                    if (window.getInput().isKeyDown(GLFW_KEY_D)) { // When D is pressed, camera shifts right 5
+                        camera.addPosition(new Vector3f(-5,0,0));
+                    }
+
+                    world.correctCamera(camera,window);
+
+
                     // updates keys
                     window.update();
 
+                    // Outputs FPS
                     if (frame_time >= 1.0) { // When Frame_time = 1.0, reset frame_time and print frames as well as set frames to 0.
                         frame_time = 0;
                         System.out.println("FPS: " + frames); // Thus, this prints fps
@@ -111,11 +111,7 @@ public class main {
                     //model.render(); // Renders Tiles (grass/field)
                     //texture_grass.bind(0); // binds tiles/field to frame.
 
-                    for (int count = 0; count < 8; count++) {
-                        for (int counter = 0; counter < 4 ; counter++) {
-                            tiles.renderTile((byte) (0), count, counter, shader, scale, camera);
-                        }
-                    }
+                   world.render(tiles, shader, camera, window);
 
                     window.swapBuffers();
                     frames++; // total frames increases when 1 frame render is performed

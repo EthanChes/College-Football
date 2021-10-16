@@ -18,10 +18,10 @@ public class TileRenderer {
         // Forms Tile Structure
         float[] vertices = new float[]{
                 // VERTICES ARE TWO RIGHT TRIANGLES, Locations of the Corners of the Square formed by the Right Triangles are found below.
-                -.5f, .5f, 0, // TOP LEFT 0 (x,y,z) is the formatting
-                .5f, .5f, 0, // TOP RIGHT 1
-                .5f, -.5f, 0, // BOTTOM RIGHT 2
-                -.5f, -.5f, 0, // BOTTOM LEFT 3
+                -1f, 1f, 0, // TOP LEFT 0 (x,y,z) is the formatting
+                1f, 1f, 0, // TOP RIGHT 1
+                1f, -1f, 0, // BOTTOM RIGHT 2
+                -1f, -1f, 0, // BOTTOM LEFT 3
         };
 
         float[] texture = new float[]{
@@ -46,16 +46,15 @@ public class TileRenderer {
                     tile_textures.put(texture_name, new Texture( texture_name+ ".png"));
                 }
             }
-
         }
     }
-    public void renderTile(byte id, int x, int y, Shader shader, Matrix4f world, Camera camera) { // puts tiles in correct spot
+    public void renderTile(Tile tile, int x, int y, Shader shader, Matrix4f world, Camera camera) { // puts tiles in correct spot
         shader.bind();
-        if (tile_textures.containsKey (Tile.tiles[id].getTexture())) { // Tests if tile exists and if yes, then texture will bind
-            tile_textures.get(Tile.tiles[id].getTexture()).bind(0);
+        if (tile_textures.containsKey (tile.getTexture())) { // Tests if tile exists and if yes, then texture will bind
+            tile_textures.get(tile.getTexture()).bind(0); // Sampler sets starting id value for texture. 0 is green, 1 is red endzone etc.
         }
 
-        Matrix4f tile_pos = new Matrix4f().translate (new Vector3f(x, y, 0)); // position is posx or posy * scale of Tile (2) in Matrix
+        Matrix4f tile_pos = new Matrix4f().translate (new Vector3f(2*x, 2*y, 0)); // position is posx or posy * scale of Tile (2) in Matrix
         Matrix4f target = new Matrix4f();
 
         camera.getProjection().mul(world,target); // multiplies projection by world and stores into target.

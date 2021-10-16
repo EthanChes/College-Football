@@ -19,6 +19,7 @@ public class Shader {
         vertex_shader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertex_shader, readFile(filename+".vs"));
         glCompileShader(vertex_shader);
+        glEnable(GL_TEXTURE_2D);
 
         // Check Shader Error
         if (glGetShaderi(vertex_shader, GL_COMPILE_STATUS) != 1) {
@@ -52,6 +53,15 @@ public class Shader {
             System.exit(1);
         }
     }
+
+    protected void finalize() {
+        glDetachShader(program, vertex_shader);
+        glDetachShader(program,fragment_shader);
+        glDeleteShader(vertex_shader);
+        glDeleteShader(fragment_shader);
+        glDeleteProgram(program);
+    }
+
     public void setUniform(String name, Matrix4f value) {
         int location = glGetUniformLocation(program, name);
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16);

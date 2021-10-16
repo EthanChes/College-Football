@@ -40,6 +40,13 @@ public class Model {
         glBindBuffer(GL_ARRAY_BUFFER, i_id);
 
     }
+
+    protected void finalize() {
+        glDeleteBuffers(vertex_id);
+        glDeleteBuffers(texture_id);
+        glDeleteBuffers(i_id);
+    }
+
     public void render() {
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
