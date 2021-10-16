@@ -19,14 +19,17 @@ public class Shader {
         vertex_shader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertex_shader, readFile(filename+".vs"));
         glCompileShader(vertex_shader);
+
         // Check Shader Error
         if (glGetShaderi(vertex_shader, GL_COMPILE_STATUS) != 1) {
             System.err.println(glGetShaderInfoLog(vertex_shader));
             System.exit(1);
         }
+
         fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragment_shader, readFile(filename+".fs"));
         glCompileShader(fragment_shader);
+
         if (glGetShaderi(fragment_shader, GL_COMPILE_STATUS) != 1) {
             System.err.println(glGetShaderInfoLog(fragment_shader));
             System.exit(1);

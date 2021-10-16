@@ -16,8 +16,6 @@ public class Input {
         for (int count = 0; count < GLFW_KEY_LAST; count++) {
             keys[count] = false;
         }
-
-
     }
 
     public boolean isKeyDown(int key) { return glfwGetKey(window, key) == 1; } // Returns true if specific "key" is pressed

@@ -18,4 +18,8 @@ public class Tile {
     public byte getId() {
         return id;
     }
+
+    public String getTexture() {
+        return texture;
+    }
 }

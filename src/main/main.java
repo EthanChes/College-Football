@@ -5,10 +5,12 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.*;
 import org.lwjgl.opengl.*;
+import world.TileRenderer;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
-public class Main {
+public class main {
 // Note 10 Spaces Indicates New Function/End of Previous Function ONLY in Main
 
 
@@ -28,8 +30,11 @@ public class Main {
 
             // Creates a camera, including and rendering tiles and objects throughout the frame that is 1000x1000, meaning the camera has to be 1000x1000 to use the entire frame.
             Camera camera = new Camera(window.getWidth(), window.getHeight());
+            glEnable(GL_TEXTURE_2D);
 
-            // Forms Tile Structure
+            TileRenderer tiles = new TileRenderer();
+
+            /*// Forms Tile Structure (Don't use this with current Tilerenderer
             float[] vertices = new float[]{
                     // VERTICES ARE TWO RIGHT TRIANGLES, Locations of the Corners of the Square formed by the Right Triangles are found below.
                     -.5f, .5f, 0, // TOP LEFT 0 (x,y,z) is the formatting
@@ -51,13 +56,12 @@ public class Main {
                     2, 3, 0,
             };
 
-            Model model = new Model(vertices, texture, indices); // Draws the square using 2 right triangles to put the tile image on.
+            Model model = new Model(vertices, texture, indices); // Draws the square using 2 right triangles to put the tile image on. */
             Shader shader = new Shader("shader"); // Creates a new shader, filename is singular, because in the directory, the shader files start with "shader" Shader Class Handles Names.
-            Texture tile = new Texture("./res/grass.png"); // Creates a texture of grass/field
-            Matrix4f scale = new Matrix4f().translate(new Vector3f(100, 0, 0)).scale(64); // Set Scale of Tile, Use .translate(x,y,z) to translate.
+            Texture texture_grass = new Texture("grass.png"); // Creates a texture of grass/field
+            Matrix4f scale = new Matrix4f().translate(new Vector3f(0, 0, 0)).scale(16); // Set Scale of Tile, Use .translate(x,y,z) to translate.
             Matrix4f target = new Matrix4f(); // Makes target a new Matrix.
-            camera.setPosition(new Vector3f(-100, 0, 0)); // Sets Camera Position. Notice that the tile is translated 100 right, but by moving the camera it appears in the center.
-
+            camera.setPosition(new Vector3f(0, 0, 0)); // Sets Camera Position. Notice that the tile is translated 100 right, but by moving the camera it appears in the center.
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Window Initial Color
 
             double frame_cap = 1.0 / 60.0; // Max frames per second
@@ -101,11 +105,18 @@ public class Main {
                 // Renders images only if they are enabled to render as determined by a boolean activated once every frame at a rate of the given fps, 60.
                 if (can_render) {
                     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear Framebuffer
-                    shader.bind(); // Enables program and frame to use the shader making images more clear and with outline parameters for size and color determined in shader.fs and shader.vs
-                    shader.setUniform("sampler", new Matrix4f()); // Sets shader's image's sampler, or color. See shader.fs file for exact procedures of color.
-                    shader.setUniform("projection", camera.getProjection().mul(target)); // Sets location of the image. See shader.vs for exact procedures of positioning.
-                    model.render(); // Renders Tiles (grass/field)
-                    tile.bind(0); // binds tiles/field to frame.
+                    //shader.bind(); // Enables program and frame to use the shader making images more clear and with outline parameters for size and color determined in shader.fs and shader.vs
+                    //shader.setUniform("sampler", new Matrix4f()); // Sets shader's image's sampler, or color. See shader.fs file for exact procedures of color.
+                    //shader.setUniform("projection", camera.getProjection().mul(target)); // Sets location of the image. See shader.vs for exact procedures of positioning.
+                    //model.render(); // Renders Tiles (grass/field)
+                    //texture_grass.bind(0); // binds tiles/field to frame.
+
+                    for (int count = 0; count < 8; count++) {
+                        for (int counter = 0; counter < 4 ; counter++) {
+                            tiles.renderTile((byte) (0), count, counter, shader, scale, camera);
+                        }
+                    }
+
                     window.swapBuffers();
                     frames++; // total frames increases when 1 frame render is performed
                 }
