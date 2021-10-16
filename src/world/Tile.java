@@ -3,8 +3,9 @@ public class Tile {
     public static Tile tiles[] = new Tile[16];
     public static byte not = 0;
 
-    public static final Tile test_tile = new Tile("grass");
-    public static final Tile test_tile2 = new Tile("RedEndzone"); // Make sure to increment byte
+    public static final Tile normalGrass = new Tile("fieldinfo/grass");
+    public static final Tile redEndzone = new Tile("fieldinfo/RedEndzone"); // Make sure to increment byte
+    public static final Tile darkGrass = new Tile("fieldinfo/darkgrass");
 
     private byte id; // Represents constant textures above
     private String texture; // Texture location

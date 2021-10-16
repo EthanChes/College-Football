@@ -1,4 +1,5 @@
 package main;
+import entity.Player;
 import gameplay.Timer;
 import graphics.*;
 import org.joml.Matrix4f;
@@ -42,8 +43,10 @@ public class main {
             Shader shader = new Shader("shader"); // Creates a new shader, filename is singular, because in the directory, the shader files start with "shader" Shader Class Handles Names.
             World world = new World();
 
-            world.setTile(Tile.test_tile2,0,0); // Imports redgrass color into tile (0,0)
-            world.setTile(Tile.test_tile2, 63, 63);
+            Player quarterback = new Player();
+
+            world.setTile(Tile.redEndzone,0,0); // Imports redgrass color into tile (0,0)
+            world.setTile(Tile.redEndzone, 63, 63);
 
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Window Initial Color
 
@@ -74,19 +77,7 @@ public class main {
                         glfwSetWindowShouldClose(window.getWindow(), true);
                     }
 
-                    // Moves Camera various WASD directions using vectors.
-                    if (window.getInput().isKeyDown(GLFW_KEY_S)) { // When S is pressed, camera shifts down 5, reversed due to correctCamera() setting positions -1* what they really are
-                        camera.addPosition(new Vector3f(0,5,0));
-                    }
-                    if (window.getInput().isKeyDown(GLFW_KEY_A)) { // When A is pressed, camera shifts left 5
-                        camera.addPosition(new Vector3f(5,0,0));
-                    }
-                    if (window.getInput().isKeyDown(GLFW_KEY_W)) { // When W is pressed, camera shifts up 5
-                        camera.addPosition(new Vector3f(0,-5,0));
-                    }
-                    if (window.getInput().isKeyDown(GLFW_KEY_D)) { // When D is pressed, camera shifts right 5
-                        camera.addPosition(new Vector3f(-5,0,0));
-                    }
+                    quarterback.update((float) frame_cap,window,camera,world);
 
                     world.correctCamera(camera,window);
 
@@ -112,6 +103,8 @@ public class main {
                     //texture_grass.bind(0); // binds tiles/field to frame.
 
                    world.render(tiles, shader, camera, window);
+
+                   quarterback.render(shader,camera,window);
 
                     window.swapBuffers();
                     frames++; // total frames increases when 1 frame render is performed
