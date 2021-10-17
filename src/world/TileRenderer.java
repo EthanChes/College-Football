@@ -1,6 +1,5 @@
 package world;
 import java.util.HashMap;
-
 import graphics.Camera;
 import graphics.Model;
 import graphics.Shader;
@@ -11,6 +10,8 @@ import org.joml.Vector3f;
 public class TileRenderer {
     private HashMap<String, Texture> tile_textures;
     private Model model;
+
+
 
     public TileRenderer() {
         tile_textures = new HashMap<String, Texture>();
@@ -48,13 +49,16 @@ public class TileRenderer {
             }
         }
     }
+
+
+
     public void renderTile(Tile tile, int x, int y, Shader shader, Matrix4f world, Camera camera) { // puts tiles in correct spot
         shader.bind();
         if (tile_textures.containsKey (tile.getTexture())) { // Tests if tile exists and if yes, then texture will bind
             tile_textures.get(tile.getTexture()).bind(0); // Sampler sets starting id value for texture. 0 is green, 1 is red endzone etc.
         }
 
-        Matrix4f tile_pos = new Matrix4f().translate (new Vector3f(2*x, 2*y, 0)); // position is posx or posy * scale of Tile (2) in Matrix
+        Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(2*x, 2*y, 0)); // position is posx or posy * scale of Tile (2) in Matrix
         Matrix4f target = new Matrix4f();
 
         camera.getProjection().mul(world,target); // multiplies projection by world and stores into target.

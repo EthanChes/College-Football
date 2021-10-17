@@ -4,7 +4,7 @@ public class Tile {
     public static byte not = 0;
 
     public static final Tile normalGrass = new Tile("fieldinfo/grass");
-    public static final Tile redEndzone = new Tile("fieldinfo/RedEndzone").setSolid(); // Make sure to increment byte
+    public static final Tile redEndzone = new Tile("fieldinfo/RedEndzone"); // .setSolid(); // Make sure to increment byte
     public static final Tile darkGrass = new Tile("fieldinfo/darkgrass");
 
     private byte id; // Represents constant textures above

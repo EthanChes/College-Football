@@ -8,7 +8,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 
@@ -146,4 +145,5 @@ public class World {
     }
 
     public int getScale() { return scale; }
+    public Matrix4f getWorld() { return world;}
 }
