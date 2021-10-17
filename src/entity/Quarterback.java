@@ -34,6 +34,8 @@ public class Quarterback extends Entity {
 
         move(movement);
 
+        collideWithTiles(world);
+
         camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), .05f);
     }
 

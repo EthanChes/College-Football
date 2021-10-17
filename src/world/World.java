@@ -78,9 +78,20 @@ public class World {
                 @Override
                 public void update(float delta, Window window, Camera camera, World world) {
                     move(new Vector2f(5*delta,0));
-
+                    collideWithTiles(world);
                 }
             });
+
+            // entity with automated controls
+            entities.add(new Entity(new Animation(1,1,"widereceiverstationary"), new Transform()) {
+                @Override
+                public void update(float delta, Window window, Camera camera, World world) {
+                    move(new Vector2f(1*delta,0));
+                    collideWithTiles(world);
+                }
+            });
+
+
 
         } catch (IOException e) {
             e.printStackTrace();
