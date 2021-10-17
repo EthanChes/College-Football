@@ -1,8 +1,10 @@
 package main;
-import entity.Player;
+import collision.AABB;
+import entity.Quarterback;
 import gameplay.Timer;
 import graphics.*;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.*;
 import org.lwjgl.glfw.GLFW;
@@ -41,12 +43,11 @@ public class main {
             TileRenderer tiles = new TileRenderer();
 
             Shader shader = new Shader("shader"); // Creates a new shader, filename is singular, because in the directory, the shader files start with "shader" Shader Class Handles Names.
-            World world = new World();
+            World world = new World("test");
 
-            Player quarterback = new Player();
+            Quarterback quarterback = new Quarterback();
 
-            world.setTile(Tile.redEndzone,0,0); // Imports redgrass color into tile (0,0)
-            world.setTile(Tile.redEndzone, 63, 63);
+
 
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Window Initial Color
 
@@ -122,6 +123,7 @@ public class main {
 
     public static void main(String[] args) {
         Window.setCallbacks(); // Provides Better Error Codes
+
         if (glfwInit() != true) {
             System.err.println("GLFW Failed to initialize!");
             System.exit(1);

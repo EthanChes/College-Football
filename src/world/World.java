@@ -1,20 +1,68 @@
 package world;
+import collision.AABB;
 import graphics.Camera;
 import graphics.Shader;
 import graphics.Window;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
-
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 
 public class World {
     private final int view = 24; // controls screen render distance (6 squares)
     private byte[] tiles;
+    private AABB[] bounding_boxes;
     private int width;
     private int height;
     private int scale;
 
     private Matrix4f world;
+
+    public World(String stadium) {
+
+        try {
+             BufferedImage tile_sheet = ImageIO.read(new File("./res/stadiums/" + stadium + "_tiles.png"));
+             //BufferedImage entity_sheet = ImageIO.read(new File("./stadiums/" + stadium + "_entities.png"));
+
+             width = tile_sheet.getWidth();
+             height = tile_sheet.getHeight();
+             scale = 16;
+
+            int[] colorTileSheet = tile_sheet.getRGB(0,0,width,height, null, 0, tile_sheet.getWidth());
+
+            this.world = new Matrix4f().setTranslation(new Vector3f(0));
+            this.world.scale(scale);// Tiles are 32x32, since scale = 16 * 2 due to renderTile using 2*length
+
+            tiles = new byte[width*height];
+            bounding_boxes = new AABB[width * height];
+
+            for (int y = 0; y < height; y++) { // x and y represent id of tile
+                for (int x = 0; x < width; x++) {
+                    int red = (colorTileSheet[x + y * width] >> 16) & 0xFF; // represents red on tile of grid of map
+
+                    Tile t;
+                    try {
+                        t = Tile.tiles[red];
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        t = null;
+                    }
+
+                    if (t != null) {
+                        setTile(t, x, y); // sets tile
+                    }
+
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public World() {
         width = 64; // width of world
@@ -22,6 +70,7 @@ public class World {
         scale = 16;
 
         tiles = new byte[width*height];
+        bounding_boxes = new AABB[width*height];
 
         world = new Matrix4f().setTranslation(new Vector3f(0));
         world.scale(scale);// Tiles are 32x32, since scale = 16 * 2 due to renderTile using 2*length
@@ -72,12 +121,25 @@ public class World {
     }
 
     public void setTile(Tile tile, int x, int y) {
-        tiles[y + x * width] = tile.getId();
+        tiles[x + y * width] = tile.getId();
+        if (tile.isSolid()) {
+            bounding_boxes[x+y*width] = new AABB(new Vector2f(x*2, -y*2), new Vector2f(1,1));
+        } else {
+            bounding_boxes[x+y*width] = null;
+        }
     }
 
     public Tile getTile(int x, int y) {
         try {
             return Tile.tiles[tiles[x+y*width]];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+
+    public AABB getTileBoundingBox(int x, int y) {
+        try {
+            return bounding_boxes[x+y*width];
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
         }
