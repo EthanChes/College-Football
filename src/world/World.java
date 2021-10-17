@@ -1,5 +1,9 @@
 package world;
 import collision.AABB;
+import entity.Entity;
+import entity.Quarterback;
+import entity.Transform;
+import graphics.Animation;
 import graphics.Camera;
 import graphics.Shader;
 import graphics.Window;
@@ -10,18 +14,26 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class World {
     private final int view = 24; // controls screen render distance (6 squares)
     private byte[] tiles;
     private AABB[] bounding_boxes;
+    private List<Entity> entities;
     private int width;
     private int height;
     private int scale;
 
     private Matrix4f world;
 
-    public World(String stadium) {
+
+
+
+
+
+    public World(String stadium) { // Load world from file
 
         try {
              BufferedImage tile_sheet = ImageIO.read(new File("./res/stadiums/" + stadium + "_tiles.png"));
@@ -38,6 +50,7 @@ public class World {
 
             tiles = new byte[width*height];
             bounding_boxes = new AABB[width * height];
+            entities = new ArrayList<Entity>();
 
             for (int y = 0; y < height; y++) { // x and y represent id of tile
                 for (int x = 0; x < width; x++) {
@@ -56,6 +69,18 @@ public class World {
 
                 }
             }
+            // add entities here
+
+            entities.add(new Quarterback(new Transform()));
+
+            // entity with automated controls
+            entities.add(new Entity(new Animation(1,1,"qbthrow"), new Transform()) {
+                @Override
+                public void update(float delta, Window window, Camera camera, World world) {
+                    move(new Vector2f(5*delta,0));
+
+                }
+            });
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -63,7 +88,12 @@ public class World {
 
     }
 
-    public World() {
+
+
+
+
+
+    public World() { // straight grass world
         width = 64; // width of world
         height = 64; // height of world
         scale = 16;
@@ -75,12 +105,15 @@ public class World {
         world.scale(scale);// Tiles are 32x32, since scale = 16 * 2 due to renderTile using 2*length
     }
 
+
+
+
+
+
+
+
+
     public void render(TileRenderer render, Shader shader, Camera camera, Window window) {
-       /* for (int count = 0; count < height; count++) {
-            for (int counter = 0; counter < width; counter++) {
-                render.renderTile(tiles[count + counter * width], counter, -count, shader, world, camera);
-            }
-        } */
 
         int posX = ((int) camera.getPosition().x + (window.getWidth()/2)) / (scale * 2);
         int posY = ((int) camera.getPosition().y - (window.getHeight()/2)) / (scale * 2);
@@ -93,7 +126,35 @@ public class World {
                 }
             }
         }
+
+        for (Entity entity : entities) {
+            entity.render(shader,camera,window,this);
+        }
+
+        for (int count = 0; count < entities.size(); count++) {
+            entities.get(count).collideWithTiles(this);
+        }
     }
+
+
+
+
+
+
+
+
+    public void update(float delta, Window window, Camera camera) {
+        for (Entity entity : entities) {
+            entity.update(delta,window,camera,this);
+        }
+    }
+
+
+
+
+
+
+
 
     public void correctCamera(Camera camera, Window window) {
         Vector3f pos = camera.getPosition();
@@ -119,6 +180,16 @@ public class World {
         }
     }
 
+
+
+
+
+
+
+
+
+
+
     public void setTile(Tile tile, int x, int y) {
         tiles[x + y * width] = tile.getId();
         if (tile.isSolid()) {
@@ -128,6 +199,14 @@ public class World {
         }
     }
 
+
+
+
+
+
+
+
+
     public Tile getTile(int x, int y) {
         try {
             return Tile.tiles[tiles[x+y*width]];
@@ -136,6 +215,13 @@ public class World {
         }
     }
 
+
+
+
+
+
+
+
     public AABB getTileBoundingBox(int x, int y) {
         try {
             return bounding_boxes[x+y*width];
@@ -143,6 +229,11 @@ public class World {
             return null;
         }
     }
+
+
+
+
+
 
     public int getScale() { return scale; }
     public Matrix4f getWorld() { return world;}

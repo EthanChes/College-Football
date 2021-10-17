@@ -1,6 +1,8 @@
 package main;
 import collision.AABB;
+import entity.Entity;
 import entity.Quarterback;
+import entity.Transform;
 import gameplay.Timer;
 import graphics.*;
 import org.joml.Matrix4f;
@@ -41,13 +43,10 @@ public class main {
             glEnable(GL_TEXTURE_2D);
 
             TileRenderer tiles = new TileRenderer();
+            Entity.initAsset();
 
             Shader shader = new Shader("shader"); // Creates a new shader, filename is singular, because in the directory, the shader files start with "shader" Shader Class Handles Names.
             World world = new World("test");
-
-            Quarterback quarterback = new Quarterback();
-
-
 
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Window Initial Color
 
@@ -78,7 +77,7 @@ public class main {
                         glfwSetWindowShouldClose(window.getWindow(), true);
                     }
 
-                    quarterback.update((float) frame_cap,window,camera,world);
+                    world.update((float) frame_cap, window, camera);
 
                     world.correctCamera(camera,window);
 
@@ -105,12 +104,13 @@ public class main {
 
                    world.render(tiles, shader, camera, window);
 
-                   quarterback.render(shader,camera,window);
-
                     window.swapBuffers();
                     frames++; // total frames increases when 1 frame render is performed
                 }
             }
+
+            Entity.deleteAsset(); // Deletes Entities
+
         }
 
 
