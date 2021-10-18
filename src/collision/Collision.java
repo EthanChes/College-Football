@@ -7,11 +7,5 @@ public class Collision {
     public Collision(Vector2f distance, boolean intersecting) {
         this.distance = distance;
         this.isIntersecting = intersecting;
-
-
-
     }
-
-
-
 }

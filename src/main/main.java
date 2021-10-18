@@ -38,6 +38,10 @@ public class main {
             // Imperative this is at the top, sets capabilities so window can make squares, textures etc.
             GL.createCapabilities();
 
+            // Transparency with entities
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
             // Creates a camera, including and rendering tiles and objects throughout the frame that is 1000x1000, meaning the camera has to be 1000x1000 to use the entire frame.
             Camera camera = new Camera(window.getWidth(), window.getHeight());
             glEnable(GL_TEXTURE_2D);

@@ -31,7 +31,7 @@ public class Animation {
         this.elapsedTime += currentTime-lastTime;
 
         if (elapsedTime >= fps) {
-            elapsedTime -= fps;
+            elapsedTime = 0;
             pointer++;
         }
 

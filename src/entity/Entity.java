@@ -9,15 +9,25 @@ import world.World;
 
 public abstract class Entity {
     protected static Model model;
-    protected Animation animation;
+    protected Animation[] animations;
+    private int use_animation;
     protected AABB bounding_box;
     protected Transform transform;
 
-    public Entity(Animation animation, Transform transform) {
+    public Entity(int max_animations, Transform transform) {
         this.transform = transform;
-        this.animation = animation;
+        this.animations = new Animation[max_animations];
+        this.use_animation = 0;
 
         bounding_box = new AABB(new Vector2f(transform.pos.x, transform.pos.y), new Vector2f(transform.scale.x, transform.scale.y));
+    }
+
+    protected void setAnimation(int index, Animation animation) {
+        animations[index] = animation;
+    }
+
+    public void useAnimation(int index) {
+        this.use_animation = index;
     }
 
     public abstract void update(float delta, Window window, Camera camera, World world);
@@ -36,7 +46,7 @@ public abstract class Entity {
         shader.bind();
         shader.setUniform("sampler", sampler_0);
         shader.setUniform("projection",transform.getProjection(target));
-        animation.bind(0);
+        animations[use_animation].bind(0);
         model.render();
     }
 
@@ -115,6 +125,21 @@ public abstract class Entity {
                 bounding_box.correctPosition(box, data);
                 transform.pos.set(bounding_box.getCenter(), 0);
             }
+        }
+    }
+
+    public void collideWithEntity(Entity entity, World world) {
+        Collision collision = bounding_box.getCollision(entity.bounding_box);
+
+        if (collision.isIntersecting) {
+            collision.distance.x /= 2;
+            collision.distance.y /= 2;
+
+            bounding_box.correctPosition(entity.bounding_box, collision);
+            transform.pos.set(bounding_box.getCenter().x, bounding_box.getCenter().y, 0);
+
+            entity.bounding_box.correctPosition(bounding_box,collision);
+            entity.transform.pos.set(entity.bounding_box.getCenter().x, entity.bounding_box.getCenter().y,0);
         }
     }
 

@@ -71,31 +71,36 @@ public class World {
             }
             // add entities here
 
+
+
+
+
+
+
             entities.add(new Quarterback(new Transform()));
 
-            // entity with automated controls
-            entities.add(new Entity(new Animation(1,1,"qbthrow"), new Transform()) {
-                @Override
-                public void update(float delta, Window window, Camera camera, World world) {
-                    move(new Vector2f(5*delta,0));
-                    collideWithTiles(world);
-                }
-            });
-
-            // entity with automated controls
+            /* entity with automated controls
             entities.add(new Entity(new Animation(1,1,"widereceiverstationary"), new Transform()) {
                 @Override
                 public void update(float delta, Window window, Camera camera, World world) {
-                    move(new Vector2f(1*delta,0));
-                    collideWithTiles(world);
+                    move(new Vector2f(5*delta,0));
                 }
-            });
+            }); */
+
+
+
+
+
 
 
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+
+
 
     }
 
@@ -157,6 +162,14 @@ public class World {
     public void update(float delta, Window window, Camera camera) {
         for (Entity entity : entities) {
             entity.update(delta,window,camera,this);
+        }
+
+        for (int count = 0; count < entities.size(); count++) {
+            entities.get(count).collideWithTiles(this);
+            for (int counter = count+1; counter < entities.size(); counter++) {
+                entities.get(count).collideWithEntity(entities.get(counter), this);
+            }
+            entities.get(count).collideWithTiles(this);
         }
     }
 
