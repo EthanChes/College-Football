@@ -38,7 +38,6 @@ public class World {
 
         try {
              BufferedImage tile_sheet = ImageIO.read(new File("./res/stadiums/" + stadium + "_tiles.png"));
-             //BufferedImage entity_sheet = ImageIO.read(new File("./stadiums/" + stadium + "_entities.png"));
 
              width = tile_sheet.getWidth();
              height = tile_sheet.getHeight();
