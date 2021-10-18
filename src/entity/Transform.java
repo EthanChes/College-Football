@@ -6,8 +6,13 @@ public class Transform {
     public Vector3f pos;
     public Vector3f scale;
 
-    public Transform() {
+    public Transform() { // default location of entity
         pos = new Vector3f(4,-14,0);
+        scale = new Vector3f(1,1,1);
+    }
+
+    public Transform(float x, float y) { // Set location of entity
+        pos = new Vector3f(x,y,0);
         scale = new Vector3f(1,1,1);
     }
 

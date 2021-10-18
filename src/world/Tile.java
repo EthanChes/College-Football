@@ -3,8 +3,10 @@ public class Tile {
     public static Tile tiles[] = new Tile[255];
     public static byte not = 0;
 
+    // .setSolid() sets a tile solid meaning entities cannot walk over it.
+
     public static final Tile normalGrass = new Tile("fieldinfo/grass");
-    public static final Tile redEndzone = new Tile("fieldinfo/RedEndzone").setSolid();
+    public static final Tile redEndzone = new Tile("fieldinfo/RedEndzone");
     public static final Tile darkGrass = new Tile("fieldinfo/darkgrass");
 
     private byte id; // Represents constant textures above

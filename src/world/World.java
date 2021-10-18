@@ -3,6 +3,7 @@ import collision.AABB;
 import entity.Entity;
 import entity.Quarterback;
 import entity.Transform;
+import entity.WideReceiver;
 import graphics.Animation;
 import graphics.Camera;
 import graphics.Shader;
@@ -78,6 +79,7 @@ public class World {
 
 
             entities.add(new Quarterback(new Transform()));
+            entities.add(new WideReceiver(new Transform(4-2,-2))); // Subtract by two such that their box ends at line of scrim
 
             /* entity with automated controls
             entities.add(new Entity(new Animation(1,1,"widereceiverstationary"), new Transform()) {
