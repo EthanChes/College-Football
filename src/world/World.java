@@ -4,7 +4,6 @@ import entity.Entity;
 import entity.Quarterback;
 import entity.Transform;
 import entity.WideReceiver;
-import graphics.Animation;
 import graphics.Camera;
 import graphics.Shader;
 import graphics.Window;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class World {
-    private final int view = 24; // controls screen render distance (6 squares)
+    private final int view = 46; // controls screen render distance (6 squares)
     private byte[] tiles;
     private AABB[] bounding_boxes;
     private List<Entity> entities;
@@ -77,7 +76,7 @@ public class World {
 
 
 
-            entities.add(new Quarterback(new Transform()));
+            entities.add(new Quarterback(new Transform(4,-14)));
             entities.add(new WideReceiver(new Transform(4-2,-2))); // Subtract by two such that their box ends at line of scrim
 
             /* entity with automated controls
@@ -254,6 +253,7 @@ public class World {
             return null;
         }
     }
+
 
 
 

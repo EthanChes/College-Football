@@ -143,6 +143,29 @@ public abstract class Entity {
         }
     }
 
+    public void zoomOutWhenNotVisible(Entity entity, Camera cam) { // 640 width OG, 480 height OG
+        float range = 25;
+        float entityX = (16.1141f*entity.bounding_box.getCenter().x)-8.518391f;
+        float entityY = 16f*(-entity.bounding_box.getCenter().y);
+        float camX = (-cam.getPosition().x);
+        float camY = (cam.getPosition().y);
+        float camWidth = 640 * cam.getProjMultiplier();
+        float camHeight = 480 * cam.getProjMultiplier();
+
+        if (entityX + range > camX + camWidth/2) {  // Checks if entity is near end of window on right and adjusts projection to prevent them from leaving sight.
+            System.out.println("Nearing Window End Right");
+            cam.setProjMultiplier(cam.getProjMultiplier()*1.01f);
+            cam.setProjection(640*cam.getProjMultiplier(),480*cam.getProjMultiplier());
+        }
+        else if (entityY + range > camY + camHeight/2) {
+            System.out.println("Nearing Window End Bottom");
+        }
+        else if (entityY - range < camY - camHeight/2) {
+            System.out.println("Nearing Window End Top");
+        }
+
+    }
+
     public static void deleteAsset() {
         model = null;
     }
