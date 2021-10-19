@@ -152,9 +152,9 @@ public abstract class Entity {
         float camWidth = 640 * cam.getProjMultiplier();
         float camHeight = 480 * cam.getProjMultiplier();
 
-        if (entityX + range > camX + camWidth/2) {  // Checks if entity is near end of window on right and adjusts projection to prevent them from leaving sight.
+        if (entityX + range > camX + camWidth/2) {  // Checks if entity is near end of window on right and adjusts projection to prevent them from leaving sight. This algorithm may need tweaking
             System.out.println("Nearing Window End Right");
-            cam.setProjMultiplier(cam.getProjMultiplier()*1.01f);
+            cam.setProjMultiplier(cam.getProjMultiplier()*1.007f);
             cam.setProjection(640*cam.getProjMultiplier(),480*cam.getProjMultiplier());
         }
         else if (entityY + range > camY + camHeight/2) {

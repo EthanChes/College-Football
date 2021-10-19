@@ -42,13 +42,13 @@ public class WideReceiver extends Entity {
         }
 
         if (!hasBall) { // Route Movements
-            if (routeMovement <= 80) { // 80 is full length of field. 20 tiles means 4/tile. each tile represents 5 yds. So 4pts/5yds
+            if (routeMovement <= 25) { // 80 is full length of field. 20 tiles means 4/tile. each tile represents 5 yds. So 4pts/5yds
                 movement.add(speed * delta, 0);
                 routeMovement += speed * delta; // total movement so far, for change of route direction etc.
             }
         }
 
-        //zoomOutWhenNotVisible(this, camera);
+        zoomOutWhenNotVisible(this, camera);
 
         if (movement.x != 0 || movement.y != 0) {
             useAnimation(ANIM_RUN);

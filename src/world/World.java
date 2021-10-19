@@ -18,7 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class World {
-    private final int view = 46; // controls screen render distance (6 squares)
+    private int viewX;
+    private int viewY;
     private byte[] tiles;
     private AABB[] bounding_boxes;
     private List<Entity> entities;
@@ -38,11 +39,11 @@ public class World {
         try {
              BufferedImage tile_sheet = ImageIO.read(new File("./res/stadiums/" + stadium + "_tiles.png"));
 
-             width = tile_sheet.getWidth();
-             height = tile_sheet.getHeight();
+             width = 256; //tile_sheet.getWidth();
+             height = 256; //tile_sheet.getHeight();
              scale = 16;
 
-            int[] colorTileSheet = tile_sheet.getRGB(0,0,width,height, null, 0, tile_sheet.getWidth());
+            int[] colorTileSheet = tile_sheet.getRGB(0,0,tile_sheet.getWidth(),tile_sheet.getHeight(), null, 0, tile_sheet.getWidth());
 
             this.world = new Matrix4f().setTranslation(new Vector3f(0));
             this.world.scale(scale);// Tiles are 32x32, since scale = 16 * 2 due to renderTile using 2*length
@@ -51,9 +52,9 @@ public class World {
             bounding_boxes = new AABB[width * height];
             entities = new ArrayList<Entity>();
 
-            for (int y = 0; y < height; y++) { // x and y represent id of tile
-                for (int x = 0; x < width; x++) {
-                    int red = (colorTileSheet[x + y * width] >> 16) & 0xFF; // represents red on tile of grid of map
+            for (int y = 0; y < tile_sheet.getHeight(); y++) { // x and y represent id of tile
+                for (int x = 0; x < tile_sheet.getWidth(); x++) {
+                    int red = (colorTileSheet[x + y * tile_sheet.getWidth()] >> 16) & 0xFF; // represents red on tile of grid of map
 
                     Tile t;
                     try {
@@ -76,8 +77,8 @@ public class World {
 
 
 
-            entities.add(new Quarterback(new Transform(4,-14)));
-            entities.add(new WideReceiver(new Transform(4-2,-2))); // Subtract by two such that their box ends at line of scrim
+            entities.add(new Quarterback(new Transform(200,-200)));
+            entities.add(new WideReceiver(new Transform(200,-190))); // Subtract by two such that their box ends at line of scrim
 
             /* entity with automated controls
             entities.add(new Entity(new Animation(1,1,"widereceiverstationary"), new Transform()) {
@@ -131,14 +132,14 @@ public class World {
 
     public void render(TileRenderer render, Shader shader, Camera camera, Window window) {
 
-        int posX = ((int) camera.getPosition().x + (window.getWidth()/2)) / (scale * 2);
-        int posY = ((int) camera.getPosition().y - (window.getHeight()/2)) / (scale * 2);
+        int posX = ((int) camera.getPosition().x/ (scale * 2));
+        int posY = ((int) camera.getPosition().y/ (scale * 2));
 
-        for (int count = 0; count < view; count++) {
-            for (int counter = 0; counter < view; counter++) {
-                Tile t = getTile(count-posX, counter+posY);
+        for (int count = 0; count < viewX; count++) {
+            for (int counter = 0; counter < viewY; counter++) {
+                Tile t = getTile(count-posX-(viewX/2)+1, counter+posY-(viewY/2));
                 if (t != null) {
-                    render.renderTile(t, count-posX, -counter-posY, shader, world, camera);
+                    render.renderTile(t, count-posX-(viewX/2)+1, -counter-posY+(viewY/2), shader, world, camera);
                 }
             }
         }
@@ -254,7 +255,10 @@ public class World {
         }
     }
 
-
+    public void calculateView(Window window, Camera cam) {
+        viewX = (int) ((window.getWidth()*cam.getProjMultiplier())/(scale*2)) + 4;
+        viewY = (int) (((window.getHeight()*cam.getProjMultiplier())/(scale*2)) + 4);
+    }
 
 
 

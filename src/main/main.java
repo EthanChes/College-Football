@@ -51,6 +51,7 @@ public class main {
 
             Shader shader = new Shader("shader"); // Creates a new shader, filename is singular, because in the directory, the shader files start with "shader" Shader Class Handles Names.
             World world = new World("test");
+            world.calculateView(window,camera);
 
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Window Initial Color
 
@@ -73,6 +74,7 @@ public class main {
                 time = time_2; // Reset time, such that it can calculate difference between this and next frame in next loop.
 
                 while (unprocessed >= frame_cap) { // Loop at rate of fps, only occurs when the unprocessed time is greater than time available for a frame.
+                    world.calculateView(window,camera);
                     unprocessed -= frame_cap; // The amount of unprocessed time decreases by 1 frames amount of time.
                     can_render = true; // If this is set to true, then images may render. Thus it only renders at frame_cap speed. Line 166, this is used for controlling rendering at fps.
 
