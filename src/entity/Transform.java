@@ -26,4 +26,12 @@ public class Transform {
         target.scale(scale);
         return target;
     }
+
+    public float getEntityPosX() {
+        return this.pos.x;
+    }
+
+    public float getEntityPosY() {
+        return this.pos.y;
+    }
 }

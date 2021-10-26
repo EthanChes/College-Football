@@ -71,20 +71,10 @@ public class World {
 
 
 
-
-
-
-            entities.add(new Football(new Transform(200,-250,.75f)));
             entities.add(new Quarterback(new Transform(200,-250)));
             entities.add(new WideReceiver(new Transform(200,-240))); // Subtract by two such that their box ends at line of scrim
 
-            /* entity with automated controls
-            entities.add(new Entity(new Animation(1,1,"widereceiverstationary"), new Transform()) {
-                @Override
-                public void update(float delta, Window window, Camera camera, World world) {
-                    move(new Vector2f(5*delta,0));
-                }
-            }); */
+            entities.add(new Football(new Transform(200f,-250f,.5f))); // MUST BE AT BOTTOM
 
 
 
@@ -256,6 +246,10 @@ public class World {
     public void calculateView(Window window, Camera cam) {
         viewX = (int) ((window.getWidth()*cam.getProjMultiplier())/(scale*2)) + 4;
         viewY = (int) (((window.getHeight()*cam.getProjMultiplier())/(scale*2)) + 4);
+    }
+
+    public Entity getFootballEntity() {
+        return entities.get(entities.size()-1);
     }
 
 

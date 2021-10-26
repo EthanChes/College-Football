@@ -13,6 +13,8 @@ public abstract class Entity {
     private int use_animation;
     protected AABB bounding_box;
     protected Transform transform;
+    protected boolean canCollide = true;
+    protected boolean pass = false;
 
     public Entity(int max_animations, Transform transform) {
         this.transform = transform;
@@ -131,7 +133,7 @@ public abstract class Entity {
     public void collideWithEntity(Entity entity, World world) {
         Collision collision = bounding_box.getCollision(entity.bounding_box);
 
-        if (collision.isIntersecting) {
+        if (collision.isIntersecting && entity.canCollide && canCollide) {
             collision.distance.x /= 2;
             collision.distance.y /= 2;
 
@@ -165,6 +167,15 @@ public abstract class Entity {
         }
 
     }
+
+    public void noCollision() {
+        canCollide = false;
+    }
+
+    public void startPass() {
+        this.pass = true;
+    }
+
 
     public static void deleteAsset() {
         model = null;

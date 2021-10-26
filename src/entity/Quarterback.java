@@ -16,7 +16,7 @@ public class Quarterback extends Entity {
     public static final int ANIM_WALK = 1;
     public static final int ANIM_IDLE = 0;
 
-    public static double timePass; // time of pass
+    public static double timePass = 0; // time of pass
     public static boolean hasBall = true;
     public static float speed = 10f;
 
@@ -31,12 +31,26 @@ public class Quarterback extends Entity {
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
         double time_current = getTime();
-        boolean pass = false;
         boolean able_move;
+        Entity football = world.getFootballEntity();
 
         if (time_current - timePass < .35) {
             pass = true;
+
+            if (time_current - timePass > .25) { // Waits until frame of qb animation throw to move football
+                football.useAnimation(1);
+                football.transform.pos.set(transform.getEntityPosX() - .3f, transform.getEntityPosY() + .75f, 0);
+            }
         }
+        else if (time_current - timePass > .35 && time_current - timePass < .37) {
+            football.startPass();
+            pass = false;
+        }
+        else {
+            pass = false; // Prevents Bad Error if timing doesnt match up
+        }
+
+
 
         if (hasBall && !pass) { able_move = true; } else { able_move = false;}
 
@@ -60,17 +74,24 @@ public class Quarterback extends Entity {
 
         //zoomOutWhenNotVisible(this, camera);
 
-        if (pass) {
-            useAnimation(ANIM_THROW);
-        } else if (movement.x != 0 || movement.y != 0) {
-            useAnimation(ANIM_WALK);
-        } else {
-            useAnimation(ANIM_IDLE);
-        }
-
         move(movement);
 
-        camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), .05f);
+
+        if (pass) {
+            useAnimation(ANIM_THROW);
+        }
+        else if (movement.x != 0 || movement.y != 0) {
+            if (hasBall) {
+                football.transform.pos.add(movement.x, movement.y, 0);
+            }
+            useAnimation(ANIM_WALK);
+        }
+        else {
+            if (hasBall) {
+                football.transform.pos.set(transform.getEntityPosX() + .125f, transform.getEntityPosY() + .125f, 0);
+            }
+            useAnimation(ANIM_IDLE);
+        }
     }
 
 }
