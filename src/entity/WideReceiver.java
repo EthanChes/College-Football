@@ -12,6 +12,8 @@ public class WideReceiver extends Entity {
     public static final int ANIM_RUN = 1;
     public static final int ANIM_IDLE = 0;
 
+    public static int totalReceivers = 0;
+
     public static boolean hasBall = false;
     public static float routeMovement = 0f;
     public static float speed = 10f;
@@ -20,6 +22,7 @@ public class WideReceiver extends Entity {
         super(ANIM_SIZE,transform);
         setAnimation(ANIM_IDLE, new Animation(1,1,"widereceiveridle"));
         setAnimation(ANIM_RUN, new Animation(4,16,"widereceiverrouterun"));
+        totalReceivers++;
     }
 
     @Override
@@ -48,6 +51,16 @@ public class WideReceiver extends Entity {
             }
         }
 
+        move(movement);
+
+        // Movements for receiver symbol
+        Entity receiverSymbol = world.getSpecifiedEntity(ReceiverSymbol.index++);
+        receiverSymbol.transform.pos.set(this.transform.pos.x,this.transform.pos.y + 1.5f,0);
+        if (ReceiverSymbol.index > totalReceivers) {
+            ReceiverSymbol.index = 1;
+        }
+        receiverSymbol.useAnimation(ReceiverSymbol.index-1);
+
         //zoomOutWhenNotVisible(this, camera);
 
         if (movement.x != 0 || movement.y != 0) {
@@ -58,7 +71,6 @@ public class WideReceiver extends Entity {
 
 
 
-        move(movement);
     }
 
 }

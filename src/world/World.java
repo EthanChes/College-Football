@@ -74,6 +74,8 @@ public class World {
             entities.add(new Quarterback(new Transform(200,-250)));
             entities.add(new WideReceiver(new Transform(200,-240))); // Subtract by two such that their box ends at line of scrim
 
+            entities.add(new ReceiverSymbol(new Transform(200,-250,.75f))); // Adds Symbol for Receiver
+
             entities.add(new Football(new Transform(200f,-250f,.5f))); // MUST BE AT BOTTOM
 
 
@@ -251,6 +253,8 @@ public class World {
     public Entity getFootballEntity() {
         return entities.get(entities.size()-1);
     }
+
+    public Entity getSpecifiedEntity(int index) { return entities.get(entities.size()-(index + 1)); }
 
 
 
