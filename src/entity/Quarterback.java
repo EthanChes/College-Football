@@ -58,7 +58,7 @@ public class Quarterback extends Entity {
             movement.add(speed*delta,0);
         }
 
-        zoomOutWhenNotVisible(this, camera);
+        //zoomOutWhenNotVisible(this, camera);
 
         if (pass) {
             useAnimation(ANIM_THROW);

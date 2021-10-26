@@ -48,7 +48,7 @@ public class WideReceiver extends Entity {
             }
         }
 
-        zoomOutWhenNotVisible(this, camera);
+        //zoomOutWhenNotVisible(this, camera);
 
         if (movement.x != 0 || movement.y != 0) {
             useAnimation(ANIM_RUN);

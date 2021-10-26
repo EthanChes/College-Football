@@ -8,7 +8,7 @@ public class Camera {
     private float projMultiplier = 1;
 
     public Camera(int width, int height) {
-            position = new Vector3f(-3200,3200,0); // multiply actual position on screen for entities by 16.
+            position = new Vector3f(-200*16,250*16,0); // multiply actual position on screen for entities by 16.
             setProjection(640,480);
     }
     public void setPosition(Vector3f position) {

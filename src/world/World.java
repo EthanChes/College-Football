@@ -1,9 +1,6 @@
 package world;
 import collision.AABB;
-import entity.Entity;
-import entity.Quarterback;
-import entity.Transform;
-import entity.WideReceiver;
+import entity.*;
 import graphics.Camera;
 import graphics.Shader;
 import graphics.Window;
@@ -77,8 +74,9 @@ public class World {
 
 
 
-            entities.add(new Quarterback(new Transform(200,-200)));
-            entities.add(new WideReceiver(new Transform(200,-190))); // Subtract by two such that their box ends at line of scrim
+            entities.add(new Football(new Transform(200,-250,.75f)));
+            entities.add(new Quarterback(new Transform(200,-250)));
+            entities.add(new WideReceiver(new Transform(200,-240))); // Subtract by two such that their box ends at line of scrim
 
             /* entity with automated controls
             entities.add(new Entity(new Animation(1,1,"widereceiverstationary"), new Transform()) {
