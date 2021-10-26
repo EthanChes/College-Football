@@ -8,7 +8,8 @@ import org.joml.Vector3f;
 import world.World;
 
 public class Football extends Entity {
-    public static final int ANIM_SIZE = 2;
+    public static final int ANIM_SIZE = 3;
+    public static final int ANIM_QB_THROW = 2;
     public static final int ANIM_QB_THROW_START = 1;
     public static final int ANIM_QB_HOLD = 0;
 
@@ -22,6 +23,7 @@ public class Football extends Entity {
 
         setAnimation(ANIM_QB_HOLD,new Animation(1,1,"footballqb"));
         setAnimation(ANIM_QB_THROW_START, new Animation(1,1,"footballthrowstart"));
+        setAnimation(ANIM_QB_THROW, new Animation(6,50,"footballthrow"));
     }
 
 
@@ -30,6 +32,7 @@ public class Football extends Entity {
         Vector2f movement = new Vector2f(); // for passes
 
         if (pass) { // Pass Algorithm Here
+            useAnimation(ANIM_QB_THROW);
 
             movement.add(throw_speed*delta,0); // pass movement
             if (throw_speed > 0) {

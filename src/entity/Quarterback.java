@@ -3,7 +3,6 @@ import graphics.Animation;
 import graphics.Camera;
 import graphics.Window;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import world.World;
 
 import static gameplay.Timer.getTime;
@@ -82,7 +81,7 @@ public class Quarterback extends Entity {
         }
         else if (movement.x != 0 || movement.y != 0) {
             if (hasBall) {
-                football.transform.pos.add(movement.x, movement.y, 0);
+                football.transform.pos.set(transform.pos.x + .125f, transform.pos.y + .125f, 0);
             }
             useAnimation(ANIM_WALK);
         }
