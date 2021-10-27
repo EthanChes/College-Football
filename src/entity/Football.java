@@ -13,7 +13,8 @@ public class Football extends Entity {
     public static final int ANIM_QB_THROW_START = 1;
     public static final int ANIM_QB_HOLD = 0;
 
-    public static float throw_speed = 50f;
+    public static float throw_speed;
+    public static float throw_height;
     public static float slow_fb_in_air = .5f;
     public static float ball_slope;
 
@@ -42,9 +43,12 @@ public class Football extends Entity {
                 Entity wideReceiver = world.getSpecifiedEntity(WideReceiver.totalReceivers + Quarterback.receiverPass + 1);
                 this.wideReceiverX = wideReceiver.transform.pos.x;
                 this.wideReceiverY = wideReceiver.transform.pos.y;
+                this.throw_speed = Quarterback.throw_power * 2.5f;
 
                 // Calculate Slope to get to receiver
                 this.ball_slope = (this.transform.pos.y - wideReceiverY)/(this.transform.pos.x - wideReceiverX);
+
+                throw_height = (wideReceiverX-transform.pos.x) + 2;
 
                 gotWideReceiverPos = false;
             }
@@ -56,8 +60,8 @@ public class Football extends Entity {
 
 
 
-            if (throw_speed > 0) {
-                throw_speed -= slow_fb_in_air; // Decrement Throw Speed, Removal of if statement results in boomerang effect
+            if (throw_height > 0) {
+                throw_height -= (9.8/throw_speed);
             }
             else {
                 pass = false;
