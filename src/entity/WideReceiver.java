@@ -1,4 +1,5 @@
 package entity;
+import gameplay.Timer;
 import graphics.Animation;
 import graphics.Camera;
 import graphics.Window;
@@ -11,26 +12,48 @@ import javax.sound.midi.Receiver;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class WideReceiver extends Entity {
-    public static final int ANIM_SIZE = 2;
+    public static final int ANIM_SIZE = 3;
+    public static final int ANIM_CATCH = 2;
     public static final int ANIM_RUN = 1;
     public static final int ANIM_IDLE = 0;
 
     public static int totalReceivers = 0;
 
-    public static boolean hasBall = false;
-    public static float routeMovement = 0f;
-    public static float speed = 10f;
+    public boolean inCatch = false;
+    public double timeCatch;
+    public boolean hasBall = false;
+    public float routeMovement = 0f;
+    public float speed = 10f;
 
     public WideReceiver(Transform transform) {
         super(ANIM_SIZE,transform);
         setAnimation(ANIM_IDLE, new Animation(1,1,"widereceiveridle"));
         setAnimation(ANIM_RUN, new Animation(4,16,"widereceiverrouterun"));
+        setAnimation(ANIM_CATCH, new Animation(1,1,"widereceiverincatch"));
         totalReceivers++;
+    }
+
+    public void catching() {
+        hasBall = true; // move this to if statement later
+
+        if (timeCatch + .5 < Timer.getTime()) { // Parameter for time during catch, then set hasball and incatch in here.
+            inCatch = false;
+        }
     }
 
     @Override
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
+        Entity football = world.getFootballEntity();
+
+        if (collidingWithFootball(this,world) && ! (inCatch || hasBall)) {
+            inCatch = true;
+            timeCatch = Timer.getTime();
+        }
+
+        if (inCatch) {
+            catching();
+        }
 
         // Moves Player using various WASD directions using vectors.
         if (window.getInput().isKeyDown(GLFW_KEY_S) && hasBall) { // When S is pressed, player moves 5 down
@@ -65,8 +88,15 @@ public class WideReceiver extends Entity {
 
         //zoomOutWhenNotVisible(this, camera);
 
-        if (movement.x != 0 || movement.y != 0) {
+        if (inCatch) {
+            useAnimation(ANIM_CATCH);
+            football.transform.pos.set(transform.pos.x,transform.pos.y,0);
+        }
+        else if (movement.x != 0 || movement.y != 0) {
             useAnimation(ANIM_RUN);
+            if (hasBall) {
+                football.transform.pos.set(transform.pos.x,transform.pos.y,0); // remove this eventually
+            }
         } else {
             useAnimation(ANIM_IDLE);
         }

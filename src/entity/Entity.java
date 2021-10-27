@@ -78,6 +78,15 @@ public abstract class Entity {
         model = new Model(vertices,texture,indices);
     }
 
+    public boolean collidingWithFootball(Entity entity, World world) {
+        Collision collision = world.getFootballEntity().bounding_box.getCollision(entity.bounding_box);
+
+        if (collision.isIntersecting) {
+            return true;
+        }
+        return false;
+    }
+
     public void collideWithTiles(World world) {
         AABB[] boxes = new AABB[25];
         for (int count = 0; count < 5; count++) {
