@@ -17,6 +17,10 @@ public class Quarterback extends Entity {
 
     public static double timePass = 0; // time of pass
     public static boolean hasBall = true;
+    public static byte receiverPass;
+    public static boolean able_move;
+
+    // Skills
     public static float speed = 10f;
 
     public Quarterback(Transform transform) {
@@ -26,11 +30,50 @@ public class Quarterback extends Entity {
         setAnimation(ANIM_THROW, new Animation(2,4,"qbthrow"));
     }
 
+    public void passOptions(Window window) {
+        if (hasBall) {
+            for (int count = 0; count < WideReceiver.totalReceivers; count++) {
+                switch (count) {
+                    case 0:
+                        if (window.getInput().isKeyDown(GLFW_KEY_P)) {
+                             receiverPass = 0;  pass = true; able_move = false; timePass = getTime(); hasBall = false;
+                        }
+                        break;
+                    case 1:
+                        if (window.getInput().isKeyDown(GLFW_KEY_O)) {
+                            receiverPass = 1;  pass = true; able_move = false; timePass = getTime(); hasBall = false;
+                        }
+                        break;
+                    case 2:
+                        if (window.getInput().isKeyDown(GLFW_KEY_I)) {
+                            receiverPass = 2;  pass = true; able_move = false; timePass = getTime(); hasBall = false;
+                        }
+                        break;
+                    case 3:
+                        if (window.getInput().isKeyDown(GLFW_KEY_U)) {
+                            receiverPass = 3;  pass = true; able_move = false; timePass = getTime(); hasBall = false;
+                        }
+                        break;
+                    case 4:
+                        if (window.getInput().isKeyDown(GLFW_KEY_Y)) {
+                            receiverPass = 4;  pass = true; able_move = false; timePass = getTime(); hasBall = false;
+                        }
+                        break;
+                }
+
+
+
+            }
+        }
+
+
+
+    }
+
     @Override
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
         double time_current = getTime();
-        boolean able_move;
         Entity football = world.getFootballEntity();
 
         if (time_current - timePass < .35) {
@@ -53,9 +96,7 @@ public class Quarterback extends Entity {
 
         if (hasBall && !pass) { able_move = true; } else { able_move = false;}
 
-        if (window.getInput().isKeyDown(GLFW_KEY_P) && hasBall) { // When P is pressed pass occurs
-            pass = true; able_move = false; timePass = getTime(); hasBall = false;
-        }
+        passOptions(window);
 
         // Moves Player using various WASD directions using vectors.
         if (window.getInput().isKeyDown(GLFW_KEY_S) && able_move) { // When S is pressed, player moves 5 down

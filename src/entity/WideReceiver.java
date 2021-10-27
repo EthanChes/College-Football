@@ -5,6 +5,9 @@ import graphics.Window;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import world.World;
+
+import javax.sound.midi.Receiver;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 public class WideReceiver extends Entity {
@@ -28,7 +31,6 @@ public class WideReceiver extends Entity {
     @Override
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
-        boolean able_move;
 
         // Moves Player using various WASD directions using vectors.
         if (window.getInput().isKeyDown(GLFW_KEY_S) && hasBall) { // When S is pressed, player moves 5 down
@@ -54,12 +56,12 @@ public class WideReceiver extends Entity {
         move(movement);
 
         // Movements for receiver symbol
-        Entity receiverSymbol = world.getSpecifiedEntity(ReceiverSymbol.index++);
+        Entity receiverSymbol = world.getSpecifiedEntity(ReceiverSymbol.index);
         receiverSymbol.transform.pos.set(this.transform.pos.x,this.transform.pos.y + 1.5f,0);
+        receiverSymbol.useAnimation(totalReceivers - (ReceiverSymbol.index++));
         if (ReceiverSymbol.index > totalReceivers) {
             ReceiverSymbol.index = 1;
         }
-        receiverSymbol.useAnimation(ReceiverSymbol.index-1);
 
         //zoomOutWhenNotVisible(this, camera);
 

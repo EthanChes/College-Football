@@ -13,9 +13,13 @@ public class Football extends Entity {
     public static final int ANIM_QB_THROW_START = 1;
     public static final int ANIM_QB_HOLD = 0;
 
-    public static float throw_height = 100f;
     public static float throw_speed = 50f;
     public static float slow_fb_in_air = .5f;
+    public static float ball_slope;
+
+    public static float wideReceiverX;
+    public static float wideReceiverY;
+    public static boolean gotWideReceiverPos = true;
 
     public Football(Transform transform) {
         super(ANIM_SIZE, transform);
@@ -34,16 +38,32 @@ public class Football extends Entity {
         if (pass) { // Pass Algorithm Here
             useAnimation(ANIM_QB_THROW);
 
-            movement.add(throw_speed*delta,0); // pass movement
+            if (gotWideReceiverPos) { // Gets Location of WR at time of pass
+                Entity wideReceiver = world.getSpecifiedEntity(WideReceiver.totalReceivers + Quarterback.receiverPass + 1);
+                System.out.println(wideReceiver.transform.pos.x + " " + wideReceiver.transform.pos.y);
+                System.out.println(WideReceiver.totalReceivers + Quarterback.receiverPass);
+                this.wideReceiverX = wideReceiver.transform.pos.x;
+                this.wideReceiverY = wideReceiver.transform.pos.y;
+
+                // Calculate Slope to get to receiver
+                this.ball_slope = (this.transform.pos.y - wideReceiverY)/(this.transform.pos.x - wideReceiverX);
+
+                gotWideReceiverPos = false;
+            }
+
+
+
+                movement.add(throw_speed*delta,throw_speed*delta*ball_slope); // Ball Movements
+
+
+
+
             if (throw_speed > 0) {
                 throw_speed -= slow_fb_in_air; // Decrement Throw Speed, Removal of if statement results in boomerang effect
             }
-
-            if (throw_height > 0) {
-                throw_height -= (1/(throw_speed - 1)); // Stronger throw means in air longer
-            }
             else {
-                throw_speed = 0; // if height = 0, then throw ends
+                pass = false;
+                System.out.println("PASS ENDED");
             }
         }
 
