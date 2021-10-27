@@ -40,8 +40,6 @@ public class Football extends Entity {
 
             if (gotWideReceiverPos) { // Gets Location of WR at time of pass
                 Entity wideReceiver = world.getSpecifiedEntity(WideReceiver.totalReceivers + Quarterback.receiverPass + 1);
-                System.out.println(wideReceiver.transform.pos.x + " " + wideReceiver.transform.pos.y);
-                System.out.println(WideReceiver.totalReceivers + Quarterback.receiverPass);
                 this.wideReceiverX = wideReceiver.transform.pos.x;
                 this.wideReceiverY = wideReceiver.transform.pos.y;
 

@@ -18,10 +18,12 @@ public class Quarterback extends Entity {
     public static double timePass = 0; // time of pass
     public static boolean hasBall = true;
     public static byte receiverPass;
-    public static boolean able_move;
 
     // Skills
     public static float speed = 10f;
+    public static float strength = 10f;
+    public static float throw_power = 10f;
+    public static float throw_accuracy = 10f;
 
     public Quarterback(Transform transform) {
         super(ANIM_SIZE,transform);
@@ -36,27 +38,27 @@ public class Quarterback extends Entity {
                 switch (count) {
                     case 0:
                         if (window.getInput().isKeyDown(GLFW_KEY_P)) {
-                             receiverPass = 0;  pass = true; able_move = false; timePass = getTime(); hasBall = false;
+                             receiverPass = 0;  pass = true; timePass = getTime(); hasBall = false;
                         }
                         break;
                     case 1:
                         if (window.getInput().isKeyDown(GLFW_KEY_O)) {
-                            receiverPass = 1;  pass = true; able_move = false; timePass = getTime(); hasBall = false;
+                            receiverPass = 1;  pass = true; timePass = getTime(); hasBall = false;
                         }
                         break;
                     case 2:
                         if (window.getInput().isKeyDown(GLFW_KEY_I)) {
-                            receiverPass = 2;  pass = true; able_move = false; timePass = getTime(); hasBall = false;
+                            receiverPass = 2;  pass = true; timePass = getTime(); hasBall = false;
                         }
                         break;
                     case 3:
                         if (window.getInput().isKeyDown(GLFW_KEY_U)) {
-                            receiverPass = 3;  pass = true; able_move = false; timePass = getTime(); hasBall = false;
+                            receiverPass = 3;  pass = true; timePass = getTime(); hasBall = false;
                         }
                         break;
                     case 4:
                         if (window.getInput().isKeyDown(GLFW_KEY_Y)) {
-                            receiverPass = 4;  pass = true; able_move = false; timePass = getTime(); hasBall = false;
+                            receiverPass = 4;  pass = true; timePass = getTime(); hasBall = false;
                         }
                         break;
                 }
@@ -93,22 +95,19 @@ public class Quarterback extends Entity {
         }
 
 
-
-        if (hasBall && !pass) { able_move = true; } else { able_move = false;}
-
         passOptions(window);
 
         // Moves Player using various WASD directions using vectors.
-        if (window.getInput().isKeyDown(GLFW_KEY_S) && able_move) { // When S is pressed, player moves 5 down
+        if (window.getInput().isKeyDown(GLFW_KEY_S) && hasBall) { // When S is pressed, player moves 5 down
             movement.add(0,-speed*delta); // multiply by delta (framecap) to move 10 frames in a second.
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_A) && able_move) { // When A is pressed, camera shifts left 5
+        if (window.getInput().isKeyDown(GLFW_KEY_A) && hasBall) { // When A is pressed, camera shifts left 5
             movement.add(-speed*delta,0);
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_W) && able_move) { // When W is pressed, camera shifts up 5
+        if (window.getInput().isKeyDown(GLFW_KEY_W) && hasBall) { // When W is pressed, camera shifts up 5
             movement.add(0,speed*delta);
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_D) && able_move) { // When D is pressed, camera shifts right 5
+        if (window.getInput().isKeyDown(GLFW_KEY_D) && hasBall) { // When D is pressed, camera shifts right 5
             movement.add(speed*delta,0);
         }
 
