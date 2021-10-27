@@ -73,6 +73,8 @@ public class World {
 
             entities.add(new Quarterback(new Transform(200,-250)));
             entities.add(new WideReceiver(new Transform(200,-240))); // Subtract by two such that their box ends at line of scrim
+            entities.add(new WideReceiver(new Transform(200,-245)));
+            entities.add(new WideReceiver(new Transform(200,-247)));
 
             for (int count = 0; count < WideReceiver.totalReceivers; count++) {
                 entities.add(new ReceiverSymbol(new Transform(200, -250, .75f))); // Adds Symbol for Receiver
