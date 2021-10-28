@@ -4,15 +4,14 @@ import graphics.Animation;
 import graphics.Camera;
 import graphics.Window;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import world.World;
-
-import javax.sound.midi.Receiver;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class WideReceiver extends Entity {
-    public static final int ANIM_SIZE = 3;
+    public static final int ANIM_SIZE = 5;
+    public static final int ANIM_IDLE_BALL = 4;
+    public static final int ANIM_RUN_BALL = 3;
     public static final int ANIM_CATCH = 2;
     public static final int ANIM_RUN = 1;
     public static final int ANIM_IDLE = 0;
@@ -30,14 +29,16 @@ public class WideReceiver extends Entity {
         setAnimation(ANIM_IDLE, new Animation(1,1,"widereceiveridle"));
         setAnimation(ANIM_RUN, new Animation(4,16,"widereceiverrouterun"));
         setAnimation(ANIM_CATCH, new Animation(1,1,"widereceiverincatch"));
+        setAnimation(ANIM_RUN_BALL, new Animation(4,16,"widereceiverrunwithball"));
+        setAnimation(ANIM_IDLE_BALL, new Animation(1,1,"widereceiveridlewithball"));
         totalReceivers++;
     }
 
     public void catching() {
-        hasBall = true; // move this to if statement later
 
-        if (timeCatch + .5 < Timer.getTime()) { // Parameter for time during catch, then set hasball and incatch in here.
+        if (timeCatch + .125 < Timer.getTime()) { // Parameter for time during catch, then set hasball and incatch in here.
             inCatch = false;
+            hasBall = true;
         }
     }
 
@@ -52,6 +53,7 @@ public class WideReceiver extends Entity {
         }
 
         if (inCatch) {
+            football.useAnimation(1);
             catching();
         }
 
@@ -79,24 +81,31 @@ public class WideReceiver extends Entity {
         move(movement);
 
         // Movements for receiver symbol
-        Entity receiverSymbol = world.getSpecifiedEntity(ReceiverSymbol.index);
-        receiverSymbol.transform.pos.set(this.transform.pos.x,this.transform.pos.y + 1.5f,0);
-        receiverSymbol.useAnimation(totalReceivers - (ReceiverSymbol.index++));
-        if (ReceiverSymbol.index > totalReceivers) {
-            ReceiverSymbol.index = 1;
-        }
+            Entity receiverSymbol = world.getSpecifiedEntity(ReceiverSymbol.index);
+            receiverSymbol.transform.pos.set(this.transform.pos.x, this.transform.pos.y + 1.5f, 0);
+            receiverSymbol.useAnimation(totalReceivers - (ReceiverSymbol.index++));
+            if (ReceiverSymbol.index > totalReceivers) {
+                ReceiverSymbol.index = 1;
+            }
 
         //zoomOutWhenNotVisible(this, camera);
 
-        if (inCatch) {
+
+        // Animations for wide receiver catch & football translations, try to move some of these for more effective coding
+        if (hasBall && movement.x != 0 || movement.y != 0) {
+            useAnimation(ANIM_RUN_BALL);
+            football.transform.pos.set(transform.pos.x - .3f,transform.pos.y + .1f,0);
+        }
+        else if (hasBall) {
+            useAnimation(ANIM_IDLE_BALL);
+            football.transform.pos.set(transform.pos.x - .3f,transform.pos.y + .1f,0);
+        }
+        else if (inCatch) {
             useAnimation(ANIM_CATCH);
             football.transform.pos.set(transform.pos.x,transform.pos.y,0);
         }
         else if (movement.x != 0 || movement.y != 0) {
             useAnimation(ANIM_RUN);
-            if (hasBall) {
-                football.transform.pos.set(transform.pos.x,transform.pos.y,0); // remove this eventually
-            }
         } else {
             useAnimation(ANIM_IDLE);
         }

@@ -65,6 +65,7 @@ public class Football extends Entity {
             }
             else {
                 pass = false;
+                useAnimation(1);
                 System.out.println("PASS ENDED");
             }
         }
