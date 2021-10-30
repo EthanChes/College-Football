@@ -26,6 +26,8 @@ public class World {
 
     private Matrix4f world;
 
+    public Entity ballCarrier;
+
 
 
 
@@ -82,6 +84,8 @@ public class World {
             }
 
             entities.add(new Football(new Transform(200f,-250f,.5f))); // MUST BE AT BOTTOM
+
+            setBallCarrier(getSpecifiedEntity(entities.size() - 1));
 
 
 
@@ -262,6 +266,8 @@ public class World {
     public Entity getSpecifiedEntity(int index) { return entities.get(entities.size()- (index + 1)); }
 
     public int totalEntities() { return entities.size(); }
+
+    public void setBallCarrier(Entity BC) { ballCarrier = BC; }
 
 
 

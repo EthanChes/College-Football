@@ -46,7 +46,7 @@ public class WideReceiver extends Entity {
         Vector2f movement = new Vector2f();
         Entity football = world.getFootballEntity();
 
-        if (collidingWithFootball(this,world) && ! (inCatch || hasBall)) {
+        if (collidingWithFootball(this,world) && ! (inCatch || hasBall)) { // Put Random Catch Element here
             inCatch = true;
             timeCatch = Timer.getTime();
         }
@@ -54,6 +54,7 @@ public class WideReceiver extends Entity {
         if (inCatch) {
             football.useAnimation(1);
             catching();
+            world.setBallCarrier(this);
         }
 
         // Moves Player using various WASD directions using vectors.

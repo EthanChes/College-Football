@@ -18,18 +18,7 @@ public class DefensiveLineman extends Entity {
         setAnimation(ANIM_IDLE, new Animation(1, 1, "defensivelineidle"));
     }
 
-    public Entity getBallCarrier(World world) {
-        Entity BC = world.getFootballEntity();
-        for (int i = 0; i < world.totalEntities(); i++) {
-            if (world.getSpecifiedEntity(i).hasBall) {
-                BC = world.getSpecifiedEntity(i);
-            }
-        }
-
-        return BC;
-    }
-
-    public Vector2f movements(Entity ballCarrier, float delta) {
+    public Vector2f defensive_movement(Entity ballCarrier, float delta) {
         Vector2f movement = new Vector2f();
 
         float posX = ballCarrier.transform.pos.x;
@@ -64,7 +53,7 @@ public class DefensiveLineman extends Entity {
             movement.add(speed * delta, 0);
         }
 
-        movement.add(movements(getBallCarrier(world), delta));
+        movement.add(defensive_movement(world.ballCarrier, delta));
 
         move(movement);
 
