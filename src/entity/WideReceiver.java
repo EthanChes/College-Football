@@ -20,7 +20,6 @@ public class WideReceiver extends Entity {
 
     public boolean inCatch = false;
     public double timeCatch;
-    public boolean hasBall = false;
     public float routeMovement = 0f;
     public float speed = 10f;
 

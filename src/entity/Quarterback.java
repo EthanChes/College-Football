@@ -16,7 +16,6 @@ public class Quarterback extends Entity {
     public static final int ANIM_IDLE = 0;
 
     public static double timePass = 0; // time of pass
-    public static boolean hasBall = true;
     public static byte receiverPass;
 
     // Skills
@@ -27,6 +26,7 @@ public class Quarterback extends Entity {
 
     public Quarterback(Transform transform) {
         super(ANIM_SIZE,transform);
+        hasBall = true;
         setAnimation(ANIM_IDLE, new Animation(1,1,"qbidle"));
         setAnimation(ANIM_WALK, new Animation(4,16,"qbrun"));
         setAnimation(ANIM_THROW, new Animation(2,4,"qbthrow"));

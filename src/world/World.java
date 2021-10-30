@@ -72,9 +72,10 @@ public class World {
 
 
             entities.add(new Quarterback(new Transform(200,-250)));
-            entities.add(new WideReceiver(new Transform(200,-240))); // I PIO
-            entities.add(new WideReceiver(new Transform(200,-245))); // O
-            entities.add(new WideReceiver(new Transform(200,-235))); // P
+            entities.add(new DefensiveLineman(new Transform(210,-240,1.5f)));
+            entities.add(new WideReceiver(new Transform(200,-240)));
+            entities.add(new WideReceiver(new Transform(200,-245)));
+            entities.add(new WideReceiver(new Transform(200,-235)));
 
             for (int count = 0; count < WideReceiver.totalReceivers; count++) {
                 entities.add(new ReceiverSymbol(new Transform(200, -250, .75f))); // Adds Symbol for Receiver
@@ -259,6 +260,8 @@ public class World {
     }
 
     public Entity getSpecifiedEntity(int index) { return entities.get(entities.size()- (index + 1)); }
+
+    public int totalEntities() { return entities.size(); }
 
 
 

@@ -15,6 +15,7 @@ public abstract class Entity {
     protected Transform transform;
     protected boolean canCollide = true;
     protected boolean pass = false;
+    public boolean hasBall = false;
 
     public Entity(int max_animations, Transform transform) {
         this.transform = transform;
