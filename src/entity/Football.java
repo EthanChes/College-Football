@@ -15,7 +15,7 @@ public class Football extends Entity {
 
     public static float throw_speed;
     public static float throw_height;
-    public static float slow_fb_in_air = .5f;
+    public final static float slow_fb_in_air = .5f;
     public static float ball_slope;
 
     public static float wideReceiverX;
@@ -41,8 +41,8 @@ public class Football extends Entity {
 
             if (gotWideReceiverPos) { // Gets Location of WR at time of pass
                 Entity wideReceiver = world.getSpecifiedEntity(WideReceiver.totalReceivers + Quarterback.receiverPass + 1);
-                this.wideReceiverX = wideReceiver.transform.pos.x;
-                this.wideReceiverY = wideReceiver.transform.pos.y;
+                this.wideReceiverX = getProjectedLocation(wideReceiver, delta, world).x;
+                this.wideReceiverY = getProjectedLocation(wideReceiver, delta, world).y;
                 this.throw_speed = Quarterback.throw_power * 2.5f;
 
                 // Calculate Slope to get to receiver

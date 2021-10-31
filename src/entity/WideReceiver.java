@@ -6,6 +6,8 @@ import graphics.Window;
 import org.joml.Vector2f;
 import world.World;
 
+import java.util.Vector;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 public class WideReceiver extends Entity {
@@ -20,8 +22,6 @@ public class WideReceiver extends Entity {
 
     public boolean inCatch = false;
     public double timeCatch;
-    public float routeMovement = 0f;
-    public float speed = 10f;
 
     public WideReceiver(Transform transform) {
         super(ANIM_SIZE,transform);
@@ -72,9 +72,17 @@ public class WideReceiver extends Entity {
         }
 
         if (!hasBall) { // Route Movements
-            if (routeMovement <= 25) { // 80 is full length of field. 20 tiles means 4/tile. each tile represents 5 yds. So 4pts/5yds
-                movement.add(speed * delta, 0);
-                routeMovement += speed * delta; // total movement so far, for change of route direction etc.
+            switch (route) {
+
+                case 0 : if (routeMovement <= 90) { // Fade
+                    movement.add(speed * delta, 0);
+                    routeMovement += speed * delta;
+                }
+                else { reachedEndOfRoute = true; }
+                break;
+
+                case 1 : break;
+                case 2 : break;
             }
         }
 

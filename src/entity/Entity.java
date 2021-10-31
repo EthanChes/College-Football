@@ -16,6 +16,13 @@ public abstract class Entity {
     protected boolean canCollide = true;
     protected boolean pass = false;
     public boolean hasBall = false;
+    public boolean reachedEndOfRoute = false;
+    public byte route = 0;
+    public float routeMovement = 0f;
+    public float speed = 10f;
+    public static float strength = 10f;
+    public static float throw_power = 10f;
+    public static float throw_accuracy = 10f;
 
     public Entity(int max_animations, Transform transform) {
         this.transform = transform;
@@ -184,6 +191,29 @@ public abstract class Entity {
 
     public void startPass() {
         this.pass = true;
+    }
+
+    public Vector2f getProjectedLocation(Entity entity, float delta, World world) {
+        Vector2f location = new Vector2f(entity.transform.pos.x,entity.transform.pos.y);
+        float projRouteMovement = entity.routeMovement;
+        float projBallMovement = 0;
+        for (; projBallMovement <= projRouteMovement && ! reachedEndOfRoute;) {
+            switch (route) {
+                case 0:
+                    if (projRouteMovement <= 90) { // Fade
+                        location.add(entity.speed * delta, 0);
+                        projRouteMovement += entity.speed*delta;
+                        projBallMovement += world.getQuarterbackEntity().throw_power*2.5f*delta;
+                    } else {
+                        reachedEndOfRoute = true;
+                    }
+                    break;
+
+                case 1:
+                    break;
+            }
+        }
+        return location;
     }
 
 

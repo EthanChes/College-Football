@@ -18,12 +18,6 @@ public class Quarterback extends Entity {
     public static double timePass = 0; // time of pass
     public static byte receiverPass;
 
-    // Skills
-    public static float speed = 10f;
-    public static float strength = 10f;
-    public static float throw_power = 10f;
-    public static float throw_accuracy = 10f;
-
     public Quarterback(Transform transform) {
         super(ANIM_SIZE,transform);
         hasBall = true;

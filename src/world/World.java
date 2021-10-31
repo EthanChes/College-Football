@@ -266,6 +266,8 @@ public class World {
 
     public Entity getSpecifiedEntity(int index) { return entities.get(entities.size()- (index + 1)); }
 
+    public Entity getQuarterbackEntity() { return entities.get(0); }
+
     public int totalEntities() { return entities.size(); }
 
     public void setBallCarrier(Entity BC) { ballCarrier = BC; }

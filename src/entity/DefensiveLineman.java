@@ -10,11 +10,10 @@ public class DefensiveLineman extends Entity {
     public static final int ANIM_SIZE = 1;
     public static final int ANIM_IDLE = 0;
 
-    public static float speed = 5f;
-
     public DefensiveLineman(Transform transform) {
         super(ANIM_SIZE, transform);
         setAnimation(ANIM_IDLE, new Animation(1, 1, "defensivelineidle"));
+        speed = 5f;
     }
 
     public Vector2f defensive_movement(Entity ballCarrier, float delta) {
