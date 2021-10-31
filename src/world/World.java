@@ -57,6 +57,7 @@ public class World {
 
                     Tile t;
                     try {
+                        System.out.println(red);
                         t = Tile.tiles[red];
                     } catch (ArrayIndexOutOfBoundsException e) {
                         t = null;
@@ -271,8 +272,9 @@ public class World {
 
 
 
-
-
     public int getScale() { return scale; }
     public Matrix4f getWorld() { return world;}
+
+
+
 }

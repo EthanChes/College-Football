@@ -5,7 +5,6 @@ import graphics.Window;
 import org.joml.Vector2f;
 import world.World;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 
 public class DefensiveLineman extends Entity {
     public static final int ANIM_SIZE = 1;

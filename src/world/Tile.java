@@ -5,9 +5,11 @@ public class Tile {
 
     // .setSolid() sets a tile solid meaning entities cannot walk over it.
 
-    public static final Tile normalGrass = new Tile("fieldinfo/grass");
-    public static final Tile redEndzone = new Tile("fieldinfo/RedEndzone");
-    public static final Tile darkGrass = new Tile("fieldinfo/darkgrass");
+    public static final Tile normalGrass = new Tile("fieldinfo/grass"); // id 0
+    public static final Tile redEndzone = new Tile("fieldinfo/RedEndzone"); // id 1
+    public static final Tile darkGrass = new Tile("fieldinfo/lightgrass"); // id 2
+    public static final Tile grassLeft = new Tile("fieldinfo/grassleft"); // id 3
+    public static final Tile grassRight = new Tile("fieldinfo/grassright"); // id 4
 
     private byte id; // Represents constant textures above
     private boolean solid; // represents if tile should collide with entities.
