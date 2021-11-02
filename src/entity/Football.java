@@ -40,16 +40,23 @@ public class Football extends Entity {
             if (gotWideReceiverPos) { // Gets Location of WR at time of pass
                 throw_power = world.getQuarterbackEntity().throw_power * 2.5f;
                 Entity wideReceiver = world.getSpecifiedEntity(WideReceiver.totalReceivers + Quarterback.receiverPass + 1);
-                Vector2f currentLocation = getProjectedLocation(wideReceiver, this, delta,world);
-                wideReceiverX = currentLocation.x;
-                wideReceiverY = currentLocation.y;
+                Vector2f projLoc = getProjectedLocation(wideReceiver, this, delta,world);
+                wideReceiverX = projLoc.x;
+                wideReceiverY = projLoc.y;
+
+                wideReceiverX = this.transform.pos.x;
 
                 // Calculate Slope to get to receiver
                 this.ball_slope = (this.transform.pos.y - wideReceiverY)/(this.transform.pos.x - wideReceiverX);
 
-                this.distance_multiplier =  (float) ((throw_power*delta) / (Math.sqrt(Math.pow(throw_power*delta,2) + Math.pow(throw_power*delta*ball_slope,2))));
+                throw_height = projLoc.distance(this.transform.pos.x,this.transform.pos.y);
 
-                throw_height = currentLocation.distance(this.transform.pos.x,this.transform.pos.y);
+                if (Float.isInfinite(ball_slope)) { // Recalculate ball slope in case of infinite slope
+                    System.out.println("Infinite Slope");
+                    ball_slope = (this.transform.pos.y - wideReceiverY) / ((this.transform.pos.x -.0001f) - wideReceiverX);
+                }
+
+                this.distance_multiplier =  (float) ((throw_power*delta) / (Math.sqrt(Math.pow(throw_power*delta,2) + Math.pow(throw_power*delta*ball_slope,2))));
 
                 gotWideReceiverPos = false;
             }
@@ -62,10 +69,7 @@ public class Football extends Entity {
                 throw_height -= (throw_power*delta);
                 System.out.println(throw_height);
             }
-            else {
-                pass = false;
-                useAnimation(1);
-            }
+
         }
 
         move(movement);

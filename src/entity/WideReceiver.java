@@ -50,9 +50,8 @@ public class WideReceiver extends Entity {
 
         if (inCatch) {
             football.useAnimation(1);
+            passCaught(world);
             catching();
-            pass = false;
-            throw_height = 0;
             world.setBallCarrier(this);
         }
 

@@ -230,6 +230,12 @@ public abstract class Entity {
         return location;
     }
 
+    public void passCaught(World world) {
+        throw_height = 0;
+        world.getFootballEntity().pass = false;
+        world.getFootballEntity().useAnimation(1);
+    }
+
 
     public static void deleteAsset() {
         model = null;
