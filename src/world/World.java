@@ -26,7 +26,7 @@ public class World {
 
     private Matrix4f world;
 
-    public Entity ballCarrier;
+    private Entity ballCarrier;
 
 
 
@@ -38,8 +38,8 @@ public class World {
         try {
              BufferedImage tile_sheet = ImageIO.read(new File("./res/stadiums/" + stadium + "_tiles.png"));
 
-             width = 256; //tile_sheet.getWidth();
-             height = 256; //tile_sheet.getHeight();
+             width = tile_sheet.getWidth();
+             height = tile_sheet.getHeight();
              scale = 16;
 
             int[] colorTileSheet = tile_sheet.getRGB(0,0,tile_sheet.getWidth(),tile_sheet.getHeight(), null, 0, tile_sheet.getWidth());
@@ -57,7 +57,6 @@ public class World {
 
                     Tile t;
                     try {
-                        System.out.println(red);
                         t = Tile.tiles[red];
                     } catch (ArrayIndexOutOfBoundsException e) {
                         t = null;
@@ -131,7 +130,6 @@ public class World {
 
 
     public void render(TileRenderer render, Shader shader, Camera camera, Window window) {
-
         int posX = ((int) camera.getPosition().x/ (scale * 2));
         int posY = ((int) camera.getPosition().y/ (scale * 2));
 
@@ -270,7 +268,9 @@ public class World {
 
     public int totalEntities() { return entities.size(); }
 
-    public void setBallCarrier(Entity BC) { ballCarrier = BC; }
+    public void setBallCarrier(Entity BC) { this.ballCarrier = BC; }
+
+    public Entity getBallCarrier() { return ballCarrier; }
 
 
 

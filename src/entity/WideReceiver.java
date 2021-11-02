@@ -6,8 +6,6 @@ import graphics.Window;
 import org.joml.Vector2f;
 import world.World;
 
-import java.util.Vector;
-
 import static org.lwjgl.glfw.GLFW.*;
 
 public class WideReceiver extends Entity {
@@ -34,10 +32,9 @@ public class WideReceiver extends Entity {
     }
 
     public void catching() {
-
         if (timeCatch + .125 < Timer.getTime()) { // Parameter for time during catch, then set hasball and incatch in here.
-            inCatch = false;
-            hasBall = true;
+            this.inCatch = false;
+            this.hasBall = true;
         }
     }
 
@@ -46,14 +43,16 @@ public class WideReceiver extends Entity {
         Vector2f movement = new Vector2f();
         Entity football = world.getFootballEntity();
 
-        if (collidingWithFootball(this,world) && ! (inCatch || hasBall)) { // Put Random Catch Element here
-            inCatch = true;
-            timeCatch = Timer.getTime();
+        if (! (inCatch || hasBall) && collidingWithFootball(this,world)) { // Put Random Catch Element here
+            this.inCatch = true;
+            this.timeCatch = Timer.getTime();
         }
 
         if (inCatch) {
             football.useAnimation(1);
             catching();
+            pass = false;
+            throw_height = 0;
             world.setBallCarrier(this);
         }
 

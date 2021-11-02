@@ -13,10 +13,8 @@ public class Football extends Entity {
     public static final int ANIM_QB_THROW_START = 1;
     public static final int ANIM_QB_HOLD = 0;
 
-    public static float throw_speed;
-    public static float throw_height;
-    public final static float slow_fb_in_air = .5f;
     public static float ball_slope;
+    public static float distance_multiplier;
 
     public static float wideReceiverX;
     public static float wideReceiverY;
@@ -40,33 +38,33 @@ public class Football extends Entity {
             useAnimation(ANIM_QB_THROW);
 
             if (gotWideReceiverPos) { // Gets Location of WR at time of pass
+                throw_power = world.getQuarterbackEntity().throw_power * 2.5f;
                 Entity wideReceiver = world.getSpecifiedEntity(WideReceiver.totalReceivers + Quarterback.receiverPass + 1);
-                this.wideReceiverX = getProjectedLocation(wideReceiver, delta, world).x;
-                this.wideReceiverY = getProjectedLocation(wideReceiver, delta, world).y;
-                this.throw_speed = Quarterback.throw_power * 2.5f;
+                Vector2f currentLocation = getProjectedLocation(wideReceiver, this, delta,world);
+                wideReceiverX = currentLocation.x;
+                wideReceiverY = currentLocation.y;
 
                 // Calculate Slope to get to receiver
                 this.ball_slope = (this.transform.pos.y - wideReceiverY)/(this.transform.pos.x - wideReceiverX);
 
-                throw_height = (wideReceiverX-transform.pos.x) + 2;
+                this.distance_multiplier =  (float) ((throw_power*delta) / (Math.sqrt(Math.pow(throw_power*delta,2) + Math.pow(throw_power*delta*ball_slope,2))));
+
+                throw_height = currentLocation.distance(this.transform.pos.x,this.transform.pos.y);
 
                 gotWideReceiverPos = false;
             }
 
-
-
-                movement.add(throw_speed*delta,throw_speed*delta*ball_slope); // Ball Movements
-
+                movement.add(throw_power*delta*distance_multiplier,throw_power*delta*ball_slope*distance_multiplier); // Ball Movements
 
 
 
             if (throw_height > 0) {
-                throw_height -= (9.8/throw_speed);
+                throw_height -= (throw_power*delta);
+                System.out.println(throw_height);
             }
             else {
                 pass = false;
                 useAnimation(1);
-                System.out.println("PASS ENDED");
             }
         }
 

@@ -10,6 +10,7 @@ import world.World;
 public abstract class Entity {
     protected static Model model;
     protected Animation[] animations;
+    public static float throw_height;
     private int use_animation;
     protected AABB bounding_box;
     protected Transform transform;
@@ -89,10 +90,20 @@ public abstract class Entity {
     public boolean collidingWithFootball(Entity entity, World world) {
         Collision collision = world.getFootballEntity().bounding_box.getCollision(entity.bounding_box);
 
-        if (collision.isIntersecting) {
+        if (collision.isIntersecting && throw_height > 0 && throw_height < 6) { // 6 Will Be Starting Receiver Height
+            System.out.println("Catch");
             return true;
         }
+        else if (collision.isIntersecting && ! entity.hasBall) { // Remove ! entity.hasBall for final version, this just helps with print message
+            System.out.println("Throw too high for catch.");
+        }
         return false;
+    }
+
+    public boolean collidingWithBallCarrier(Entity entity, World world) {
+        Collision hit = world.getBallCarrier().bounding_box.getCollision(entity.bounding_box);
+
+        return hit.isIntersecting;
     }
 
     public void collideWithTiles(World world) {
@@ -193,18 +204,21 @@ public abstract class Entity {
         this.pass = true;
     }
 
-    public Vector2f getProjectedLocation(Entity entity, float delta, World world) {
+    public Vector2f getProjectedLocation(Entity entity, Entity ball, float delta, World world) {
         Vector2f location = new Vector2f(entity.transform.pos.x,entity.transform.pos.y);
         float projRouteMovement = entity.routeMovement;
-        float projBallMovement = 0;
-        for (; projBallMovement <= projRouteMovement && ! reachedEndOfRoute;) {
-            switch (route) {
+        float quarterbackX = world.getQuarterbackEntity().transform.pos.x;
+        float quarterbackY = world.getQuarterbackEntity().transform.pos.y;
+        Vector2f projBallMovement = new Vector2f(ball.transform.pos.x,ball.transform.pos.y);
+        for (; projBallMovement.distance(quarterbackX,quarterbackY) <= location.distance(quarterbackX,quarterbackY) && ! reachedEndOfRoute;) {
+            switch (entity.route) {
                 case 0:
                     if (projRouteMovement <= 90) { // Fade
-                        location.add(entity.speed * delta, 0);
+                        location.add(entity.speed*delta,0);
                         projRouteMovement += entity.speed*delta;
-                        projBallMovement += world.getQuarterbackEntity().throw_power*2.5f*delta;
-                    } else {
+                        projBallMovement.add(throw_power*delta,0);
+                    }
+                    else {
                         reachedEndOfRoute = true;
                     }
                     break;

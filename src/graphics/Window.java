@@ -24,6 +24,7 @@ public class Window {
             throw new IllegalStateException("Failed to create window");
         }
 
+
         if (!fullscreen) {
             GLFWVidMode vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
             glfwSetWindowPos(window, (vid.width() - width) / 2, (vid.height() - height) / 2);

@@ -37,6 +37,8 @@ public class main {
             window.createWindow("CFB WIP"); // Creates window using window object
             // Imperative this is at the top, sets capabilities so window can make squares, textures etc.
             GL.createCapabilities();
+            glfwDefaultWindowHints();
+            glfwWindowHint(GLFW_VISIBLE,GLFW_FALSE);
 
             // Transparency with entities
             glEnable(GL_BLEND);
@@ -102,16 +104,12 @@ public class main {
                 // Renders images only if they are enabled to render as determined by a boolean activated once every frame at a rate of the given fps, 60.
                 if (can_render) {
                     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear Framebuffer
-                    //shader.bind(); // Enables program and frame to use the shader making images more clear and with outline parameters for size and color determined in shader.fs and shader.vs
-                    //shader.setUniform("sampler", new Matrix4f()); // Sets shader's image's sampler, or color. See shader.fs file for exact procedures of color.
-                    //shader.setUniform("projection", camera.getProjection().mul(target)); // Sets location of the image. See shader.vs for exact procedures of positioning.
-                    //model.render(); // Renders Tiles (grass/field)
-                    //texture_grass.bind(0); // binds tiles/field to frame.
 
-                   world.render(tiles, shader, camera, window);
+                    world.render(tiles, shader, camera, window);
+
+                    frames++; // total frames increases when 1 frame render is performed
 
                     window.swapBuffers();
-                    frames++; // total frames increases when 1 frame render is performed
                 }
             }
 

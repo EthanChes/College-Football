@@ -51,9 +51,13 @@ public class DefensiveLineman extends Entity {
             movement.add(speed * delta, 0);
         }
 
-        movement.add(defensive_movement(world.ballCarrier, delta));
+        movement.add(defensive_movement(world.getBallCarrier(), delta));
 
         move(movement);
+
+        if (collidingWithBallCarrier(this,world)) {
+            System.out.println("Hit"); // Hit Stuff Here
+        }
 
     }
 }
