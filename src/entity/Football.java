@@ -44,8 +44,6 @@ public class Football extends Entity {
                 wideReceiverX = projLoc.x;
                 wideReceiverY = projLoc.y;
 
-                wideReceiverX = this.transform.pos.x;
-
                 // Calculate Slope to get to receiver
                 this.ball_slope = (this.transform.pos.y - wideReceiverY)/(this.transform.pos.x - wideReceiverX);
 
