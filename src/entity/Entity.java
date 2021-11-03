@@ -10,20 +10,27 @@ import world.World;
 public abstract class Entity {
     protected static Model model;
     protected Animation[] animations;
-    public static float throw_height;
     private int use_animation;
     protected AABB bounding_box;
     protected Transform transform;
+
+    // Game booleans
+    public static float throw_height;
+    public static boolean canPlay = true;
     protected boolean canCollide = true;
     protected boolean pass = false;
     public boolean hasBall = false;
     public boolean reachedEndOfRoute = false;
+    public boolean userControl = false;
+
+
+    // Player Info
     public byte route = 0;
     public float routeMovement = 0f;
     public float speed = 10f;
-    public static float strength = 10f;
-    public static float throw_power = 10f;
-    public static float throw_accuracy = 10f;
+    public float strength = 10f;
+    public float throw_power = 10f;
+    public float throw_accuracy = 10f;
 
     public Entity(int max_animations, Transform transform) {
         this.transform = transform;
@@ -235,6 +242,8 @@ public abstract class Entity {
         world.getFootballEntity().pass = false;
         world.getFootballEntity().useAnimation(1);
     }
+
+    public int getAnimationIndex() { return use_animation; }
 
 
     public static void deleteAsset() {

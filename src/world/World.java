@@ -2,6 +2,7 @@ package world;
 import collision.AABB;
 import entity.*;
 import graphics.Camera;
+import graphics.Model;
 import graphics.Shader;
 import graphics.Window;
 import org.joml.Matrix4f;
@@ -69,6 +70,7 @@ public class World {
                 }
             }
             // add entities here
+            this.initReset();
 
 
 
@@ -271,6 +273,13 @@ public class World {
     public void setBallCarrier(Entity BC) { this.ballCarrier = BC; }
 
     public Entity getBallCarrier() { return ballCarrier; }
+
+    public void initReset() {
+        entities.clear();
+        Entity.canPlay = true;
+        Football.gotWideReceiverPos = true;
+        WideReceiver.totalReceivers = 0;
+    }
 
 
 

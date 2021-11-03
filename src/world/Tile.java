@@ -10,6 +10,7 @@ public class Tile {
     public static final Tile darkGrass = new Tile("fieldinfo/lightgrass"); // id 2
     public static final Tile grassLeft = new Tile("fieldinfo/grassleft"); // id 3
     public static final Tile grassRight = new Tile("fieldinfo/grassright"); // id 4
+    public static final Tile sideLines = new Tile("fieldinfo/sidelines"); // id 5
 
     private byte id; // Represents constant textures above
     private boolean solid; // represents if tile should collide with entities.

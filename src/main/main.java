@@ -3,6 +3,7 @@ import collision.AABB;
 import entity.Entity;
 import entity.Quarterback;
 import entity.Transform;
+import entity.WideReceiver;
 import gameplay.Timer;
 import graphics.*;
 import org.joml.Matrix4f;
@@ -83,6 +84,10 @@ public class main {
                     // Window Closes when Key Escape is Pressed
                     if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
                         glfwSetWindowShouldClose(window.getWindow(), true);
+                    }
+
+                    if (window.getInput().isKeyPressed(GLFW_KEY_R)) {
+                        world = new World("test");
                     }
 
                     world.update((float) frame_cap, window, camera);

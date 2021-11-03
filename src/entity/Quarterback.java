@@ -10,7 +10,8 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 
 public class Quarterback extends Entity {
-    public static final int ANIM_SIZE = 3;
+    public static final int ANIM_SIZE = 4;
+    public static final int ANIM_FALL = 3;
     public static final int ANIM_THROW = 2;
     public static final int ANIM_WALK = 1;
     public static final int ANIM_IDLE = 0;
@@ -24,10 +25,11 @@ public class Quarterback extends Entity {
         setAnimation(ANIM_IDLE, new Animation(1,1,"qbidle"));
         setAnimation(ANIM_WALK, new Animation(4,16,"qbrun"));
         setAnimation(ANIM_THROW, new Animation(2,4,"qbthrow"));
+        setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall"));
     }
 
     public void passOptions(Window window) {
-        if (hasBall) {
+        if (userControl && canPlay) {
             for (int count = 0; count < WideReceiver.totalReceivers; count++) {
                 switch (count) {
                     case 0:
@@ -72,6 +74,9 @@ public class Quarterback extends Entity {
         double time_current = getTime();
         Entity football = world.getFootballEntity();
 
+        if (hasBall && true) userControl = true; // change && true to gamemanger user is on team on offense
+        else userControl = false;
+
         if (time_current - timePass < .35) {
             pass = true;
 
@@ -93,25 +98,30 @@ public class Quarterback extends Entity {
         passOptions(window);
 
         // Moves Player using various WASD directions using vectors.
-        if (window.getInput().isKeyDown(GLFW_KEY_S) && hasBall) { // When S is pressed, player moves 5 down
+        if (window.getInput().isKeyDown(GLFW_KEY_S) && userControl) { // When S is pressed, player moves 5 down
             movement.add(0,-speed*delta); // multiply by delta (framecap) to move 10 frames in a second.
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_A) && hasBall) { // When A is pressed, camera shifts left 5
+        if (window.getInput().isKeyDown(GLFW_KEY_A) && userControl) { // When A is pressed, camera shifts left 5
             movement.add(-speed*delta,0);
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_W) && hasBall) { // When W is pressed, camera shifts up 5
+        if (window.getInput().isKeyDown(GLFW_KEY_W) && userControl) { // When W is pressed, camera shifts up 5
             movement.add(0,speed*delta);
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_D) && hasBall) { // When D is pressed, camera shifts right 5
+        if (window.getInput().isKeyDown(GLFW_KEY_D) && userControl) { // When D is pressed, camera shifts right 5
             movement.add(speed*delta,0);
         }
 
         //zoomOutWhenNotVisible(this, camera);
 
+        if (canPlay)
         move(movement);
 
-
-        if (pass) {
+        // Use Animations
+        if (getAnimationIndex() == ANIM_FALL) {
+            useAnimation(ANIM_FALL);
+            world.getFootballEntity().transform.pos.set(this.transform.pos.x,this.transform.pos.y, 0);
+        }
+        else if (pass) {
             useAnimation(ANIM_THROW);
         }
         else if (movement.x != 0 || movement.y != 0) {
@@ -126,6 +136,10 @@ public class Quarterback extends Entity {
             }
             useAnimation(ANIM_IDLE);
         }
+
+
+
+
     }
 
 }

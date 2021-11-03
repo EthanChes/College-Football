@@ -50,8 +50,8 @@ public class Texture {
     }
 
     protected void finalize() throws Throwable {
-        glDeleteTextures(id); // Deletes texture
         super.finalize();
+        //glDeleteTextures(id); // Code Doesn't Work with this involved
     }
 
     public void bind(int sampler) {

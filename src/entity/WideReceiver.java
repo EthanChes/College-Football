@@ -9,9 +9,10 @@ import world.World;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class WideReceiver extends Entity {
-    public static final int ANIM_SIZE = 5;
-    public static final int ANIM_IDLE_BALL = 4;
-    public static final int ANIM_RUN_BALL = 3;
+    public static final int ANIM_SIZE = 6;
+    public static final int ANIM_IDLE_BALL = 5;
+    public static final int ANIM_RUN_BALL = 4;
+    public static final int ANIM_FALL = 3;
     public static final int ANIM_CATCH = 2;
     public static final int ANIM_RUN = 1;
     public static final int ANIM_IDLE = 0;
@@ -26,6 +27,7 @@ public class WideReceiver extends Entity {
         setAnimation(ANIM_IDLE, new Animation(1,1,"widereceiveridle"));
         setAnimation(ANIM_RUN, new Animation(4,16,"widereceiverrouterun"));
         setAnimation(ANIM_CATCH, new Animation(1,1,"widereceiverincatch"));
+        setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall"));
         setAnimation(ANIM_RUN_BALL, new Animation(4,16,"widereceiverrunwithball"));
         setAnimation(ANIM_IDLE_BALL, new Animation(1,1,"widereceiveridlewithball"));
         totalReceivers++;
@@ -43,6 +45,9 @@ public class WideReceiver extends Entity {
         Vector2f movement = new Vector2f();
         Entity football = world.getFootballEntity();
 
+        if (hasBall && true) userControl = true; // change && true to gamemanager user controls offensive team
+        else userControl = false;
+
         if (! (inCatch || hasBall) && collidingWithFootball(this,world)) { // Put Random Catch Element here
             this.inCatch = true;
             this.timeCatch = Timer.getTime();
@@ -56,16 +61,16 @@ public class WideReceiver extends Entity {
         }
 
         // Moves Player using various WASD directions using vectors.
-        if (window.getInput().isKeyDown(GLFW_KEY_S) && hasBall) { // When S is pressed, player moves 5 down
+        if (window.getInput().isKeyDown(GLFW_KEY_S) && userControl) { // When S is pressed, player moves 5 down
             movement.add(0,-speed*delta); // multiply by delta (framecap) to move 10 frames in a second.
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_A) && hasBall) { // When A is pressed, camera shifts left 5
+        if (window.getInput().isKeyDown(GLFW_KEY_A) && userControl) { // When A is pressed, camera shifts left 5
             movement.add(-speed*delta,0);
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_W) && hasBall) { // When W is pressed, camera shifts up 5
+        if (window.getInput().isKeyDown(GLFW_KEY_W) && userControl) { // When W is pressed, camera shifts up 5
             movement.add(0,speed*delta);
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_D) && hasBall) { // When D is pressed, camera shifts right 5
+        if (window.getInput().isKeyDown(GLFW_KEY_D) && userControl) { // When D is pressed, camera shifts right 5
             movement.add(speed*delta,0);
         }
 
@@ -84,6 +89,7 @@ public class WideReceiver extends Entity {
             }
         }
 
+        if (canPlay)
         move(movement);
 
         // Movements for receiver symbol
@@ -98,7 +104,11 @@ public class WideReceiver extends Entity {
 
 
         // Animations for wide receiver catch & football translations, try to move some of these for more effective coding
-        if (hasBall && movement.x != 0 || movement.y != 0) {
+        if (getAnimationIndex() == ANIM_FALL) {
+            useAnimation(ANIM_FALL);
+            world.getFootballEntity().transform.pos.set(this.transform.pos.x,this.transform.pos.y, 0);
+        }
+        else if (hasBall && movement.x != 0 || movement.y != 0) {
             useAnimation(ANIM_RUN_BALL);
             football.transform.pos.set(transform.pos.x - .3f,transform.pos.y + .1f,0);
         }
