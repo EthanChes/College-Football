@@ -85,7 +85,7 @@ public class Quarterback extends Entity {
                 football.transform.pos.set(transform.getEntityPosX() - .3f, transform.getEntityPosY() + .75f, 0);
             }
         }
-        else if (time_current - timePass > .35 && time_current - timePass < .37) {
+        else if (time_current - timePass > .35 && time_current - timePass < .37 && canPlay) {
             football.startPass();
             world.setBallCarrier(world.getFootballEntity());
             pass = false;

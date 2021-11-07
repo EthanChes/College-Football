@@ -24,14 +24,15 @@ public class DefensiveLineman extends Entity {
         float posX = ballCarrier.transform.pos.x;
         float posY = ballCarrier.transform.pos.y;
 
-        if (posX > this.transform.pos.x) {
+        if (posX - speed*delta > this.transform.pos.x) {
             movement.add(speed*delta,0);
+            System.out.println("0");
         }
-        else { movement.add(-speed*delta,0); }
-        if (posY > this.transform.pos.y) {
+        else if (posX + speed*delta < this.transform.pos.x){ movement.add(-speed*delta,0); System.out.println("1"); }
+        if (posY - delta*speed > this.transform.pos.y) {
             movement.add(0,speed*delta);
         }
-        else { movement.add(0,-speed*delta); }
+        else if (posY + delta*speed < this.transform.pos.y){ movement.add(0,-speed*delta); }
 
         return movement;
     }

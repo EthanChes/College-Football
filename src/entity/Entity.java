@@ -237,6 +237,10 @@ public abstract class Entity {
         return location;
     }
 
+    public void setRoute(int index) {
+        this.route = (byte) index;
+    }
+
     public void passCaught(World world) {
         throw_height = 0;
         world.getFootballEntity().pass = false;
