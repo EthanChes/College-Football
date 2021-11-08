@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import static org.lwjgl.opengl.GL11.*;
 
 public class Texture {
     private int id;
@@ -15,7 +14,7 @@ public class Texture {
     public Texture(String filename) {
         BufferedImage bi;
         try {
-            bi = ImageIO.read(new File("./res/"+filename));
+            bi = ImageIO.read(new File("res/" +filename));
             width = bi.getWidth();
             height = bi.getHeight();
 

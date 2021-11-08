@@ -2,7 +2,6 @@ package world;
 import collision.AABB;
 import entity.*;
 import graphics.Camera;
-import graphics.Model;
 import graphics.Shader;
 import graphics.Window;
 import org.joml.Matrix4f;
@@ -37,7 +36,7 @@ public class World {
     public World(String stadium) { // Load world from file
 
         try {
-             BufferedImage tile_sheet = ImageIO.read(new File("./res/stadiums/" + stadium + "_tiles.png"));
+             BufferedImage tile_sheet = ImageIO.read(new File("res/stadiums/" + stadium + "_tiles.png"));
 
              width = tile_sheet.getWidth();
              height = tile_sheet.getHeight();
@@ -78,7 +77,7 @@ public class World {
             entities.add(new Quarterback(new Transform(200,-250)));
             entities.add(new DefensiveLineman(new Transform(210,-240,1.5f)));
             //entities.add(new OffensiveLineman(new Transform(200, -237,1.5f)));
-            entities.add(new RunningBack(new Transform(190,-240)));
+            //entities.add(new RunningBack(new Transform(190,-240)));
             entities.add(new WideReceiver(new Transform(200,-240)));
             entities.add(new WideReceiver(new Transform(200,-245)));
             entities.add(new WideReceiver(new Transform(200,-235)));

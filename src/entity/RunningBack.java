@@ -1,5 +1,6 @@
 package entity;
 
+import collision.Collision;
 import gameplay.Timer;
 import graphics.Animation;
 import graphics.Camera;
@@ -11,27 +12,48 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 
 public class RunningBack extends Entity {
-    public static final int ANIM_SIZE = 1;
+    public static final int ANIM_SIZE = 5;
+    public static final int ANIM_FALL = 3;
+    public static final int ANIM_IDLE_WITH_BALL = 4;
+    public static final int ANIM_RUN_WITH_BALL = 2;
+    public static final int ANIM_RUN_WITHOUT_BALL = 1;
     public static final int ANIM_IDLE = 0;
 
     public RunningBack(Transform transform) {
         super(ANIM_SIZE, transform);
         setAnimation(ANIM_IDLE, new Animation(1,1,"runningbackidle"));
+        setAnimation(ANIM_RUN_WITHOUT_BALL, new Animation(3,12, "runningbackmovewithoutball"));
+        setAnimation(ANIM_RUN_WITH_BALL, new Animation(3,12,"runningbackmovewithball"));
+        setAnimation(ANIM_IDLE_WITH_BALL, new Animation(1,1,"runningbackidlewithball"));
+        setAnimation(ANIM_FALL, new Animation(1,1, "offensivefall"));
         setRoute(1);
     }
 
-    public Vector2f handoff(float delta, World world) {
-        Vector2f movement = new Vector2f();
-
-        if (routeMovement <= 5) {
-            movement.add(speed * delta, 0);
-            routeMovement += speed*delta;
-        }
-        else if (routeMovement > 5) {
+    public void receiveHandoff(World world) {
+        Collision collision = this.bounding_box.getCollision(world.getBallCarrier().bounding_box);
+        if (collision.isIntersecting) {
             world.getBallCarrier().hasBall = false;
             hasBall = true;
             world.setBallCarrier(this);
-            world.getFootballEntity().transform.pos.set(this.transform.pos.x,this.transform.pos.y,0);
+        }
+    }
+    public Vector2f handoff(float delta, World world) {
+        Collision collision = this.bounding_box.getCollision(world.getBallCarrier().bounding_box);
+        Vector2f movement = new Vector2f();
+
+        if (! collision.isIntersecting) {
+            if (this.transform.pos.x + delta*speed < world.getBallCarrier().transform.pos.x) {
+                movement.add(speed*delta,0);
+            }
+            else if (this.transform.pos.x - delta*speed > world.getBallCarrier().transform.pos.x){
+                movement.add(-speed*delta,0);
+            }
+            if (this.transform.pos.y + delta*speed < world.getBallCarrier().transform.pos.y) {
+                movement.add(0,speed*delta);
+            }
+            else if (this.transform.pos.y - delta*speed > world.getBallCarrier().transform.pos.y) {
+                movement.add(0,-speed*delta);
+            }
         }
 
         return movement;
@@ -70,9 +92,32 @@ public class RunningBack extends Entity {
 
         if (canPlay) {
             move(movement);
+            receiveHandoff(world);
         }
 
-        useAnimation(ANIM_IDLE);
+
+
+        // Set Animations
+        if (getAnimationIndex() == 3) {
+            useAnimation(ANIM_FALL);
+            world.getFootballEntity().useAnimation(0);
+            world.getFootballEntity().transform.pos.set(this.transform.pos.x,this.transform.pos.y,0);
+        }
+        else if (hasBall && (movement.x != 0 || movement.y != 0)) {
+            useAnimation(ANIM_RUN_WITH_BALL);
+            world.getFootballEntity().transform.pos.set(this.transform.pos.x - .25f,this.transform.pos.y,0);
+            world.getFootballEntity().useAnimation(1);
+        }
+        else if (hasBall) {
+            useAnimation(ANIM_IDLE_WITH_BALL);
+            world.getFootballEntity().transform.pos.set(this.transform.pos.x - .25f,this.transform.pos.y,0);
+        }
+        else if (movement.x != 0 || movement.y != 0) {
+            useAnimation(ANIM_RUN_WITHOUT_BALL);
+        }
+        else {
+            useAnimation(ANIM_IDLE);
+        }
 
     }
 }

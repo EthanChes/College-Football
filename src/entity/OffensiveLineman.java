@@ -14,7 +14,7 @@ public class OffensiveLineman extends Entity {
     public OffensiveLineman (Transform transform) {
         super(ANIM_SIZE,transform);
         setAnimation(ANIM_IDLE, new Animation(1,1,"offensivelineidle"));
-        setAnimation(ANIM_MOVE, new Animation(4,16, "offensivelinemove"));
+        setAnimation(ANIM_MOVE, new Animation(3,12, "offensivelinemove"));
         setAnimation(ANIM_BLOCK, new Animation(1,1, "offensivelineblock"));
         speed = 3f;
     }

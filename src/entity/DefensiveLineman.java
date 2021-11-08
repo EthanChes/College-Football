@@ -26,9 +26,8 @@ public class DefensiveLineman extends Entity {
 
         if (posX - speed*delta > this.transform.pos.x) {
             movement.add(speed*delta,0);
-            System.out.println("0");
         }
-        else if (posX + speed*delta < this.transform.pos.x){ movement.add(-speed*delta,0); System.out.println("1"); }
+        else if (posX + speed*delta < this.transform.pos.x){ movement.add(-speed*delta,0); }
         if (posY - delta*speed > this.transform.pos.y) {
             movement.add(0,speed*delta);
         }
