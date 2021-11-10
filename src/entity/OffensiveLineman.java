@@ -23,7 +23,7 @@ public class OffensiveLineman extends Entity {
         setAnimation(ANIM_BLOCK, new Animation(1,1, "offensivelineblock"));
         setAnimation(ANIM_BLOCK_MOVING, new Animation(4, 16, "offensivelineblockmoving"));
         speed = 3f;
-        strength = 10f;
+        strength = 7f;
     }
 
     public Vector2f passBlockMovement(float delta, World world) {
