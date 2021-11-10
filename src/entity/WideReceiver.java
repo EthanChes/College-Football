@@ -58,6 +58,7 @@ public class WideReceiver extends Entity {
             passCaught(world);
             catching();
             world.setBallCarrier(this);
+            camera.setProjection(640,480);
         }
 
         // Moves Player using various WASD directions using vectors.
