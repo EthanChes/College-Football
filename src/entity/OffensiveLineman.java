@@ -69,7 +69,6 @@ public class OffensiveLineman extends Entity {
         int rand_output = rand.nextInt((int) ((this.strength * 100) + (player.strength * 100)));
         if (rand_output <= this.strength * 100) {
             player.move(new Vector2f(((this.strength + player.speed - player.strength) * delta/3), 0));
-            movement.add(new Vector2f((this.strength + this.speed - player.strength) * delta/3,0));
             player.isBeingMovedExternally = true;
         } else {
             float blitzerPushesLineAwayFromQB;
