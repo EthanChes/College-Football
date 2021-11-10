@@ -43,16 +43,16 @@ public class RunningBack extends Entity {
 
         if (! collision.isIntersecting) {
             if (this.transform.pos.x + delta*speed < world.getBallCarrier().transform.pos.x) {
-                movement.add(speed*delta,0);
+                movement.add(speed*delta*.5f,0);
             }
             else if (this.transform.pos.x - delta*speed > world.getBallCarrier().transform.pos.x){
-                movement.add(-speed*delta,0);
+                movement.add(-speed*delta*.5f,0);
             }
             if (this.transform.pos.y + delta*speed < world.getBallCarrier().transform.pos.y) {
-                movement.add(0,speed*delta);
+                movement.add(0,speed*delta*.5f);
             }
             else if (this.transform.pos.y - delta*speed > world.getBallCarrier().transform.pos.y) {
-                movement.add(0,-speed*delta);
+                movement.add(0,-speed*delta*.5f);
             }
         }
 

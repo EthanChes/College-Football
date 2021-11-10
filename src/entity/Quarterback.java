@@ -28,7 +28,7 @@ public class Quarterback extends Entity {
         setAnimation(ANIM_THROW, new Animation(2,4,"qbthrow"));
         setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall"));
         setAnimation(ANIM_HANDOFF, new Animation(1,1,"qbhandoff"));
-        setRoute(0);
+        speed = 7f;
     }
 
     public void passOptions(Window window) {

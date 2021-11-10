@@ -22,6 +22,7 @@ public abstract class Entity {
     public boolean hasBall = false;
     public boolean reachedEndOfRoute = false;
     public boolean userControl = false;
+    public boolean isBeingMovedExternally = false;
 
 
     // Player Info

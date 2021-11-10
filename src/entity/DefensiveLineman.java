@@ -16,6 +16,7 @@ public class DefensiveLineman extends Entity {
         setAnimation(ANIM_IDLE, new Animation(1, 1, "defensivelineidle"));
         setAnimation(ANIM_MOVE, new Animation(4,16,"defensivemovement"));
         speed = 5f;
+        strength = 3f;
     }
 
     public Vector2f defensive_movement(Entity ballCarrier, float delta) {
@@ -59,8 +60,12 @@ public class DefensiveLineman extends Entity {
         }
 
         movement.add(defensive_movement(world.getBallCarrier(), delta));
-        if (canPlay)
-        move(movement);
+
+        if (canPlay && (! isBeingMovedExternally)) {
+            move(movement);
+        }
+        else
+        { isBeingMovedExternally = false; } // reset isBeingMovedExternally
 
         if (movement.x != 0 || movement.y != 0) {
             useAnimation(ANIM_MOVE);

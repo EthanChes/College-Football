@@ -7,6 +7,10 @@ import graphics.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import plays.Four_Verticals;
+import plays.Line_Blitz;
+import plays.RB_Dive;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -72,12 +76,16 @@ public class World {
             this.initReset();
 
 
-
-
-            entities.add(new Quarterback(new Transform(200,-250)));
+            Four_Verticals O_play = new Four_Verticals(200,-250);
+            //RB_Dive O_play = new RB_Dive(200,-250);
+            Line_Blitz D_play = new Line_Blitz(200,-250);
+            entities.addAll(D_play.getEntities());
+            entities.addAll(O_play.getEntities());
+            setBallCarrier(entities.get(11));
+            /*entities.add(new Quarterback(new Transform(200,-250)));
             entities.add(new DefensiveLineman(new Transform(210,-240,1.5f)));
             //entities.add(new OffensiveLineman(new Transform(200, -237,1.5f)));
-            //entities.add(new RunningBack(new Transform(190,-240)));
+            entities.add(new RunningBack(new Transform(190,-240)));
             entities.add(new WideReceiver(new Transform(200,-240)));
             entities.add(new WideReceiver(new Transform(200,-245)));
             entities.add(new WideReceiver(new Transform(200,-235)));
@@ -88,7 +96,7 @@ public class World {
 
             entities.add(new Football(new Transform(200f,-250f,.5f))); // MUST BE AT BOTTOM
 
-            setBallCarrier(getSpecifiedEntity(entities.size() - 1));
+            setBallCarrier(getSpecifiedEntity(entities.size() - 1));*/
 
 
 
@@ -267,7 +275,9 @@ public class World {
 
     public Entity getSpecifiedEntity(int index) { return entities.get(entities.size()- (index + 1)); }
 
-    public Entity getQuarterbackEntity() { return entities.get(0); }
+    public Entity getCountingUpEntity(int index) { return entities.get(index); }
+
+    public Entity getQuarterbackEntity() { return entities.get(11); } // Set this to 12 eventually
 
     public int totalEntities() { return entities.size(); }
 
