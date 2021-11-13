@@ -17,15 +17,27 @@ public class RB_Dive {
         entities.add(new RunningBack(new Transform(ballX - 3, ballY + 5)));
         entities.get(1).setRoute(1);
 
+        // Add Offensive Line
+        entities.add(new OffensiveLineman(new Transform(ballX,ballY + 2)));
+        entities.get(2).setRoute(1);
+        entities.add(new OffensiveLineman(new Transform(ballX,ballY + 4)));
+        entities.get(3).setRoute(1);
+        entities.add(new OffensiveLineman(new Transform(ballX,ballY)));
+        entities.get(4).setRoute(2);
+        entities.add(new OffensiveLineman(new Transform(ballX,ballY - 2)));
+        entities.get(5).setRoute(2);
+        entities.add(new OffensiveLineman(new Transform(ballX,ballY - 4)));
+        entities.get(6).setRoute(2);
+
         // Add WRs
         entities.add(new WideReceiver(new Transform(ballX, ballY+5)));
-        entities.get(2).setRoute(0);
+        entities.get(7).setRoute(0);
         entities.add(new WideReceiver(new Transform(ballX, ballY+10)));
-        entities.get(3).setRoute(0);
+        entities.get(8).setRoute(0);
         entities.add(new WideReceiver(new Transform(ballX, ballY - 10)));
-        entities.get(4).setRoute(0);
+        entities.get(9).setRoute(0);
         entities.add(new WideReceiver(new Transform(ballX,ballY-12)));
-        entities.get(5).setRoute(0);
+        entities.get(10).setRoute(0);
 
         // Symbols for Pass
         for (int count = 0; count < WideReceiver.totalReceivers; count++) {

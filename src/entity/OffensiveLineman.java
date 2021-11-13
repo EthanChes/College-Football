@@ -68,16 +68,16 @@ public class OffensiveLineman extends Entity {
         Random rand = new Random();
         int rand_output = rand.nextInt((int) ((this.strength * 100) + (player.strength * 100)));
         if (rand_output <= this.strength * 100) {
-            player.move(new Vector2f(((this.strength + player.speed - player.strength) * delta/3), 0));
+            player.move(new Vector2f(this.strength*delta/5, 0));
             player.isBeingMovedExternally = true;
         } else {
             float blitzerPushesLineAwayFromQB;
             if (player.transform.pos.y > world.getQuarterbackEntity().transform.pos.y) {
-                blitzerPushesLineAwayFromQB = ((this.strength + player.speed - player.strength) * delta);
+                blitzerPushesLineAwayFromQB = (player.strength* delta/5);
             } else {
-                blitzerPushesLineAwayFromQB = -((this.strength - player.speed - player.strength) * delta);
+                blitzerPushesLineAwayFromQB = -(player.strength * delta/5);
 
-                movement.add(new Vector2f(((this.strength - this.speed - player.strength) * delta/3), blitzerPushesLineAwayFromQB));
+                movement.add(new Vector2f((player.strength * delta/5), blitzerPushesLineAwayFromQB));
                 player.move(new Vector2f(0,-blitzerPushesLineAwayFromQB));
                 player.isBeingMovedExternally = true;
             }
@@ -101,6 +101,17 @@ public class OffensiveLineman extends Entity {
             isBlocking = true;
         } else { isBlocking = false; }
 
+        if (! isBlocking) {
+            if (world.getBallCarrier().transform.pos.x > this.transform.pos.x) { // Run Down Field when RB passes OL
+                move.add(speed * delta, 0);
+            } else {
+                switch (route) {
+                    case 1 : move.add(0,-speed*delta/5); break;
+                    case 2 : move.add(0,speed*delta/5); break;
+                }
+            }
+        }
+
         return move;
     }
 
@@ -109,10 +120,27 @@ public class OffensiveLineman extends Entity {
         Random rand = new Random();
 
         int rand_output = rand.nextInt((int) ((this.strength * 100) + (player.strength * 100)));
-        if (rand_output <= this.strength * 100) {
-            player.move(new Vector2f(((this.strength + player.speed - player.strength) * delta/3), 0));
+
+        if (rand_output <= this.strength*100) {
+
+            float yPush;
+
+            switch (route) {
+                case 1 : yPush = this.strength*delta/5; break;
+
+                case 2 : yPush = -this.strength*delta/5; break;
+
+                default : yPush = 0;
+            }
+
+            player.move(new Vector2f((this.strength * delta)/5, 3*yPush));
+            movement.add(this.strength * delta/5, yPush);
             player.isBeingMovedExternally = true;
-        } else { }
+        } else {
+            player.move(new Vector2f(-player.strength*delta/5,0));
+            movement.add(-player.strength*delta/5,0);
+            player.isBeingMovedExternally = true;
+        }
 
         return movement;
     }
@@ -121,11 +149,9 @@ public class OffensiveLineman extends Entity {
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
 
-
-        switch (route) {
-            case 0 : movement.add(passBlockMovement(delta,world)); break;
-            case 1 : movement.add(runBlockMovement(delta,world)); break;
-        }
+        if (route == 0) {
+            movement.add(passBlockMovement(delta,world));
+        } else { movement.add(runBlockMovement(delta,world)); }
 
         if (canPlay)
         move(movement);
