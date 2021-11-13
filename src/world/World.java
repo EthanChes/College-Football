@@ -76,8 +76,8 @@ public class World {
             this.initReset();
 
 
-            Four_Verticals O_play = new Four_Verticals(200,-250);
-            //RB_Dive O_play = new RB_Dive(200,-250);
+            //Four_Verticals O_play = new Four_Verticals(200,-250);
+            RB_Dive O_play = new RB_Dive(200,-250);
             Line_Blitz D_play = new Line_Blitz(200,-250);
             entities.addAll(D_play.getEntities());
             entities.addAll(O_play.getEntities());

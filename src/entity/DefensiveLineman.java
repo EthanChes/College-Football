@@ -37,6 +37,31 @@ public class DefensiveLineman extends Entity {
         return movement;
     }
 
+    public Vector2f pursuit(Entity ballCarrier, float delta, World world) {
+        Vector2f movement = new Vector2f();
+        int playersInFront = 0;
+
+        for (int i = 0; i < 11 ;i++) {
+            if (world.getBallCarrier().transform.pos.x < this.transform.pos.x) {
+                if (world.getCountingUpEntity(i).transform.pos.x < this.transform.pos.x) {
+                    playersInFront++;
+                }
+            }
+            else {
+                if (world.getCountingUpEntity(i).transform.pos.x > this.transform.pos.x) {
+                    playersInFront++;
+                }
+            }
+        }
+
+        switch (playersInFront) {
+            case 0 : break; // Regular Pursuit
+            case 1 : break;
+        }
+
+        return movement;
+    }
+
     @Override
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();

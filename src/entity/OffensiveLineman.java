@@ -126,9 +126,9 @@ public class OffensiveLineman extends Entity {
             float yPush;
 
             switch (route) {
-                case 1 : yPush = this.strength*delta/5; break;
+                case 1 : yPush = this.strength*delta/4.5f; break;
 
-                case 2 : yPush = -this.strength*delta/5; break;
+                case 2 : yPush = -this.strength*delta/4.5f; break;
 
                 default : yPush = 0;
             }
