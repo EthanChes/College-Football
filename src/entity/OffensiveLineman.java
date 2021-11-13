@@ -149,9 +149,9 @@ public class OffensiveLineman extends Entity {
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
 
-        if (route == 0) {
+        if (route == 0 && canPlay) {
             movement.add(passBlockMovement(delta,world));
-        } else { movement.add(runBlockMovement(delta,world)); }
+        } else if (canPlay) { movement.add(runBlockMovement(delta,world)); }
 
         if (canPlay)
         move(movement);

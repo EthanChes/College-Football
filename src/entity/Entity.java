@@ -7,6 +7,9 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import world.World;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+
 public abstract class Entity {
     protected static Model model;
     protected Animation[] animations;
@@ -16,7 +19,8 @@ public abstract class Entity {
 
     // Game booleans
     public static float throw_height;
-    public static boolean canPlay = true;
+    public static boolean canPlay = false;
+    public static boolean playStart = false;
     protected boolean canCollide = true;
     protected boolean pass = false;
     public boolean hasBall = false;
@@ -220,7 +224,7 @@ public abstract class Entity {
         float quarterbackY = world.getQuarterbackEntity().transform.pos.y;
         Vector2f projBallMovement = new Vector2f(ball.transform.pos.x,ball.transform.pos.y);
         for (; projBallMovement.distance(quarterbackX,quarterbackY) <= location.distance(quarterbackX,quarterbackY) && ! reachedEndOfRoute;) {
-            switch (entity.route) {
+            switch (entity.route) { // Lookup Table
                 case 0:
                     if (projRouteMovement <= 90) { // Fade
                         location.add(entity.speed*delta,0);
@@ -245,7 +249,7 @@ public abstract class Entity {
                     else { reachedEndOfRoute = true; }
                     break;
 
-                case 2 : if (projRouteMovement <= 10) {
+                case 2 : if (projRouteMovement <= 10) { // Slant
                     location.add(entity.speed*delta,0);
                     projRouteMovement += entity.speed * delta;
                     projBallMovement.add(throw_power*delta,0);
@@ -258,7 +262,13 @@ public abstract class Entity {
                 else { reachedEndOfRoute = true; }
                 break;
 
-                case 3 :
+                case 3 : if (projRouteMovement <= 15) { // Curl
+                    location.add(entity.speed*delta,0);
+                    projRouteMovement += entity.speed * delta;
+                    projBallMovement.add(throw_power*delta,0);
+                } else { reachedEndOfRoute = true; }
+                    break;
+
             }
         }
         return location;
@@ -266,6 +276,16 @@ public abstract class Entity {
 
     public void setRoute(int index) {
         this.route = (byte) index;
+    }
+
+    public boolean snap(Window window) {
+        if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && ! playStart) {
+            canPlay = true;
+            playStart = true;
+            return true;
+        }
+
+        return false;
     }
 
     public void passCaught(World world) {

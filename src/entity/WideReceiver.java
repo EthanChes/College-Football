@@ -75,7 +75,7 @@ public class WideReceiver extends Entity {
             movement.add(speed*delta,0);
         }
 
-        if (!hasBall) { // Route Movements
+        if (!hasBall && canPlay) { // Route Movements
             switch (route) {
 
                 case 0 : if (routeMovement <= 90) { // Fade
@@ -95,7 +95,7 @@ public class WideReceiver extends Entity {
                 else { reachedEndOfRoute = true; }
                 break;
 
-                case 2 : if (routeMovement <= 10) {
+                case 2 : if (routeMovement <= 10) { // Slant
                     movement.add(speed*delta,0);
                     routeMovement += speed * delta;
                 }
@@ -104,13 +104,20 @@ public class WideReceiver extends Entity {
                     routeMovement += new Vector2f().distance(speed*delta,-speed*delta);
                 }
                 else { reachedEndOfRoute = true; }
+                break;
 
+                case 3 : if (routeMovement <= 15) { // Curl
+                    movement.add(speed*delta,0);
+                    routeMovement += speed * delta;
+                } else { reachedEndOfRoute = true; }
                     break;
+
             }
         }
 
-        if (canPlay)
-        move(movement);
+        if (canPlay) {
+            move(movement);
+        }
 
         // Movements for receiver symbol
             Entity receiverSymbol = world.getSpecifiedEntity(ReceiverSymbol.index);

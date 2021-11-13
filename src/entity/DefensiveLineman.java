@@ -108,7 +108,9 @@ public class DefensiveLineman extends Entity {
             movement.add(speed * delta, 0);
         }
 
-        movement.add(defensive_movement(world.getBallCarrier(), delta));
+        if (canPlay) {
+            movement.add(defensive_movement(world.getBallCarrier(), delta));
+        }
 
         if (canPlay && ! isBeingMovedExternally) {
             move(movement);

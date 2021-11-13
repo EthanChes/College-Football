@@ -76,6 +76,7 @@ public class Quarterback extends Entity {
         Vector2f movement = new Vector2f();
         double time_current = getTime();
         Entity football = world.getFootballEntity();
+
         if (route != 1) {
 
             if (hasBall && true) userControl = true; // change && true to gamemanger user is on team on offense
@@ -99,23 +100,28 @@ public class Quarterback extends Entity {
             passOptions(window);
 
             // Moves Player using various WASD directions using vectors.
-            if (window.getInput().isKeyDown(GLFW_KEY_S) && userControl) { // When S is pressed, player moves 5 down
-                movement.add(0, -speed * delta); // multiply by delta (framecap) to move 10 frames in a second.
-            }
-            if (window.getInput().isKeyDown(GLFW_KEY_A) && userControl) { // When A is pressed, camera shifts left 5
-                movement.add(-speed * delta, 0);
-            }
-            if (window.getInput().isKeyDown(GLFW_KEY_W) && userControl) { // When W is pressed, camera shifts up 5
-                movement.add(0, speed * delta);
-            }
-            if (window.getInput().isKeyDown(GLFW_KEY_D) && userControl) { // When D is pressed, camera shifts right 5
-                movement.add(speed * delta, 0);
+            if (canPlay) {
+                if (window.getInput().isKeyDown(GLFW_KEY_S) && userControl) { // When S is pressed, player moves 5 down
+                    movement.add(0, -speed * delta); // multiply by delta (framecap) to move 10 frames in a second.
+                }
+                if (window.getInput().isKeyDown(GLFW_KEY_A) && userControl) { // When A is pressed, camera shifts left 5
+                    movement.add(-speed * delta, 0);
+                }
+                if (window.getInput().isKeyDown(GLFW_KEY_W) && userControl) { // When W is pressed, camera shifts up 5
+                    movement.add(0, speed * delta);
+                }
+                if (window.getInput().isKeyDown(GLFW_KEY_D) && userControl) { // When D is pressed, camera shifts right 5
+                    movement.add(speed * delta, 0);
+                }
             }
 
             //zoomOutWhenNotVisible(this, camera);
 
-            if (canPlay)
+            System.out.println(canPlay);
+
+            if (canPlay) {
                 move(movement);
+            } else { snap(window); }
 
             // Use Animations
             if (getAnimationIndex() == ANIM_FALL) {
