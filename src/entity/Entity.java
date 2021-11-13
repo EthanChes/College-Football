@@ -191,15 +191,16 @@ public abstract class Entity {
         float camHeight = 480 * cam.getProjMultiplier();
 
         if (entityX + range > camX + camWidth/2) {  // Checks if entity is near end of window on right and adjusts projection to prevent them from leaving sight. This algorithm may need tweaking
-            System.out.println("Nearing Window End Right");
+            cam.setProjMultiplier(cam.getProjMultiplier() * 1.007f);
+            cam.setProjection(camWidth, camHeight);
+        }
+        else if (entityY + range > camY + camHeight/2) {
             cam.setProjMultiplier(cam.getProjMultiplier()*1.007f);
             cam.setProjection(640*cam.getProjMultiplier(),480*cam.getProjMultiplier());
         }
-        else if (entityY + range > camY + camHeight/2) {
-            System.out.println("Nearing Window End Bottom");
-        }
         else if (entityY - range < camY - camHeight/2) {
-            System.out.println("Nearing Window End Top");
+            cam.setProjMultiplier(cam.getProjMultiplier()*1.007f);
+            cam.setProjection(640*cam.getProjMultiplier(),480*cam.getProjMultiplier());
         }
 
     }
@@ -232,7 +233,32 @@ public abstract class Entity {
                     break;
 
                 case 1:
+                    if (projRouteMovement <= 10) { // In Route
+                        location.add(entity.speed*delta,0);
+                        projRouteMovement += entity.speed * delta;
+                        projBallMovement.add(throw_power*delta,0);
+                    } else if (projRouteMovement <= 25) {
+                        location.add(0, -entity.speed*delta);
+                        projRouteMovement += entity.speed * delta;
+                        projBallMovement.add(throw_power*delta,0);
+                    }
+                    else { reachedEndOfRoute = true; }
                     break;
+
+                case 2 : if (projRouteMovement <= 10) {
+                    location.add(entity.speed*delta,0);
+                    projRouteMovement += entity.speed * delta;
+                    projBallMovement.add(throw_power*delta,0);
+                }
+                else if (projRouteMovement <= 40) {
+                    location.add(entity.speed*delta,-entity.speed*delta);
+                    projRouteMovement += new Vector2f().distance(entity.speed*delta,-entity.speed*delta);
+                    projBallMovement.add(throw_power*delta,0);
+                }
+                else { reachedEndOfRoute = true; }
+                break;
+
+                case 3 :
             }
         }
         return location;

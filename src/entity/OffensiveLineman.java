@@ -23,7 +23,7 @@ public class OffensiveLineman extends Entity {
         setAnimation(ANIM_BLOCK, new Animation(1,1, "offensivelineblock"));
         setAnimation(ANIM_BLOCK_MOVING, new Animation(4, 16, "offensivelineblockmoving"));
         speed = 3f;
-        strength = 7f;
+        strength = 10f;
     }
 
     public Vector2f passBlockMovement(float delta, World world) {
@@ -73,9 +73,9 @@ public class OffensiveLineman extends Entity {
         } else {
             float blitzerPushesLineAwayFromQB;
             if (player.transform.pos.y > world.getQuarterbackEntity().transform.pos.y) {
-                blitzerPushesLineAwayFromQB = ((this.strength - player.strength) * delta);
+                blitzerPushesLineAwayFromQB = ((this.strength + player.speed - player.strength) * delta);
             } else {
-                blitzerPushesLineAwayFromQB = -((this.strength - player.strength) * delta);
+                blitzerPushesLineAwayFromQB = -((this.strength - player.speed - player.strength) * delta);
 
                 movement.add(new Vector2f(((this.strength - this.speed - player.strength) * delta/3), blitzerPushesLineAwayFromQB));
                 player.move(new Vector2f(0,-blitzerPushesLineAwayFromQB));
@@ -87,10 +87,34 @@ public class OffensiveLineman extends Entity {
 
     public Vector2f runBlockMovement(float delta, World world) {
         Vector2f move = new Vector2f();
+        boolean hasBlockedPlayerInLoop = false;
 
-        // Run code here
+        for (int i = 0; i < 11; i++) { // Check if any defenders are higher up than the OL : Note This Loop May Cause Game Rendering Issues, if there are any issues remove this
+            Entity defender = world.getCountingUpEntity(i);
+
+            Collision blocking = this.bounding_box.getCollision(defender.bounding_box);
+
+            if (blocking.isIntersecting) { hasBlockedPlayerInLoop = true; move.add(runBlock(defender, delta, world)); }
+        }
+
+        if (hasBlockedPlayerInLoop) {
+            isBlocking = true;
+        } else { isBlocking = false; }
 
         return move;
+    }
+
+    public Vector2f runBlock(Entity player, float delta, World world) {
+        Vector2f movement = new Vector2f();
+        Random rand = new Random();
+
+        int rand_output = rand.nextInt((int) ((this.strength * 100) + (player.strength * 100)));
+        if (rand_output <= this.strength * 100) {
+            player.move(new Vector2f(((this.strength + player.speed - player.strength) * delta/3), 0));
+            player.isBeingMovedExternally = true;
+        } else { }
+
+        return movement;
     }
 
     @Override
