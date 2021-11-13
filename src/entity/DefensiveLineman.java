@@ -1,15 +1,21 @@
 package entity;
+import gameplay.Timer;
 import graphics.Animation;
 import graphics.Camera;
 import graphics.Window;
 import org.joml.Vector2f;
 import world.World;
+
+import java.util.Random;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 public class DefensiveLineman extends Entity {
     public static final int ANIM_SIZE = 2;
     public static final int ANIM_MOVE = 1;
     public static final int ANIM_IDLE = 0;
+
+    public double timeSinceLastTackleAttempt;
 
     public DefensiveLineman(Transform transform) {
         super(ANIM_SIZE, transform);
@@ -62,6 +68,24 @@ public class DefensiveLineman extends Entity {
         return movement;
     }
 
+    public boolean tackle(Entity ballCarrier) {
+        boolean tackle = false;
+
+        Random rand = new Random();
+        int rand_output = rand.nextInt((int) (this.strength*200 + ballCarrier.strength*100));
+
+        if (rand_output <= this.strength*200) {
+            tackle = true;
+            System.out.println("Tackle");
+        }
+        else {
+            System.out.println("Tackle Evaded");
+        }
+        timeSinceLastTackleAttempt = Timer.getTime();
+
+        return tackle;
+    }
+
     @Override
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
@@ -104,8 +128,10 @@ public class DefensiveLineman extends Entity {
                 if (collidingWithFootball(this,world)); // Interception, keep this nothing for now?
             }
             else {
-                world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
-                canPlay = false;
+                if (timeSinceLastTackleAttempt + 3 < Timer.getTime() && tackle(world.getBallCarrier())) {
+                    world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
+                    canPlay = false;
+                }
             }
 
         }
