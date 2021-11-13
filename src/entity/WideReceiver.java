@@ -85,8 +85,27 @@ public class WideReceiver extends Entity {
                 else { reachedEndOfRoute = true; }
                 break;
 
-                case 1 : break;
-                case 2 : break;
+                case 1 : if (routeMovement <= 10) { // In Route
+                    movement.add(speed*delta,0);
+                    routeMovement += speed * delta;
+                } else if (routeMovement <= 25) {
+                    movement.add(0,-speed*delta);
+                    routeMovement += speed * delta;
+                }
+                else { reachedEndOfRoute = true; }
+                break;
+
+                case 2 : if (routeMovement <= 10) {
+                    movement.add(speed*delta,0);
+                    routeMovement += speed * delta;
+                }
+                else if (routeMovement <= 40) {
+                    movement.add(speed*delta,-speed*delta);
+                    routeMovement += new Vector2f().distance(speed*delta,-speed*delta);
+                }
+                else { reachedEndOfRoute = true; }
+
+                    break;
             }
         }
 
@@ -101,7 +120,9 @@ public class WideReceiver extends Entity {
                 ReceiverSymbol.index = 1;
             }
 
-        //zoomOutWhenNotVisible(this, camera);
+        if (world.getQuarterbackEntity().route == 0 && world.getQuarterbackEntity().hasBall) {
+            zoomOutWhenNotVisible(this, camera);
+        }
 
 
         // Animations for wide receiver catch & football translations, try to move some of these for more effective coding
@@ -109,7 +130,7 @@ public class WideReceiver extends Entity {
             useAnimation(ANIM_FALL);
             world.getFootballEntity().transform.pos.set(this.transform.pos.x,this.transform.pos.y, 0);
         }
-        else if (hasBall && movement.x != 0 || movement.y != 0) {
+        else if (hasBall && (movement.x != 0 || movement.y != 0)) {
             useAnimation(ANIM_RUN_BALL);
             football.transform.pos.set(transform.pos.x - .3f,transform.pos.y + .1f,0);
         }
