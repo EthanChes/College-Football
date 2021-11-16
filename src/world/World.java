@@ -1,13 +1,13 @@
 package world;
 import collision.AABB;
 import entity.*;
+import entity.GameManager;
 import graphics.Camera;
 import graphics.Shader;
 import graphics.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import plays.Four_Verticals;
 import plays.Line_Blitz;
 import plays.RB_Dive;
 
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class World {
+    GameManager gameManager = new GameManager(-236f, -268f, 367f, 141f, 153f, 355f);
     private int viewX;
     private int viewY;
     private byte[] tiles;
@@ -72,13 +73,14 @@ public class World {
 
                 }
             }
+
             // add entities here
             this.initReset();
 
 
-            Four_Verticals O_play = new Four_Verticals(200,-250);
-            //RB_Dive O_play = new RB_Dive(200,-250);
-            Line_Blitz D_play = new Line_Blitz(200,-250);
+            //Four_Verticals O_play = new Four_Verticals(194 - 2,-250);
+            RB_Dive O_play = new RB_Dive(194 - 2,-250);
+            Line_Blitz D_play = new Line_Blitz(194-2,-250);
             entities.addAll(D_play.getEntities());
             entities.addAll(O_play.getEntities());
             setBallCarrier(entities.get(11));
@@ -181,6 +183,15 @@ public class World {
             }
             entities.get(count).collideWithTiles(this);
         }
+
+        if (gameManager.ballCarrierOutOfBounds(this)) {
+            System.out.println("Out Of Bounds");
+        }
+
+        if (gameManager.touchDown(this)) {
+            System.out.println("Touchdown Offense");
+        }
+
     }
 
 

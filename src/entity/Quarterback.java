@@ -117,12 +117,6 @@ public class Quarterback extends Entity {
 
             //zoomOutWhenNotVisible(this, camera);
 
-            System.out.println(canPlay);
-
-            if (canPlay) {
-                move(movement);
-            } else { snap(window); }
-
             // Use Animations
             if (getAnimationIndex() == ANIM_FALL) {
                 useAnimation(ANIM_FALL);
@@ -145,6 +139,13 @@ public class Quarterback extends Entity {
             useAnimation(ANIM_HANDOFF);
             world.getFootballEntity().transform.pos.set(this.transform.pos.x,this.transform.pos.y,0);
         } // Handoff Route Support
+
+        if (canPlay) {
+            move(movement);
+        }
+        else {
+            snap(window);
+        }
 
 
 

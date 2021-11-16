@@ -83,10 +83,10 @@ public class RunningBack extends Entity {
             movement.add(speed*delta,0);
         }
 
-        if (route == 0) {
+        if (route == 0 && canPlay) {
             movement.add(speed*delta,0);
         }
-        else if (route == 1) { // Carry Out Handoff
+        else if (route == 1 && canPlay) { // Carry Out Handoff
             movement.add(handoff(delta, world));
         }
 

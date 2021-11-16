@@ -43,26 +43,36 @@ public class DefensiveLineman extends Entity {
         return movement;
     }
 
+    public Vector2f coverSides(Entity ballCarrier, float delta, float spacing) {
+        Vector2f movement = new Vector2f();
+
+        if (ballCarrier.transform.pos.y > this.transform.pos.y) {
+
+        }
+
+        return movement;
+    }
+
     public Vector2f pursuit(Entity ballCarrier, float delta, World world) {
         Vector2f movement = new Vector2f();
         int playersInFront = 0;
 
         for (int i = 0; i < 11 ;i++) {
             if (world.getBallCarrier().transform.pos.x < this.transform.pos.x) {
-                if (world.getCountingUpEntity(i).transform.pos.x < this.transform.pos.x) {
+                if (world.getCountingUpEntity(i).transform.pos.x < this.transform.pos.x && world.getCountingUpEntity(i).transform.pos.x > world.getBallCarrier().transform.pos.x) {
                     playersInFront++;
                 }
             }
             else {
-                if (world.getCountingUpEntity(i).transform.pos.x > this.transform.pos.x) {
+                if (world.getCountingUpEntity(i).transform.pos.x > this.transform.pos.x && world.getCountingUpEntity(i).transform.pos.x < world.getBallCarrier().transform.pos.x) {
                     playersInFront++;
                 }
             }
         }
 
         switch (playersInFront) {
-            case 0 : break; // Regular Pursuit
-            case 1 : break;
+            case 0 : movement.add(defensive_movement(ballCarrier, delta)); break; // Regular Pursuit
+            case 1 : movement.add(coverSides(ballCarrier, delta,5f)); break;
         }
 
         return movement;
@@ -109,7 +119,7 @@ public class DefensiveLineman extends Entity {
         }
 
         if (canPlay) {
-            movement.add(defensive_movement(world.getBallCarrier(), delta));
+            movement.add(pursuit(world.getBallCarrier(), delta,world));
         }
 
         if (canPlay && ! isBeingMovedExternally) {
@@ -130,7 +140,7 @@ public class DefensiveLineman extends Entity {
                 if (collidingWithFootball(this,world)); // Interception, keep this nothing for now?
             }
             else {
-                if (timeSinceLastTackleAttempt + 3 < Timer.getTime() && tackle(world.getBallCarrier())) {
+                if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && tackle(world.getBallCarrier())) {
                     world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
                     canPlay = false;
                 }
