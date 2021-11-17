@@ -14,7 +14,7 @@ public class Four_Verticals {
 
         // Add Offensive Line
         entities.add(new OffensiveLineman(new Transform(ballX,ballY + 2)));
-        entities.get(1).setRoute(0);
+        entities.get(1).setRoute(2);
         entities.add(new OffensiveLineman(new Transform(ballX,ballY + 4)));
         entities.get(2).setRoute(0);
         entities.add(new OffensiveLineman(new Transform(ballX,ballY)));
@@ -22,7 +22,7 @@ public class Four_Verticals {
         entities.add(new OffensiveLineman(new Transform(ballX,ballY - 2)));
         entities.get(4).setRoute(0);
         entities.add(new OffensiveLineman(new Transform(ballX,ballY - 4)));
-        entities.get(5).setRoute(0);
+        entities.get(5).setRoute(2);
 
         // Add WRs
         entities.add(new WideReceiver(new Transform(ballX, ballY+10)));

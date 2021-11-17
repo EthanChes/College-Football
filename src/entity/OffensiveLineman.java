@@ -1,5 +1,6 @@
 package entity;
 import collision.Collision;
+import gameplay.Timer;
 import graphics.Animation;
 import graphics.Camera;
 import graphics.Window;
@@ -15,6 +16,8 @@ public class OffensiveLineman extends Entity {
     public static final int ANIM_BLOCK_MOVING = 3;
 
     public boolean isBlocking = false;
+    public boolean wonBlock = false;
+    public double timeSinceBlock = 0;
 
     public OffensiveLineman (Transform transform) {
         super(ANIM_SIZE,transform);
@@ -29,18 +32,6 @@ public class OffensiveLineman extends Entity {
     public Vector2f passBlockMovement(float delta, World world) {
         Vector2f move = new Vector2f();
         boolean hasBlockedPlayerInLoop = false;
-
-        for (int i = 0; i < 11; i++) { // Check if any defenders are higher up than the OL : Note This Loop May Cause Game Rendering Issues, if there are any issues remove this
-            Entity defender = world.getCountingUpEntity(i);
-
-            Collision blocking = this.bounding_box.getCollision(defender.bounding_box);
-
-            if (blocking.isIntersecting) { hasBlockedPlayerInLoop = true; move.add(passBlock(defender, delta, world)); }
-        }
-
-        if (hasBlockedPlayerInLoop) {
-            isBlocking = true;
-        } else { isBlocking = false; }
 
         if (! isBlocking) {
             if (this.transform.pos.distance(world.getBallCarrier().transform.pos) > 5.5) {
@@ -60,6 +51,28 @@ public class OffensiveLineman extends Entity {
             }
         }
 
+        move(move);
+        move.set(.00001f,.00001f);
+
+        for (int i = 0; i < 11; i++) { // Check if any defenders are higher up than the OL : Note This Loop May Cause Game Rendering Issues, if there are any issues remove this
+            Entity defender = world.getCountingUpEntity(i);
+            if (defender.transform.pos.x > this.transform.pos.x || route == 0) {
+
+                Collision blocking = this.bounding_box.getCollision(defender.bounding_box);
+
+                if (blocking.isIntersecting) {
+                    hasBlockedPlayerInLoop = true;
+                    move.add(passBlock(defender, delta, world));
+                }
+            } else { // For Outside Tackles
+                move.add(-speed*delta,0);
+            }
+        }
+
+        if (hasBlockedPlayerInLoop) {
+            isBlocking = true;
+        } else { isBlocking = false; }
+
         return move;
     }
 
@@ -67,18 +80,27 @@ public class OffensiveLineman extends Entity {
         Vector2f movement = new Vector2f();
         Random rand = new Random();
         int rand_output = rand.nextInt((int) ((this.strength * 100) + (player.strength * 100)));
-        if (rand_output <= this.strength * 100) {
+
+        if (rand_output <= this.strength*100 && timeSinceBlock + .5 < Timer.getTime()) {
+            timeSinceBlock = Timer.getTime();
+            wonBlock = true;
+        } else if (timeSinceBlock + .5 < Timer.getTime()) {
+            timeSinceBlock = Timer.getTime();
+            wonBlock = false;
+        }
+
+        if (wonBlock && this.transform.pos.x < player.transform.pos.x) {
             player.move(new Vector2f(this.strength*delta/5, 0));
             player.isBeingMovedExternally = true;
         } else {
             float blitzerPushesLineAwayFromQB;
             if (player.transform.pos.y > world.getQuarterbackEntity().transform.pos.y) {
-                blitzerPushesLineAwayFromQB = (player.strength* delta/5);
+                blitzerPushesLineAwayFromQB = -(player.strength* delta)/5;
             } else {
-                blitzerPushesLineAwayFromQB = -(player.strength * delta/5);
+                blitzerPushesLineAwayFromQB = (player.strength * delta)/5;
 
-                movement.add(new Vector2f((player.strength * delta/5), blitzerPushesLineAwayFromQB));
-                player.move(new Vector2f(0,-blitzerPushesLineAwayFromQB));
+                movement.add(new Vector2f(-(player.strength * delta)/5, blitzerPushesLineAwayFromQB));
+                player.move(new Vector2f(-player.strength*delta/5,-blitzerPushesLineAwayFromQB));
                 player.isBeingMovedExternally = true;
             }
         }
@@ -89,10 +111,25 @@ public class OffensiveLineman extends Entity {
         Vector2f move = new Vector2f();
         boolean hasBlockedPlayerInLoop = false;
 
+        if (! isBlocking && this.transform.pos.x - 5 < world.getBallCarrier().transform.pos.x) {
+            switch (route) {
+                case 1:
+                    move.add(speed * delta, speed * delta / 5);
+                    break;
+                case 2:
+                    move.add(speed * delta, -speed * delta / 5);
+                    break;
+            }
+        }
+        else { move.add(speed*delta/5,0); }
+
+        move(move);
+        move.set(.00001f,.00001f);
+
         for (int i = 0; i < 11; i++) { // Check if any defenders are higher up than the OL : Note This Loop May Cause Game Rendering Issues, if there are any issues remove this
             Entity defender = world.getCountingUpEntity(i);
 
-            Collision blocking = this.bounding_box.getCollision(defender.bounding_box);
+            Collision blocking = defender.bounding_box.getCollision(this.bounding_box);
 
             if (blocking.isIntersecting) { hasBlockedPlayerInLoop = true; move.add(runBlock(defender, delta, world)); }
         }
@@ -101,16 +138,6 @@ public class OffensiveLineman extends Entity {
             isBlocking = true;
         } else { isBlocking = false; }
 
-        if (! isBlocking) {
-            if (world.getBallCarrier().transform.pos.x > this.transform.pos.x) { // Run Down Field when RB passes OL
-                move.add(speed * delta, 0);
-            } else {
-                switch (route) {
-                    case 1 : move.add(0,-speed*delta/5); break;
-                    case 2 : move.add(0,speed*delta/5); break;
-                }
-            }
-        }
 
         return move;
     }
@@ -121,24 +148,27 @@ public class OffensiveLineman extends Entity {
 
         int rand_output = rand.nextInt((int) ((this.strength * 100) + (player.strength * 100)));
 
-        if (rand_output <= this.strength*100) {
+        if (rand_output <= this.strength*100 && timeSinceBlock + .1 < Timer.getTime()) { wonBlock = true; timeSinceBlock = Timer.getTime(); }
+        else if (timeSinceBlock + .1 < Timer.getTime()) { wonBlock = false; timeSinceBlock = Timer.getTime(); }
 
-            float yPush;
+        float yPush;
 
-            switch (route) {
-                case 1 : yPush = this.strength*delta/4.5f; break;
+        switch (route) {
+            case 1 : yPush = this.strength*delta/25f; break;
 
-                case 2 : yPush = -this.strength*delta/4.5f; break;
+            case 2 : yPush = -this.strength*delta/25f; break;
 
-                default : yPush = 0;
-            }
+            default : yPush = 0;
+        }
+
+        if (wonBlock) {
 
             player.move(new Vector2f((this.strength * delta)/5, 3*yPush));
             movement.add(this.strength * delta/5, yPush);
             player.isBeingMovedExternally = true;
         } else {
-            player.move(new Vector2f(-player.strength*delta/5,0));
-            movement.add(-player.strength*delta/5,0);
+            player.move(new Vector2f(-player.strength*delta/5,-yPush));
+            movement.add(-player.strength*delta/5,-yPush);
             player.isBeingMovedExternally = true;
         }
 

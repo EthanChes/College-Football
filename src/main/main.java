@@ -87,6 +87,7 @@ public class main {
                     }
 
                     if (window.getInput().isKeyPressed(GLFW_KEY_R)) {
+                        world.initReset();
                         world = new World("test");
                         camera.setProjection(640,480);
                         camera.setProjMultiplier(1);

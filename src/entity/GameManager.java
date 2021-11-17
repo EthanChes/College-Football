@@ -10,6 +10,8 @@ public class GameManager {
     float xMin;
     float xEndzoneLeft;
     float xEndzoneRight;
+    public static float ballPosX = 194f;
+    public static float ballPosY = -250f;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
         this.yMax = yMax;
@@ -33,9 +35,7 @@ public class GameManager {
         else if (world.getBallCarrier().transform.pos.y > yMax) {
             return true;
         }
-        else {
-            return false;
-        }
+        return false;
     }
 
     public boolean touchDown(World world) { // Check If TD (Offense)
@@ -44,5 +44,11 @@ public class GameManager {
         }
         return false;
     }
+
+    public void setBallPosX(World world) { this.ballPosX = world.getFootballEntity().transform.pos.x; }
+    public void setBallPosY(World world) { this.ballPosY = world.getFootballEntity().transform.pos.y; }
+
+    public float getBallPosX() { return ballPosX; }
+    public float getBallPosY() { return ballPosY; }
 
 }

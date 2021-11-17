@@ -8,6 +8,7 @@ import graphics.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import plays.Four_Verticals;
 import plays.Line_Blitz;
 import plays.RB_Dive;
 
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class World {
-    GameManager gameManager = new GameManager(-236f, -268f, 367f, 141f, 153f, 355f);
+    GameManager gameManager = new GameManager(-234.3f, -265.9f, 366.6f, 141.8f, 153f, 354.5f);
     private int viewX;
     private int viewY;
     private byte[] tiles;
@@ -74,13 +75,10 @@ public class World {
                 }
             }
 
-            // add entities here
-            this.initReset();
 
-
-            //Four_Verticals O_play = new Four_Verticals(194 - 2,-250);
-            RB_Dive O_play = new RB_Dive(194 - 2,-250);
-            Line_Blitz D_play = new Line_Blitz(194-2,-250);
+            Four_Verticals O_play = new Four_Verticals(194 - 2,-250);
+            //RB_Dive O_play = new RB_Dive(194 - 2,-250);
+            Line_Blitz D_play = new Line_Blitz(194 - 2,-250);
             entities.addAll(D_play.getEntities());
             entities.addAll(O_play.getEntities());
             setBallCarrier(entities.get(11));
@@ -297,6 +295,8 @@ public class World {
     public Entity getBallCarrier() { return ballCarrier; }
 
     public void initReset() {
+        gameManager.setBallPosX(this);
+        gameManager.setBallPosY(this);
         entities.clear();
         Entity.canPlay = false;
         Entity.playStart = false;

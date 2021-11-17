@@ -128,7 +128,7 @@ public class WideReceiver extends Entity {
             }
 
         if (world.getQuarterbackEntity().route == 0 && world.getQuarterbackEntity().hasBall) {
-            zoomOutWhenNotVisible(this, camera);
+            //zoomOutWhenNotVisible(this, camera);
         }
 
 

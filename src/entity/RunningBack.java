@@ -27,6 +27,7 @@ public class RunningBack extends Entity {
         setAnimation(ANIM_IDLE_WITH_BALL, new Animation(1,1,"runningbackidlewithball"));
         setAnimation(ANIM_FALL, new Animation(1,1, "offensivefall"));
         setRoute(1);
+        strength = 8f;
     }
 
     public void receiveHandoff(World world) {

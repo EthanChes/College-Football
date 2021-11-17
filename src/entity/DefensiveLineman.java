@@ -21,7 +21,7 @@ public class DefensiveLineman extends Entity {
         super(ANIM_SIZE, transform);
         setAnimation(ANIM_IDLE, new Animation(1, 1, "defensivelineidle"));
         setAnimation(ANIM_MOVE, new Animation(4,16,"defensivemovement"));
-        speed = 5f;
+        speed = 8f;
         strength = 10f;
     }
 
@@ -43,37 +43,10 @@ public class DefensiveLineman extends Entity {
         return movement;
     }
 
-    public Vector2f coverSides(Entity ballCarrier, float delta, float spacing) {
-        Vector2f movement = new Vector2f();
-
-        if (ballCarrier.transform.pos.y > this.transform.pos.y) {
-
-        }
-
-        return movement;
-    }
-
     public Vector2f pursuit(Entity ballCarrier, float delta, World world) {
         Vector2f movement = new Vector2f();
-        int playersInFront = 0;
 
-        for (int i = 0; i < 11 ;i++) {
-            if (world.getBallCarrier().transform.pos.x < this.transform.pos.x) {
-                if (world.getCountingUpEntity(i).transform.pos.x < this.transform.pos.x && world.getCountingUpEntity(i).transform.pos.x > world.getBallCarrier().transform.pos.x) {
-                    playersInFront++;
-                }
-            }
-            else {
-                if (world.getCountingUpEntity(i).transform.pos.x > this.transform.pos.x && world.getCountingUpEntity(i).transform.pos.x < world.getBallCarrier().transform.pos.x) {
-                    playersInFront++;
-                }
-            }
-        }
-
-        switch (playersInFront) {
-            case 0 : movement.add(defensive_movement(ballCarrier, delta)); break; // Regular Pursuit
-            case 1 : movement.add(coverSides(ballCarrier, delta,5f)); break;
-        }
+        movement.add(defensive_movement(world.getBallCarrier(),delta));
 
         return movement;
     }
@@ -105,16 +78,16 @@ public class DefensiveLineman extends Entity {
         else userControl = false;
 
         // Moves Player using various WASD directions using vectors.
-        if (window.getInput().isKeyDown(GLFW_KEY_S) && hasBall) { // When S is pressed, player moves 5 down
+        if (window.getInput().isKeyDown(GLFW_KEY_S) && userControl) { // When S is pressed, player moves 5 down
             movement.add(0, -speed * delta); // multiply by delta (framecap) to move 10 frames in a second.
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_A) && hasBall) { // When A is pressed, camera shifts left 5
+        if (window.getInput().isKeyDown(GLFW_KEY_A) && userControl) { // When A is pressed, camera shifts left 5
             movement.add(-speed * delta, 0);
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_W) && hasBall) { // When W is pressed, camera shifts up 5
+        if (window.getInput().isKeyDown(GLFW_KEY_W) && userControl) { // When W is pressed, camera shifts up 5
             movement.add(0, speed * delta);
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_D) && hasBall) { // When D is pressed, camera shifts right 5
+        if (window.getInput().isKeyDown(GLFW_KEY_D) && userControl) { // When D is pressed, camera shifts right 5
             movement.add(speed * delta, 0);
         }
 
