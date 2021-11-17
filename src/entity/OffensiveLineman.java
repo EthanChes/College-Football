@@ -56,16 +56,12 @@ public class OffensiveLineman extends Entity {
 
         for (int i = 0; i < 11; i++) { // Check if any defenders are higher up than the OL : Note This Loop May Cause Game Rendering Issues, if there are any issues remove this
             Entity defender = world.getCountingUpEntity(i);
-            if (defender.transform.pos.x > this.transform.pos.x || route == 0) {
 
-                Collision blocking = this.bounding_box.getCollision(defender.bounding_box);
+            Collision blocking = this.bounding_box.getCollision(defender.bounding_box);
 
-                if (blocking.isIntersecting) {
-                    hasBlockedPlayerInLoop = true;
-                    move.add(passBlock(defender, delta, world));
-                }
-            } else { // For Outside Tackles
-                move.add(-speed*delta,0);
+            if (blocking.isIntersecting) {
+                hasBlockedPlayerInLoop = true;
+                move.add(passBlock(defender, delta, world));
             }
         }
 
@@ -78,32 +74,7 @@ public class OffensiveLineman extends Entity {
 
     public Vector2f passBlock(Entity player, float delta, World world) { // This Needs Work
         Vector2f movement = new Vector2f();
-        Random rand = new Random();
-        int rand_output = rand.nextInt((int) ((this.strength * 100) + (player.strength * 100)));
-
-        if (rand_output <= this.strength*100 && timeSinceBlock + .5 < Timer.getTime()) {
-            timeSinceBlock = Timer.getTime();
-            wonBlock = true;
-        } else if (timeSinceBlock + .5 < Timer.getTime()) {
-            timeSinceBlock = Timer.getTime();
-            wonBlock = false;
-        }
-
-        if (wonBlock && this.transform.pos.x < player.transform.pos.x) {
-            player.move(new Vector2f(this.strength*delta/5, 0));
-            player.isBeingMovedExternally = true;
-        } else {
-            float blitzerPushesLineAwayFromQB;
-            if (player.transform.pos.y > world.getQuarterbackEntity().transform.pos.y) {
-                blitzerPushesLineAwayFromQB = -(player.strength* delta)/5;
-            } else {
-                blitzerPushesLineAwayFromQB = (player.strength * delta)/5;
-
-                movement.add(new Vector2f(-(player.strength * delta)/5, blitzerPushesLineAwayFromQB));
-                player.move(new Vector2f(-player.strength*delta/5,-blitzerPushesLineAwayFromQB));
-                player.isBeingMovedExternally = true;
-            }
-        }
+        
         return movement;
     }
 
