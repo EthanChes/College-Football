@@ -11,7 +11,9 @@ import java.util.Random;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class DefensiveLineman extends Entity {
-    public static final int ANIM_SIZE = 2;
+    public static final int ANIM_SIZE = 4;
+    public static final int ANIM_FALL = 3;
+    public static final int ANIM_UNKNOWN = 2;
     public static final int ANIM_MOVE = 1;
     public static final int ANIM_IDLE = 0;
 
@@ -21,8 +23,10 @@ public class DefensiveLineman extends Entity {
         super(ANIM_SIZE, transform);
         setAnimation(ANIM_IDLE, new Animation(1, 1, "defensivelineidle"));
         setAnimation(ANIM_MOVE, new Animation(4,16,"defensivemovement"));
+        setAnimation(ANIM_UNKNOWN, new Animation(0,0, "defensivelinemovement"));
+        setAnimation(ANIM_FALL, new Animation(1,1, "defensivefall"));
         speed = 8f;
-        strength = 6f;
+        strength = 10f;
     }
 
     public Vector2f defensive_movement(Entity ballCarrier, float delta) {
@@ -91,7 +95,7 @@ public class DefensiveLineman extends Entity {
             movement.add(speed * delta, 0);
         }
 
-        if (canPlay) {
+        if (canPlay && ! pancaked) {
             movement.add(pursuit(world.getBallCarrier(), delta,world));
         }
 
@@ -101,18 +105,27 @@ public class DefensiveLineman extends Entity {
         else
         { isBeingMovedExternally = false; } // reset isBeingMovedExternally
 
-        if (movement.x != 0 || movement.y != 0) {
+
+        if (pancaked) {
+            useAnimation(ANIM_FALL);
+            canCollide = false;
+            if (Timer.getTime() > timePancaked + 3) {
+                pancaked = false;
+                canCollide = true;
+            }
+        }
+        else if (movement.x != 0 || movement.y != 0) {
             useAnimation(ANIM_MOVE);
         }
         else {
             useAnimation(ANIM_IDLE);
         }
 
-        if (collidingWithBallCarrier(this,world)) {
+        if (canCollide && collidingWithBallCarrier(this,world)) {
             if (world.getBallCarrier() == world.getFootballEntity()) {
                 if (collidingWithFootball(this,world)); // Interception, keep this nothing for now?
             }
-            else {
+            else if (canCollide) {
                 if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && tackle(world.getBallCarrier())) {
                     world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
                     canPlay = false;
