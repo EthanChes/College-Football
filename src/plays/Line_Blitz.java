@@ -11,7 +11,7 @@ public class Line_Blitz {
     public Line_Blitz(float ballX, float ballY) {
         entities = new ArrayList<Entity>();
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4 ; i++) {
             entities.add(new DefensiveLineman(new Transform(ballX + 2, ballY - 3.5f + i)));
         }
         for (int i = 4; i < 11; i++) {
