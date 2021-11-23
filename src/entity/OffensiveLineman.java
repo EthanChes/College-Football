@@ -35,7 +35,7 @@ public class OffensiveLineman extends Entity {
         Vector2f move = new Vector2f();
         boolean hasBlockedPlayerInLoop = false;
 
-        if (! isBlocking) {
+        if (! isBlocking && ! pancaked) {
             if (this.transform.pos.distance(world.getBallCarrier().transform.pos) > 5.5) {
                 if (this.transform.pos.x + this.speed*delta > world.getBallCarrier().transform.pos.x) {
                     move.add(-this.speed*delta,0);
@@ -59,11 +59,13 @@ public class OffensiveLineman extends Entity {
         for (int i = 0; i < 11; i++) { // Check if any defenders are higher up than the OL : Note This Loop May Cause Game Rendering Issues, if there are any issues remove this
             Entity defender = world.getCountingUpEntity(i);
 
-            Collision blocking = this.bounding_box.getCollision(defender.bounding_box);
+            if (this.transform.pos.x < defender.transform.pos.x && (! (defender.pancaked || this.pancaked))) {
+                Collision blocking = this.bounding_box.getCollision(defender.bounding_box);
 
-            if (blocking.isIntersecting) {
-                hasBlockedPlayerInLoop = true;
-                move.add(passBlock(defender, delta, world));
+                if (blocking.isIntersecting) {
+                    hasBlockedPlayerInLoop = true;
+                    move.add(passBlock(defender, delta, world));
+                }
             }
         }
 
@@ -76,7 +78,46 @@ public class OffensiveLineman extends Entity {
 
     public Vector2f passBlock(Entity player, float delta, World world) { // This Needs Work
         Vector2f movement = new Vector2f();
+        Random rand = new Random();
 
+        int rand_output = rand.nextInt((int) ((this.strength * 100) + (player.strength * 100)));
+
+
+
+        if (rand_output <= this.strength * 10 && timeSinceBlock + 1 < Timer.getTime()) { blockOutcome = 2; timeSinceBlock = Timer.getTime(); }
+        else if (rand_output <= this.strength*100 && timeSinceBlock + 1 < Timer.getTime()) { blockOutcome = 1; timeSinceBlock = Timer.getTime(); }
+        else if (rand_output <= this.strength*100 + player.strength * 10 && timeSinceBlock + 1 < Timer.getTime()) { blockOutcome = 4; timeSinceBlock = Timer.getTime(); }
+        else if (timeSinceBlock + 1 < Timer.getTime()) { blockOutcome = 3; timeSinceBlock = Timer.getTime(); }
+
+        float yPush;
+
+        if (this.transform.pos.y < world.getQuarterbackEntity().transform.pos.y) {
+            yPush = this.strength*delta/5;
+        }
+        else {
+            yPush = this.strength*delta/5;
+        }
+
+        if (blockOutcome == 1) { // OL Pushes DL back
+            player.move(new Vector2f((this.strength * delta)/5, yPush*2));
+            movement.add(this.strength * delta/5, yPush);
+            player.isBeingMovedExternally = true;
+        }
+        else if (blockOutcome == 2) { // OL Pancakes DL
+            player.pancaked = true;
+            player.timePancaked = Timer.getTime();
+            timeSinceBlock -= 3;
+        }
+        else if (blockOutcome == 3) { // DL Pushes OL back
+            player.move(new Vector2f(-player.strength*delta/5,-yPush));
+            movement.add(-player.strength*delta/5,-yPush);
+            player.isBeingMovedExternally = true;
+        }
+        else if (blockOutcome == 4) { // Defender Pancakes OL
+            this.pancaked = true;
+            this.timePancaked = Timer.getTime();
+            timeSinceBlock -= 3;
+        }
         return movement;
     }
 
@@ -175,7 +216,6 @@ public class OffensiveLineman extends Entity {
         if (collidingWithBallCarrier(this,world) && world.getBallCarrier() != world.getFootballEntity() && route == 0) { // If offensivelineman hits ballcarrier, they can fall
             Random rand = new Random();
             int rand_output = rand.nextInt(300);
-            System.out.println(rand_output);
             if (rand_output == 3) {
                 world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
                 canPlay = false;

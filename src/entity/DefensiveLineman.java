@@ -105,7 +105,6 @@ public class DefensiveLineman extends Entity {
         else
         { isBeingMovedExternally = false; } // reset isBeingMovedExternally
 
-
         if (pancaked) {
             useAnimation(ANIM_FALL);
             canCollide = false;
