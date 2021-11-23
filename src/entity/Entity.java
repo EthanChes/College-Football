@@ -178,11 +178,11 @@ public abstract class Entity {
             collision.distance.x /= 2;
             collision.distance.y /= 2;
 
-                bounding_box.correctPosition(entity.bounding_box, collision);
-                transform.pos.set(bounding_box.getCenter().x, bounding_box.getCenter().y, 0);
+            bounding_box.correctPosition(entity.bounding_box, collision);
+            transform.pos.set(bounding_box.getCenter().x, bounding_box.getCenter().y, 0);
 
-                entity.bounding_box.correctPosition(bounding_box, collision);
-                entity.transform.pos.set(entity.bounding_box.getCenter().x, entity.bounding_box.getCenter().y, 0);
+            entity.bounding_box.correctPosition(bounding_box, collision);
+            entity.transform.pos.set(entity.bounding_box.getCenter().x, entity.bounding_box.getCenter().y, 0);
         }
     }
 

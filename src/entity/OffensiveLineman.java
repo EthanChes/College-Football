@@ -99,8 +99,8 @@ public class OffensiveLineman extends Entity {
         }
 
         if (blockOutcome == 1) { // OL Pushes DL back
-            player.move(new Vector2f((this.strength * delta)/4, yPush*3));
-            movement.add(this.strength * delta/5, yPush);
+            player.move(new Vector2f(this.strength*delta/5, yPush*3));
+            movement.add(this.strength*delta/4, yPush);
             player.isBeingMovedExternally = true;
         }
         else if (blockOutcome == 2) { // OL Pancakes DL

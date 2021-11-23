@@ -1,5 +1,6 @@
 package world;
 import collision.AABB;
+import collision.Collision;
 import entity.*;
 import entity.GameManager;
 import graphics.Camera;
@@ -177,7 +178,7 @@ public class World {
         for (int count = 0; count < entities.size(); count++) {
             entities.get(count).collideWithTiles(this);
             for (int counter = count+1; counter < entities.size(); counter++) {
-                entities.get(count).collideWithEntity(entities.get(counter), this);
+                 entities.get(count).collideWithEntity(entities.get(counter), this);
             }
             entities.get(count).collideWithTiles(this);
         }
