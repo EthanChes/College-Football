@@ -5,7 +5,6 @@ import graphics.Camera;
 import graphics.Window;
 import org.joml.Vector2f;
 import world.World;
-
 import java.util.Random;
 
 import static org.lwjgl.glfw.GLFW.*;

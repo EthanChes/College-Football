@@ -1,6 +1,5 @@
 package world;
 import collision.AABB;
-import collision.Collision;
 import entity.*;
 import entity.GameManager;
 import graphics.Camera;
@@ -11,7 +10,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import plays.Four_Verticals;
 import plays.Line_Blitz;
-import plays.RB_Dive;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -76,7 +74,7 @@ public class World {
                 }
             }
 
-
+            //Slants O_play = new Slants(194-2,-250);
             Four_Verticals O_play = new Four_Verticals(194 - 2,-250);
             //RB_Dive O_play = new RB_Dive(194 - 2,-250);
             Line_Blitz D_play = new Line_Blitz(194 - 2,-250);

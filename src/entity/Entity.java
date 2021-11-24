@@ -171,6 +171,7 @@ public abstract class Entity {
         }
     }
 
+
     public void collideWithEntity(Entity entity, World world) {
         Collision collision = bounding_box.getCollision(entity.bounding_box);
 
