@@ -178,8 +178,17 @@ public class OffensiveLineman extends Entity {
             default : yPush = 0;
         }
 
+        float defenderPush = yPush;
+
+        switch (player.route) {
+            case 1 : if (player.routeMovement <= 5) { defenderPush = player.strength*delta/3; } break;
+            case 2 : if (player.routeMovement <= 5) { defenderPush = -player.strength*delta/3;} break;
+            default : defenderPush = yPush;
+        }
+
         if (blockOutcome == 1) {
-            player.move(new Vector2f((this.strength * delta)/5, 3*yPush));
+            player.move(new Vector2f((this.strength * delta)/5, defenderPush));
+            player.routeMovement += defenderPush;
             movement.add(this.strength * delta/5, yPush);
             player.isBeingMovedExternally = true;
         }
@@ -189,8 +198,8 @@ public class OffensiveLineman extends Entity {
             timeSinceBlock -= 3;
         }
         else if (blockOutcome == 3) {
-            player.move(new Vector2f(-player.strength*delta/5,-yPush));
-            movement.add(-player.strength*delta/4,-yPush);
+            player.move(new Vector2f(-player.strength*delta/5,defenderPush));
+            movement.add(-player.strength*delta/4,defenderPush);
             player.isBeingMovedExternally = true;
         }
         else if (blockOutcome == 4) { // Defender Pancakes OL

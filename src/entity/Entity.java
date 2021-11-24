@@ -28,6 +28,7 @@ public abstract class Entity {
     public boolean isBeingMovedExternally = false;
     public boolean pancaked = false;
     public double timePancaked;
+    public boolean uniqueEvents = false;
 
 
     // Player Info

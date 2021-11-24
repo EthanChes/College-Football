@@ -21,6 +21,7 @@ public class DefensiveLineman extends Entity {
 
     public DefensiveLineman(Transform transform) {
         super(ANIM_SIZE, transform);
+        uniqueEvents = false;
         setAnimation(ANIM_IDLE, new Animation(1, 1, "defensivelineidle"));
         setAnimation(ANIM_MOVE, new Animation(4,16,"defensivemovement"));
         setAnimation(ANIM_UNKNOWN, new Animation(0,0, "defensivelinemovement"));
@@ -105,8 +106,15 @@ public class DefensiveLineman extends Entity {
             movement.add(speed * delta, 0);
         }
 
-        if (canPlay && (! pancaked) && ! isBeingMovedExternally) {
+        if (world.getBallCarrier().transform.pos.x > this.transform.pos.x && ! uniqueEvents) {
+            move(new Vector2f(speed*delta,0));
+            uniqueEvents = true;
+        }
+
+        if (canPlay && (! uniqueEvents) && (! pancaked) && ! isBeingMovedExternally) {
             movement.add(pursuit(world.getBallCarrier(), delta,world));
+        } else if (uniqueEvents && canPlay && (! pancaked) && ! isBeingMovedExternally) {
+            movement.add(defensive_movement(world.getBallCarrier(),delta));
         }
 
         if (canPlay && ! isBeingMovedExternally) {
