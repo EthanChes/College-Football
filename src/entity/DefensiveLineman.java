@@ -52,8 +52,14 @@ public class DefensiveLineman extends Entity {
 
         switch (route) {
             case 0 : movement.add(defensive_movement(world.getBallCarrier(),delta)); break;
-            case 1 : if (routeMovement <= 5) { movement.add(-speed*delta/2,speed*delta/3); routeMovement += new Vector2f(-speed*delta/2,speed*delta/3).distance(0,0);  } else { movement.add(defensive_movement(world.getBallCarrier(),delta)); } break;
-            case 2 : if (routeMovement <= 5) { movement.add(-speed*delta/2,-speed*delta/3); routeMovement += new Vector2f(-speed*delta/2,-speed*delta/3).distance(0,0); } else { movement.add(defensive_movement(world.getBallCarrier(),delta)); } break;
+            case 1 :
+                if (routeMovement <= 5) { movement.add(-speed*delta/2,speed*delta/3); routeMovement += new Vector2f(-speed*delta/2,speed*delta/3).distance(0,0);  }
+                else { movement.add(defensive_movement(world.getBallCarrier(),delta)); }
+                break;
+            case 2 :
+                if (routeMovement <= 5) { movement.add(-speed*delta/2,-speed*delta/3); routeMovement += new Vector2f(-speed*delta/2,-speed*delta/3).distance(0,0); }
+                else { movement.add(defensive_movement(world.getBallCarrier(),delta)); }
+                break;
         }
 
         return movement;
@@ -117,7 +123,7 @@ public class DefensiveLineman extends Entity {
                 canCollide = true;
             }
         }
-        else if (movement.x != 0 || movement.y != 0 || (canPlay && ! isBeingMovedExternally)) { // This may be where a potential error could occur because a user controlled player will always show run anim.
+        else if (movement.x != 0 || movement.y != 0 || (canPlay && true)) { // This may be where a potential error could occur because a user controlled player will always show run anim.
             useAnimation(ANIM_MOVE);
         }
         else {
