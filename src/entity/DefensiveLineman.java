@@ -6,6 +6,7 @@ import graphics.Window;
 import org.joml.Vector2f;
 import world.World;
 import java.util.Random;
+import java.util.Vector;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -49,7 +50,11 @@ public class DefensiveLineman extends Entity {
     public Vector2f pursuit(Entity ballCarrier, float delta, World world) {
         Vector2f movement = new Vector2f();
 
-        movement.add(defensive_movement(world.getBallCarrier(),delta));
+        switch (route) {
+            case 0 : movement.add(defensive_movement(world.getBallCarrier(),delta)); break;
+            case 1 : if (routeMovement <= 5) { movement.add(-speed*delta/2,speed*delta/3); routeMovement += new Vector2f(-speed*delta/2,speed*delta/3).distance(0,0);  } else { movement.add(defensive_movement(world.getBallCarrier(),delta)); } break;
+            case 2 : if (routeMovement <= 5) { movement.add(-speed*delta/2,-speed*delta/3); routeMovement += new Vector2f(-speed*delta/2,-speed*delta/3).distance(0,0); } else { movement.add(defensive_movement(world.getBallCarrier(),delta)); } break;
+        }
 
         return movement;
     }
@@ -94,7 +99,7 @@ public class DefensiveLineman extends Entity {
             movement.add(speed * delta, 0);
         }
 
-        if (canPlay && ! pancaked) {
+        if (canPlay && (! pancaked) && ! isBeingMovedExternally) {
             movement.add(pursuit(world.getBallCarrier(), delta,world));
         }
 
@@ -112,7 +117,7 @@ public class DefensiveLineman extends Entity {
                 canCollide = true;
             }
         }
-        else if (movement.x != 0 || movement.y != 0) {
+        else if (movement.x != 0 || movement.y != 0 || (canPlay && ! isBeingMovedExternally)) { // This may be where a potential error could occur because a user controlled player will always show run anim.
             useAnimation(ANIM_MOVE);
         }
         else {

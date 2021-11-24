@@ -12,9 +12,9 @@ public class Line_Blitz {
         entities = new ArrayList<Entity>();
 
         for (int i = 0; i < 4 ; i++) {
-            entities.add(new DefensiveLineman(new Transform(ballX + 2, ballY - 3.5f + i)));
+            entities.add(new DefensiveLineman(new Transform(ballX + 2, ballY - 3.5f + 2*i)));
         }
-        entities.get(0).setRoute(1);
+        entities.get(0).setRoute(2);
         entities.get(3).setRoute(1);
         for (int i = 4; i < 11; i++) {
             entities.add(new DefensiveLineman(new Transform(1000,0)));
