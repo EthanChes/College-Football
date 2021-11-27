@@ -75,9 +75,8 @@ public class World {
                 }
             }
 
-            //Slants O_play = new Slants(194-2,-250);
-            //Four_Verticals O_play = new Four_Verticals(194 - 2,-250);
-            RB_Dive O_play = new RB_Dive(194 - 2,-250);
+            Four_Verticals O_play = new Four_Verticals(194 - 2,-250);
+            //RB_Dive O_play = new RB_Dive(194 - 2,-250);
             Line_Blitz D_play = new Line_Blitz(194 - 2,-250);
             entities.addAll(D_play.getEntities());
             entities.addAll(O_play.getEntities());
