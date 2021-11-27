@@ -183,6 +183,11 @@ public abstract class Entity {
             bounding_box.correctPosition(entity.bounding_box, collision);
             transform.pos.set(bounding_box.getCenter().x, bounding_box.getCenter().y, 0);
 
+            if (this.hasBall) {
+                world.getFootballEntity().bounding_box.correctPosition(entity.bounding_box,collision);
+                world.getFootballEntity().transform.pos.set(world.getFootballEntity().bounding_box.getCenter().x,world.getFootballEntity().bounding_box.getCenter().y,0);
+            }
+
             entity.bounding_box.correctPosition(bounding_box, collision);
             entity.transform.pos.set(entity.bounding_box.getCenter().x, entity.bounding_box.getCenter().y, 0);
         }
