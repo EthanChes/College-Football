@@ -33,9 +33,31 @@ public class OffensiveLineman extends Entity {
 
     public Vector2f passBlockMovement(float delta, World world) {
         Vector2f move = new Vector2f();
+        boolean pocketMovement = true;
         boolean hasBlockedPlayerInLoop = false;
 
-        if (! isBlocking && ! pancaked) {
+        for (int i = 0; i < 11; i++) { // Check if any defenders are higher up than the OL : Note This Loop May Cause Game Rendering Issues, if there are any issues remove this
+            Entity defender = world.getCountingUpEntity(i);
+
+            if (this.transform.pos.x < defender.transform.pos.x && (! (defender.pancaked || this.pancaked))) {
+                Collision blocking = this.bounding_box.getCollision(defender.bounding_box);
+
+                if (blocking.isIntersecting) {
+                    hasBlockedPlayerInLoop = true;
+                    move.add(passBlock(defender, delta, world));
+                }
+            }
+            else if (pocketMovement && this.route == -1 && ! this.pancaked) {
+                pocketMovement = false;
+                move.add(-speed*delta,0);
+            }
+        }
+
+        if (hasBlockedPlayerInLoop) {
+            isBlocking = true;
+        } else { isBlocking = false; }
+
+        if (pocketMovement && ! isBlocking && ! pancaked) {
             if (this.transform.pos.distance(world.getBallCarrier().transform.pos) > 5.5) {
                 if (this.transform.pos.x + this.speed*delta > world.getBallCarrier().transform.pos.x) {
                     move.add(-this.speed*delta,0);
@@ -52,26 +74,6 @@ public class OffensiveLineman extends Entity {
                 }
             }
         }
-
-        move(move);
-        move.set(.00001f,.00001f);
-
-        for (int i = 0; i < 11; i++) { // Check if any defenders are higher up than the OL : Note This Loop May Cause Game Rendering Issues, if there are any issues remove this
-            Entity defender = world.getCountingUpEntity(i);
-
-            if (this.transform.pos.x < defender.transform.pos.x && (! (defender.pancaked || this.pancaked))) {
-                Collision blocking = this.bounding_box.getCollision(defender.bounding_box);
-
-                if (blocking.isIntersecting) {
-                    hasBlockedPlayerInLoop = true;
-                    move.add(passBlock(defender, delta, world));
-                }
-            }
-        }
-
-        if (hasBlockedPlayerInLoop) {
-            isBlocking = true;
-        } else { isBlocking = false; }
 
         return move;
     }
@@ -99,8 +101,9 @@ public class OffensiveLineman extends Entity {
         }
 
         if (blockOutcome == 1) { // OL Pushes DL back
-            player.move(new Vector2f(this.strength*delta/5, yPush*3));
-            movement.add(this.strength*delta/4, yPush);
+            player.move(new Vector2f(this.strength*delta/4, yPush*3));
+            player.routeMovement += new Vector2f(this.strength*delta/4,yPush*3).distance(0,0);
+            movement.add(this.strength*delta/5, yPush);
             player.isBeingMovedExternally = true;
         }
         else if (blockOutcome == 2) { // OL Pancakes DL
@@ -109,8 +112,9 @@ public class OffensiveLineman extends Entity {
             timeSinceBlock -= 3;
         }
         else if (blockOutcome == 3) { // DL Pushes OL back
-            player.move(new Vector2f(-player.strength*delta/5,-yPush));
-            movement.add(-player.strength*delta/4,-yPush);
+            player.move(new Vector2f(-player.strength*delta/6,-yPush));
+            player.routeMovement += new Vector2f(player.strength*delta/6,yPush).distance(0,0);
+            movement.add(-player.strength*delta/5,-yPush);
             player.isBeingMovedExternally = true;
         }
         else if (blockOutcome == 4) { // Defender Pancakes OL
@@ -215,7 +219,7 @@ public class OffensiveLineman extends Entity {
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
 
-        if (route == 0 && canPlay) {
+        if ((route == 0 || route == -1) && canPlay) {
             movement.add(passBlockMovement(delta,world));
         } else if (canPlay) { movement.add(runBlockMovement(delta,world)); }
 
@@ -239,7 +243,7 @@ public class OffensiveLineman extends Entity {
                 canCollide = true;
             }
         }
-        else if (isBlocking || (movement.x != 0 || movement.y != 0)) {
+        else if (canPlay || isBlocking || (movement.x != 0 || movement.y != 0)) {
             useAnimation(ANIM_BLOCK_MOVING);
         }
         else {

@@ -17,7 +17,7 @@ public class Line_Blitz {
         entities.get(0).setRoute(2);
         entities.get(3).setRoute(1);
         for (int i = 4; i < 11; i++) {
-            entities.add(new DefensiveLineman(new Transform(1000,0)));
+            entities.add(new DefensiveLineman(new Transform(100000,0)));
         } // For Testing Purposes
 
     }

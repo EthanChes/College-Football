@@ -106,10 +106,16 @@ public class DefensiveLineman extends Entity {
             movement.add(speed * delta, 0);
         }
 
+
+
+
         if (world.getBallCarrier().transform.pos.x > this.transform.pos.x && ! uniqueEvents) {
             move(new Vector2f(speed*delta,0));
             uniqueEvents = true;
         }
+
+
+
 
         if (canPlay && (! uniqueEvents) && (! pancaked) && ! isBeingMovedExternally) {
             movement.add(pursuit(world.getBallCarrier(), delta,world));
