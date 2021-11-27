@@ -27,6 +27,7 @@ public class RunningBack extends Entity {
         setAnimation(ANIM_IDLE_WITH_BALL, new Animation(1,1,"runningbackidlewithball"));
         setAnimation(ANIM_FALL, new Animation(1,1, "offensivefall"));
         setRoute(1);
+        strength = 8f;
     }
 
     public void receiveHandoff(World world) {
@@ -83,10 +84,10 @@ public class RunningBack extends Entity {
             movement.add(speed*delta,0);
         }
 
-        if (route == 0) {
+        if (route == 0 && canPlay) {
             movement.add(speed*delta,0);
         }
-        else if (route == 1) { // Carry Out Handoff
+        else if (route == 1 && canPlay) { // Carry Out Handoff
             movement.add(handoff(delta, world));
         }
 

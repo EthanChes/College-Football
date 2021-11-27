@@ -7,6 +7,8 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import world.World;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+
 public abstract class Entity {
     protected static Model model;
     protected Animation[] animations;
@@ -16,13 +18,17 @@ public abstract class Entity {
 
     // Game booleans
     public static float throw_height;
-    public static boolean canPlay = true;
+    public static boolean canPlay = false;
+    public static boolean playStart = false;
     protected boolean canCollide = true;
     protected boolean pass = false;
     public boolean hasBall = false;
     public boolean reachedEndOfRoute = false;
     public boolean userControl = false;
     public boolean isBeingMovedExternally = false;
+    public boolean pancaked = false;
+    public double timePancaked;
+    public boolean uniqueEvents = false;
 
 
     // Player Info
@@ -166,6 +172,7 @@ public abstract class Entity {
         }
     }
 
+
     public void collideWithEntity(Entity entity, World world) {
         Collision collision = bounding_box.getCollision(entity.bounding_box);
 
@@ -176,8 +183,13 @@ public abstract class Entity {
             bounding_box.correctPosition(entity.bounding_box, collision);
             transform.pos.set(bounding_box.getCenter().x, bounding_box.getCenter().y, 0);
 
-            entity.bounding_box.correctPosition(bounding_box,collision);
-            entity.transform.pos.set(entity.bounding_box.getCenter().x, entity.bounding_box.getCenter().y,0);
+            if (this.hasBall) {
+                world.getFootballEntity().bounding_box.correctPosition(entity.bounding_box,collision);
+                world.getFootballEntity().transform.pos.set(world.getFootballEntity().bounding_box.getCenter().x,world.getFootballEntity().bounding_box.getCenter().y,0);
+            }
+
+            entity.bounding_box.correctPosition(bounding_box, collision);
+            entity.transform.pos.set(entity.bounding_box.getCenter().x, entity.bounding_box.getCenter().y, 0);
         }
     }
 
@@ -220,7 +232,7 @@ public abstract class Entity {
         float quarterbackY = world.getQuarterbackEntity().transform.pos.y;
         Vector2f projBallMovement = new Vector2f(ball.transform.pos.x,ball.transform.pos.y);
         for (; projBallMovement.distance(quarterbackX,quarterbackY) <= location.distance(quarterbackX,quarterbackY) && ! reachedEndOfRoute;) {
-            switch (entity.route) {
+            switch (entity.route) { // Lookup Table
                 case 0:
                     if (projRouteMovement <= 90) { // Fade
                         location.add(entity.speed*delta,0);
@@ -245,7 +257,7 @@ public abstract class Entity {
                     else { reachedEndOfRoute = true; }
                     break;
 
-                case 2 : if (projRouteMovement <= 10) {
+                case 2 : if (projRouteMovement <= 10) { // Slant
                     location.add(entity.speed*delta,0);
                     projRouteMovement += entity.speed * delta;
                     projBallMovement.add(throw_power*delta,0);
@@ -258,7 +270,13 @@ public abstract class Entity {
                 else { reachedEndOfRoute = true; }
                 break;
 
-                case 3 :
+                case 3 : if (projRouteMovement <= 15) { // Curl
+                    location.add(entity.speed*delta,0);
+                    projRouteMovement += entity.speed * delta;
+                    projBallMovement.add(throw_power*delta,0);
+                } else { reachedEndOfRoute = true; }
+                    break;
+
             }
         }
         return location;
@@ -266,6 +284,16 @@ public abstract class Entity {
 
     public void setRoute(int index) {
         this.route = (byte) index;
+    }
+
+    public boolean snap(Window window) {
+        if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && ! playStart) {
+            canPlay = true;
+            playStart = true;
+            return true;
+        }
+
+        return false;
     }
 
     public void passCaught(World world) {

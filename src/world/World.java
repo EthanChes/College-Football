@@ -1,6 +1,7 @@
 package world;
 import collision.AABB;
 import entity.*;
+import entity.GameManager;
 import graphics.Camera;
 import graphics.Shader;
 import graphics.Window;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class World {
+    GameManager gameManager = new GameManager(-234.3f, -265.9f, 366.6f, 141.8f, 153f, 354.5f);
     private int viewX;
     private int viewY;
     private byte[] tiles;
@@ -72,13 +74,10 @@ public class World {
 
                 }
             }
-            // add entities here
-            this.initReset();
 
-
-            //Four_Verticals O_play = new Four_Verticals(200,-250);
-            RB_Dive O_play = new RB_Dive(200,-250);
-            Line_Blitz D_play = new Line_Blitz(200,-250);
+            Four_Verticals O_play = new Four_Verticals(194 - 2,-250);
+            //RB_Dive O_play = new RB_Dive(194 - 2,-250);
+            Line_Blitz D_play = new Line_Blitz(194 - 2,-250);
             entities.addAll(D_play.getEntities());
             entities.addAll(O_play.getEntities());
             setBallCarrier(entities.get(11));
@@ -177,10 +176,19 @@ public class World {
         for (int count = 0; count < entities.size(); count++) {
             entities.get(count).collideWithTiles(this);
             for (int counter = count+1; counter < entities.size(); counter++) {
-                entities.get(count).collideWithEntity(entities.get(counter), this);
+                 entities.get(count).collideWithEntity(entities.get(counter), this);
             }
             entities.get(count).collideWithTiles(this);
         }
+
+        if (gameManager.ballCarrierOutOfBounds(this)) {
+            System.out.println("Out Of Bounds");
+        }
+
+        if (gameManager.touchDown(this)) {
+            System.out.println("Touchdown Offense");
+        }
+
     }
 
 
@@ -286,8 +294,11 @@ public class World {
     public Entity getBallCarrier() { return ballCarrier; }
 
     public void initReset() {
+        gameManager.setBallPosX(this);
+        gameManager.setBallPosY(this);
         entities.clear();
-        Entity.canPlay = true;
+        Entity.canPlay = false;
+        Entity.playStart = false;
         Football.gotWideReceiverPos = true;
         WideReceiver.totalReceivers = 0;
     }
