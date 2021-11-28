@@ -1,6 +1,7 @@
 package entity;
 import collision.AABB;
 import collision.Collision;
+import gameplay.Timer;
 import graphics.*;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -18,6 +19,8 @@ public abstract class Entity {
 
     // Game booleans
     public static float throw_height;
+    public static int totalReceivers = 0;
+    public static int defensiveBacks = 0;
     public static boolean canPlay = false;
     public static boolean playStart = false;
     protected boolean canCollide = true;
@@ -29,10 +32,12 @@ public abstract class Entity {
     public boolean pancaked = false;
     public double timePancaked;
     public boolean uniqueEvents = false;
-
+    public boolean center = false;
+    public static double timeSnapped;
 
     // Player Info
     public byte route = 0;
+    public float manCoverage = 10f;
     public float routeMovement = 0f;
     public float speed = 10f;
     public float strength = 10f;
@@ -286,8 +291,10 @@ public abstract class Entity {
         this.route = (byte) index;
     }
 
-    public boolean snap(Window window) {
+    public boolean snap(Window window, World world) {
         if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && ! playStart) {
+            world.getCountingUpEntity(14).useAnimation(6);
+            timeSnapped = Timer.getTime();
             canPlay = true;
             playStart = true;
             return true;
@@ -300,6 +307,10 @@ public abstract class Entity {
         throw_height = 0;
         world.getFootballEntity().pass = false;
         world.getFootballEntity().useAnimation(1);
+    }
+
+    public void setDefenderID(int ID, DefensiveBack defensiveBack) {
+        defensiveBack.defenderID = ID;
     }
 
     public int getAnimationIndex() { return use_animation; }

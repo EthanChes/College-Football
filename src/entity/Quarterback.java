@@ -10,7 +10,8 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 
 public class Quarterback extends Entity {
-    public static final int ANIM_SIZE = 5;
+    public static final int ANIM_SIZE = 6;
+    public static final int ANIM_PRESNAP = 5;
     public static final int ANIM_HANDOFF = 4;
     public static final int ANIM_FALL = 3;
     public static final int ANIM_THROW = 2;
@@ -22,12 +23,12 @@ public class Quarterback extends Entity {
 
     public Quarterback(Transform transform) {
         super(ANIM_SIZE,transform);
-        hasBall = true;
         setAnimation(ANIM_IDLE, new Animation(1,1,"qbidle"));
         setAnimation(ANIM_WALK, new Animation(4,16,"qbrun"));
         setAnimation(ANIM_THROW, new Animation(2,4,"qbthrow"));
         setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall"));
         setAnimation(ANIM_HANDOFF, new Animation(1,1,"qbhandoff"));
+        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/quarterback"));
         speed = 7f;
     }
 
@@ -121,7 +122,7 @@ public class Quarterback extends Entity {
                 move(movement);
             }
             else {
-                snap(window);
+                snap(window,world);
             }
 
             // Use Animations
@@ -155,13 +156,15 @@ public class Quarterback extends Entity {
                 move(movement);
             }
             else {
-                snap(window);
+                snap(window,world);
             }
         } // Handoff Route Support
 
 
 
-
+        if (! (canPlay || playStart)) {
+            useAnimation(ANIM_PRESNAP);
+        }
 
 
     }

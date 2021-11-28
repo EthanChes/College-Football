@@ -75,12 +75,12 @@ public class World {
                 }
             }
 
-            Four_Verticals O_play = new Four_Verticals(194 - 2,-250);
+            Four_Verticals O_play = new Four_Verticals(GameManager.ballPosX,GameManager.ballPosY);
             //RB_Dive O_play = new RB_Dive(194 - 2,-250);
-            Line_Blitz D_play = new Line_Blitz(194 - 2,-250);
+            Line_Blitz D_play = new Line_Blitz(GameManager.ballPosX,GameManager.ballPosY);
             entities.addAll(D_play.getEntities());
             entities.addAll(O_play.getEntities());
-            setBallCarrier(entities.get(11));
+            setBallCarrier(this.getFootballEntity());
             /*entities.add(new Quarterback(new Transform(200,-250)));
             entities.add(new DefensiveLineman(new Transform(210,-240,1.5f)));
             //entities.add(new OffensiveLineman(new Transform(200, -237,1.5f)));
@@ -301,6 +301,7 @@ public class World {
         Entity.playStart = false;
         Football.gotWideReceiverPos = true;
         WideReceiver.totalReceivers = 0;
+        DefensiveBack.guardedReceivers = 0;
     }
 
 

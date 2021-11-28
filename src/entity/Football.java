@@ -1,5 +1,6 @@
 package entity;
 
+import gameplay.Timer;
 import graphics.Animation;
 import graphics.Camera;
 import graphics.Window;
@@ -67,6 +68,24 @@ public class Football extends Entity {
                 throw_height -= (throw_power*delta);
             }
 
+        }
+
+        if (timeSnapped + .25 > Timer.getTime()) {
+            // Move Towards QB
+            if (gotWideReceiverPos) {
+                gotWideReceiverPos = false;
+
+                this.speed = ((world.getFootballEntity().transform.pos.x - world.getQuarterbackEntity().transform.pos.x)*delta*4);
+            }
+
+            movement.add(-speed,0);
+        }
+        else if (timeSnapped + .27 > Timer.getTime()) {
+            this.speed = 0;
+            gotWideReceiverPos = true;
+            world.getQuarterbackEntity().hasBall = true;
+            world.setBallCarrier(world.getQuarterbackEntity());
+            world.getFootballEntity().useAnimation(0);
         }
 
         move(movement);

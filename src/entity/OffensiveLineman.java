@@ -9,12 +9,14 @@ import world.World;
 import java.util.Random;
 
 public class OffensiveLineman extends Entity {
-    public static final int ANIM_SIZE = 5;
+    public static final int ANIM_SIZE = 7;
     public static final int ANIM_IDLE = 0;
     public static final int ANIM_MOVE = 1;
     public static final int ANIM_BLOCK = 2;
     public static final int ANIM_FALL = 3;
     public static final int ANIM_BLOCK_MOVING = 4;
+    public static final int ANIM_PRESNAP = 5;
+    public static final int ANIM_CENTER = 6;
 
     public boolean isBlocking = false;
     public byte blockOutcome = 0;
@@ -27,6 +29,8 @@ public class OffensiveLineman extends Entity {
         setAnimation(ANIM_BLOCK, new Animation(1,1, "offensivelineblock"));
         setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall"));
         setAnimation(ANIM_BLOCK_MOVING, new Animation(4, 16, "offensivelineblockmoving"));
+        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/offensiveline"));
+        setAnimation(ANIM_CENTER, new Animation(2, 2, "presnap/center"));
         speed = 3f;
         strength = 10f;
     }
@@ -235,7 +239,18 @@ public class OffensiveLineman extends Entity {
             }
         }
 
-        if (pancaked) {
+        if (! (playStart || center)) {
+            useAnimation(ANIM_PRESNAP);
+        }
+        else if (! (playStart || getAnimationIndex() == 6)) {
+            useAnimation(ANIM_PRESNAP);
+            world.getFootballEntity().transform.pos.set(this.transform.pos.x + .6f, this.transform.pos.y - .3f,0);
+            world.getFootballEntity().useAnimation(1);
+        }
+        else if (getAnimationIndex() == 6 && timeSnapped + .75 > Timer.getTime()) {
+            useAnimation(ANIM_CENTER);
+        }
+        else if (pancaked) {
             useAnimation(ANIM_FALL);
             canCollide = false;
             if (Timer.getTime() > timePancaked + 3) {
@@ -249,5 +264,6 @@ public class OffensiveLineman extends Entity {
         else {
             useAnimation(ANIM_BLOCK);
         }
+
     }
 }

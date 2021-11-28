@@ -6,12 +6,12 @@ import graphics.Window;
 import org.joml.Vector2f;
 import world.World;
 import java.util.Random;
-import java.util.Vector;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class DefensiveLineman extends Entity {
-    public static final int ANIM_SIZE = 4;
+    public static final int ANIM_SIZE = 5;
+    public static final int ANIM_PRESNAP = 4;
     public static final int ANIM_FALL = 3;
     public static final int ANIM_UNKNOWN = 2;
     public static final int ANIM_MOVE = 1;
@@ -26,6 +26,7 @@ public class DefensiveLineman extends Entity {
         setAnimation(ANIM_MOVE, new Animation(4,16,"defensivemovement"));
         setAnimation(ANIM_UNKNOWN, new Animation(0,0, "defensivelinemovement"));
         setAnimation(ANIM_FALL, new Animation(1,1, "defensivefall"));
+        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/defensiveline"));
         speed = 8f;
         strength = 10f;
     }
@@ -155,6 +156,10 @@ public class DefensiveLineman extends Entity {
                 }
             }
 
+        }
+
+        if (! (canPlay || playStart)) {
+            useAnimation(ANIM_PRESNAP);
         }
 
     }

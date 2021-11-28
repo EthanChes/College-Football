@@ -9,15 +9,14 @@ import world.World;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class WideReceiver extends Entity {
-    public static final int ANIM_SIZE = 6;
+    public static final int ANIM_SIZE = 7;
+    public static final int ANIM_PRESNAP = 6;
     public static final int ANIM_IDLE_BALL = 5;
     public static final int ANIM_RUN_BALL = 4;
     public static final int ANIM_FALL = 3;
     public static final int ANIM_CATCH = 2;
     public static final int ANIM_RUN = 1;
     public static final int ANIM_IDLE = 0;
-
-    public static int totalReceivers = 0;
 
     public boolean inCatch = false;
     public double timeCatch;
@@ -30,7 +29,9 @@ public class WideReceiver extends Entity {
         setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall"));
         setAnimation(ANIM_RUN_BALL, new Animation(4,16,"widereceiverrunwithball"));
         setAnimation(ANIM_IDLE_BALL, new Animation(1,1,"widereceiveridlewithball"));
+        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/receiver"));
         totalReceivers++;
+        noCollision();
     }
 
     public void catching() {
@@ -45,6 +46,10 @@ public class WideReceiver extends Entity {
         Vector2f movement = new Vector2f();
         Entity football = world.getFootballEntity();
 
+        if (this.uniqueEvents) {
+            this.canCollide = true;
+        }
+
         if (hasBall && true) userControl = true; // change && true to gamemanager user controls offensive team
         else userControl = false;
 
@@ -54,6 +59,10 @@ public class WideReceiver extends Entity {
         }
 
         if (inCatch) {
+            for (int i = 0; i < 22; i++) {
+                world.getCountingUpEntity(i).uniqueEvents = true;
+            }
+
             football.useAnimation(1);
             passCaught(world);
             catching();
@@ -128,7 +137,7 @@ public class WideReceiver extends Entity {
             }
 
         if (world.getQuarterbackEntity().route == 0 && world.getQuarterbackEntity().hasBall) {
-            //zoomOutWhenNotVisible(this, camera);
+            zoomOutWhenNotVisible(this, camera);
         }
 
 
@@ -153,6 +162,10 @@ public class WideReceiver extends Entity {
             useAnimation(ANIM_RUN);
         } else {
             useAnimation(ANIM_IDLE);
+        }
+
+        if (! (canPlay || playStart)) {
+            useAnimation(ANIM_PRESNAP);
         }
 
 
