@@ -133,7 +133,9 @@ public class DefensiveBack extends Entity {
                         Vector2f newReceiverPos = new Vector2f();
                         Entity receiver = world.getCountingUpEntity(22-guardedReceiver);
                         boolean canDefend = true;
-                        if (timeSinceLastCoverageAttempt + (10.5 - manCoverage)/5 < Timer.getTime() && receiverKnownPos.x != 0) {
+                        Random rand = new Random();
+                        int rand_check = rand.nextInt(((int) manCoverage * 100) + 1500);
+                        if (rand_check <= manCoverage * 100 && receiverKnownPos.x != 0) {
                             timeSinceLastCoverageAttempt = Timer.getTime();
 
                             // Find Out Which Side DB should be on Receiver
