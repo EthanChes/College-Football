@@ -33,6 +33,7 @@ public abstract class Entity {
     public double timePancaked;
     public boolean uniqueEvents = false;
     public boolean center = false;
+    public boolean catchAttempt = true;
     public static double timeSnapped;
 
     // Player Info
@@ -43,6 +44,7 @@ public abstract class Entity {
     public float strength = 10f;
     public float throw_power = 10f;
     public float throw_accuracy = 10f;
+    public float catching = 10f;
 
     public Entity(int max_animations, Transform transform) {
         this.transform = transform;

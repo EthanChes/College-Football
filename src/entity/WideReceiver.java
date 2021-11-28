@@ -6,6 +6,8 @@ import graphics.Window;
 import org.joml.Vector2f;
 import world.World;
 
+import java.util.Random;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 public class WideReceiver extends Entity {
@@ -31,6 +33,7 @@ public class WideReceiver extends Entity {
         setAnimation(ANIM_IDLE_BALL, new Animation(1,1,"widereceiveridlewithball"));
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/receiver"));
         speed = 10f;
+        catching = 10f;
         totalReceivers++;
         noCollision();
     }
@@ -55,8 +58,29 @@ public class WideReceiver extends Entity {
         else userControl = false;
 
         if (! (inCatch || hasBall) && collidingWithFootball(this,world)) { // Put Random Catch Element here
-            this.inCatch = true;
-            this.timeCatch = Timer.getTime();
+            Entity closestDefender = world.getCountingUpEntity(0);
+            for (int i = 0; i < 11; i++) {
+                if (closestDefender.transform.pos.distance(this.transform.pos) > world.getCountingUpEntity(i).transform.pos.distance(this.transform.pos)) {
+                    closestDefender = world.getCountingUpEntity(i);
+                }
+            }
+
+            Random rand = new Random();
+            if (closestDefender.transform.pos.distance(this.transform.pos) <= 2.75f && catchAttempt) {
+                int rand_output = rand.nextInt((int) (this.catching * 100 + closestDefender.catching * 100));
+                System.out.println(rand_output + " " + closestDefender.transform.pos.distance(this.transform.pos));
+                if (rand_output <= this.catching * 100) {
+                    this.inCatch = true;
+                    this.timeCatch = Timer.getTime();
+                } else {
+                    world.getFootballEntity().pass = false;
+                    Football.passDropStart = Timer.getTime();
+                }
+            } else if (catchAttempt) {
+                this.inCatch = true;
+                this.timeCatch = Timer.getTime();
+            }
+            catchAttempt = false;
         }
 
         if (inCatch) {

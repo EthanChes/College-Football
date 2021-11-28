@@ -30,6 +30,7 @@ public class Quarterback extends Entity {
         setAnimation(ANIM_HANDOFF, new Animation(1,1,"qbhandoff"));
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/quarterback"));
         speed = 7f;
+        throw_accuracy = 10f;
     }
 
     public void passOptions(Window window) {

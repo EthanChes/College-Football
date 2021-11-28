@@ -8,6 +8,8 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import world.World;
 
+import java.util.Random;
+
 public class Football extends Entity {
     public static final int ANIM_SIZE = 3;
     public static final int ANIM_QB_THROW = 2;
@@ -21,6 +23,8 @@ public class Football extends Entity {
     public static float wideReceiverY;
     public static boolean gotWideReceiverPos = true;
 
+    public static double passDropStart = 0;
+
     public Football(Transform transform) {
         super(ANIM_SIZE, transform);
         noCollision();
@@ -29,6 +33,7 @@ public class Football extends Entity {
         setAnimation(ANIM_QB_THROW_START, new Animation(1,1,"footballthrowstart"));
         setAnimation(ANIM_QB_THROW, new Animation(6,50,"footballthrow"));
     }
+
 
 
     @Override
@@ -42,8 +47,16 @@ public class Football extends Entity {
                 this.throw_power = (world.getQuarterbackEntity().throw_power) * 2.5f;
                 Entity wideReceiver = world.getSpecifiedEntity(WideReceiver.totalReceivers + Quarterback.receiverPass + 1);
                 Vector2f projLoc = getProjectedLocation(wideReceiver, this, delta,world);
-                wideReceiverX = projLoc.x;
-                wideReceiverY = projLoc.y;
+
+                Random rand = new Random();
+                int rand_outputX = rand.nextInt((int) (12 - world.getQuarterbackEntity().throw_accuracy));
+                int rand_outputY = rand.nextInt((int) (12 - world.getQuarterbackEntity().throw_accuracy));
+
+                rand_outputX = (rand_outputX * 2) - rand_outputX;
+                rand_outputY = (rand_outputY * 2) - rand_outputY;
+
+                wideReceiverX = projLoc.x + rand_outputX;
+                wideReceiverY = projLoc.y + rand_outputY;
 
                 // Calculate Slope to get to receiver
                 this.ball_slope = (this.transform.pos.y - wideReceiverY)/(this.transform.pos.x - wideReceiverX);
@@ -68,6 +81,15 @@ public class Football extends Entity {
                 throw_height -= (throw_power*delta);
             }
 
+        }
+
+        if (passDropStart != 0) {
+            if (passDropStart + .75 > Timer.getTime()) {
+                movement.add(-delta*5, 0);
+            } else {
+                passDropStart = 0;
+                canPlay = false;
+            }
         }
 
         if (timeSnapped + .25 > Timer.getTime()) {

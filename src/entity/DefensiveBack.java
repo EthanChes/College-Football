@@ -40,6 +40,7 @@ public class DefensiveBack extends Entity {
         speed = 10f;
         manCoverage = 10f;
         strength = 10f;
+        catching = 10f;
     }
 
     public boolean tackle(Entity ballCarrier) {
@@ -153,7 +154,6 @@ public class DefensiveBack extends Entity {
 
                             coverageMovement.set(expectedX,expectedY);
 
-                            System.out.println(receiverKnownPos.x);
 
                             receiverKnownPos.set(newReceiverPos.x, newReceiverPos.y);
                         } else if (receiverKnownPos.x == 0) {
