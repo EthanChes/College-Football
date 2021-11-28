@@ -27,7 +27,7 @@ public class Four_Verticals {
 
         // Add WRs
         entities.add(new WideReceiver(new Transform(ballX, ballY+10)));
-        entities.get(6).setRoute(1);
+        entities.get(6).setRoute(2);
         entities.add(new WideReceiver(new Transform(ballX, ballY+14)));
         entities.get(7).setRoute(0);
         entities.add(new WideReceiver(new Transform(ballX, ballY - 10)));

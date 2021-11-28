@@ -25,18 +25,20 @@ public class DefensiveBack extends Entity {
     public int guardedReceiver = 0;
     public boolean setLoc = true;
     public int defenderID = 0; // For Linebackers (Consistent Placement)
+    public Vector2f coverageMovement = new Vector2f(0,0);
     public Vector2f receiverKnownPos = new Vector2f(0,0);
-    public Vector2f newReceiverPos = new Vector2f(0,0);
 
     public DefensiveBack(Transform transform) {
         super(ANIM_SIZE, transform);
         uniqueEvents = false;
+        canCollide = false;
         setAnimation(ANIM_IDLE, new Animation(1, 1, "defensivelineidle"));
         setAnimation(ANIM_MOVE, new Animation(4,16,"defensivemovement"));
         setAnimation(ANIM_UNKNOWN, new Animation(0,0, "defensivelinemovement"));
         setAnimation(ANIM_FALL, new Animation(1,1, "defensivefall"));
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/defensiveback"));
         speed = 10f;
+        manCoverage = 10f;
         strength = 10f;
     }
 
@@ -84,7 +86,6 @@ public class DefensiveBack extends Entity {
             Entity guardedEntity = world.getCountingUpEntity(22-guardedReceiver);
             this.transform.pos.x = GameManager.ballPosX + 7;
             this.transform.pos.y = guardedEntity.transform.pos.y;
-            System.out.println("Success");
         }
         else {
             switch (route) {
@@ -117,6 +118,7 @@ public class DefensiveBack extends Entity {
 
         // Cornerback Plays Off Ball Defense in Man-Man or Blitzes
         if (uniqueEvents && canPlay) {
+            canCollide = true;
             movement.add(defensive_movement(world.getBallCarrier(),delta));
         }
         else if (canPlay) {
@@ -128,11 +130,11 @@ public class DefensiveBack extends Entity {
                     break; // Blitz Middle
                 case 0 : // Man-Man
                     if (guardedReceiver != 0) {
+                        Vector2f newReceiverPos = new Vector2f();
                         Entity receiver = world.getCountingUpEntity(22-guardedReceiver);
-                        if (timeSinceLastCoverageAttempt + (10.5 - manCoverage) < Timer.getTime()) {
+                        boolean canDefend = true;
+                        if (timeSinceLastCoverageAttempt + (10.5 - manCoverage)/5 < Timer.getTime() && receiverKnownPos.x != 0) {
                             timeSinceLastCoverageAttempt = Timer.getTime();
-                            // Set Positions
-                            receiverKnownPos.set(newReceiverPos.x, newReceiverPos.y);
 
                             // Find Out Which Side DB should be on Receiver
 
@@ -141,29 +143,37 @@ public class DefensiveBack extends Entity {
                             } else {
                                 newReceiverPos.set(receiver.transform.pos.x + 2, receiver.transform.pos.y - 2);
                             }
+
+                            // Project Player Location
+                            Vector2f changes = new Vector2f(newReceiverPos.x - receiverKnownPos.x, newReceiverPos.y - receiverKnownPos.y);
+                            float expectedX = (newReceiverPos.x + changes.x);
+                            float expectedY = (newReceiverPos.y + changes.y);
+
+                            coverageMovement.set(expectedX,expectedY);
+
+                            System.out.println(receiverKnownPos.x);
+
+                            receiverKnownPos.set(newReceiverPos.x, newReceiverPos.y);
+                        } else if (receiverKnownPos.x == 0) {
+                            receiverKnownPos.x = receiver.transform.pos.x;
+                            receiverKnownPos.y = receiver.transform.pos.y;
+
+                            canDefend = false;
                         }
 
-                        System.out.println(newReceiverPos.x);
+                        if (canDefend) {
+                            if (this.transform.pos.x - speed * delta > coverageMovement.x) {
+                                movement.add(-speed * delta, 0);
+                            } else if (this.transform.pos.x + speed * delta < coverageMovement.x) {
+                                movement.add(speed * delta, 0);
+                            }
 
-                        Vector2f changes = new Vector2f((newReceiverPos.x-receiverKnownPos.x)/(10.5f-manCoverage), (newReceiverPos.y-receiverKnownPos.y)/(10.5f-manCoverage));
-
-                        // Make Sure To Chase The Updated Position As Well
-
-                        if (this.transform.pos.x + speed*delta < newReceiverPos.x) {
-                            movement.add(speed*delta,0);
+                            if (this.transform.pos.y - speed * delta > coverageMovement.y) {
+                                movement.add(0, -speed * delta);
+                            } else if (this.transform.pos.y + speed * delta < coverageMovement.y) {
+                                movement.add(0, speed * delta);
+                            }
                         }
-                        else if (this.transform.pos.x - speed*delta > newReceiverPos.x) {
-                            movement.add(-speed*delta,0);
-                        }
-
-                        if (this.transform.pos.y + speed*delta < newReceiverPos.y) {
-                            movement.add(0,speed*delta);
-                        }
-                        else if (this.transform.pos.y - speed*delta > newReceiverPos.y) {
-                            movement.add(0,-speed*delta);
-                        }
-
-
 
                     } else {
                         uniqueEvents = true;

@@ -114,7 +114,7 @@ public abstract class Entity {
             return true;
         }
         else if (collision.isIntersecting && ! entity.hasBall) { // Remove ! entity.hasBall for final version, this just helps with print message
-            System.out.println("Throw too high for catch.");
+            //System.out.println("Throw too high for catch.");
         }
         return false;
     }

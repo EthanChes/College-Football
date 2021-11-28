@@ -30,7 +30,7 @@ public class OffensiveLineman extends Entity {
         setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall"));
         setAnimation(ANIM_BLOCK_MOVING, new Animation(4, 16, "offensivelineblockmoving"));
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/offensiveline"));
-        setAnimation(ANIM_CENTER, new Animation(2, 2, "presnap/center"));
+        setAnimation(ANIM_CENTER, new Animation(2, 4, "presnap/center"));
         speed = 3f;
         strength = 10f;
     }
@@ -247,7 +247,7 @@ public class OffensiveLineman extends Entity {
             world.getFootballEntity().transform.pos.set(this.transform.pos.x + .6f, this.transform.pos.y - .3f,0);
             world.getFootballEntity().useAnimation(1);
         }
-        else if (getAnimationIndex() == 6 && timeSnapped + .75 > Timer.getTime()) {
+        else if (getAnimationIndex() == 6 && timeSnapped + .4 > Timer.getTime()) {
             useAnimation(ANIM_CENTER);
         }
         else if (pancaked) {

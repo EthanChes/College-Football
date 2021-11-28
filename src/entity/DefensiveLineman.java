@@ -27,8 +27,8 @@ public class DefensiveLineman extends Entity {
         setAnimation(ANIM_UNKNOWN, new Animation(0,0, "defensivelinemovement"));
         setAnimation(ANIM_FALL, new Animation(1,1, "defensivefall"));
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/defensiveline"));
-        speed = 8f;
-        strength = 10f;
+        speed = 3f; // 8
+        strength = 6f; // 10
     }
 
     public Vector2f defensive_movement(Entity ballCarrier, float delta) {
