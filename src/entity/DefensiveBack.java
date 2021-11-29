@@ -37,7 +37,7 @@ public class DefensiveBack extends Entity {
         setAnimation(ANIM_UNKNOWN, new Animation(0,0, "defensivelinemovement"));
         setAnimation(ANIM_FALL, new Animation(1,1, "defensivefall"));
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/defensiveback"));
-        speed = 10f;
+        speed = 9f;
         manCoverage = 10f;
         strength = 10f;
         catching = 10f;
@@ -124,15 +124,19 @@ public class DefensiveBack extends Entity {
         }
         else if (canPlay) {
             switch (route) {
-                case -3 : break; // Blitz Left
-                case -2 : break; // Blitz Right
-                case -1 :
+                case -3:
+                    uniqueEvents = true;
+                    break; // Blitz Left
+                case -2:
+                    uniqueEvents = true;
+                    break; // Blitz Right
+                case -1:
                     uniqueEvents = true;
                     break; // Blitz Middle
-                case 0 : // Man-Man
+                case 0: // Man-Man
                     if (guardedReceiver != 0) {
                         Vector2f newReceiverPos = new Vector2f();
-                        Entity receiver = world.getCountingUpEntity(22-guardedReceiver);
+                        Entity receiver = world.getCountingUpEntity(22 - guardedReceiver);
                         boolean canDefend = true;
                         Random rand = new Random();
                         int rand_check = rand.nextInt(((int) manCoverage * 100) + 1500);
@@ -152,7 +156,7 @@ public class DefensiveBack extends Entity {
                             float expectedX = (newReceiverPos.x + changes.x);
                             float expectedY = (newReceiverPos.y + changes.y);
 
-                            coverageMovement.set(expectedX,expectedY);
+                            coverageMovement.set(expectedX, expectedY);
 
 
                             receiverKnownPos.set(newReceiverPos.x, newReceiverPos.y);
@@ -182,8 +186,16 @@ public class DefensiveBack extends Entity {
                     }
 
                     break;
-                case 1 : break; // Zones
-                case 2 : break;
+                case 1: { // Low Zone Top
+                    int zoneRadius = 6;
+                    Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 5, -240);
+                    break; // Zones
+                  }
+                case 2 : { // Low Zone Bottom
+                    int zoneRadius = 6;
+                    Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 5, -260);
+                    break;
+                }
 
             } // End of Switch - Route
 

@@ -90,6 +90,8 @@ public class Quarterback extends Entity {
                 if (time_current - timePass > .25) { // Waits until frame of qb animation throw to move football
                     football.useAnimation(1);
                     football.transform.pos.set(transform.getEntityPosX() - .3f, transform.getEntityPosY() + .75f, 0);
+                } else {
+                    football.transform.pos.set(transform.pos.x + .125f, transform.pos.y + .125f, 0);
                 }
             } else if (time_current - timePass > .35 && time_current - timePass < .37 && canPlay) {
                 football.startPass();

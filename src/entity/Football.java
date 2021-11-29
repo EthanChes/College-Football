@@ -79,6 +79,8 @@ public class Football extends Entity {
 
             if (throw_height > 0) {
                 throw_height -= (throw_power*delta);
+            } else {
+                canPlay = false;
             }
 
         }
