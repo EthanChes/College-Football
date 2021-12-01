@@ -317,6 +317,24 @@ public abstract class Entity {
 
     public int getAnimationIndex() { return use_animation; }
 
+    public Vector2f moveToward(float x, float y, float delta) {
+        Vector2f movement = new Vector2f();
+
+        if (this.transform.pos.x - speed * delta > x) {
+            movement.add(-speed * delta, 0);
+        } else if (this.transform.pos.x + speed * delta < x) {
+            movement.add(speed * delta, 0);
+        }
+
+        if (this.transform.pos.y - speed * delta > y) {
+            movement.add(0, -speed * delta);
+        } else if (this.transform.pos.y + speed * delta < y) {
+            movement.add(0, speed * delta);
+        }
+
+        return movement;
+    }
+
 
     public static void deleteAsset() {
         model = null;

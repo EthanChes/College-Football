@@ -10,7 +10,7 @@ public class GameManager {
     float xMin;
     float xEndzoneLeft;
     float xEndzoneRight;
-    public static float ballPosX = 194f;
+    public static float ballPosX = 192f;
     public static float ballPosY = -250f;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
@@ -45,8 +45,8 @@ public class GameManager {
         return false;
     }
 
-    public void setBallPosX(World world) { this.ballPosX = world.getFootballEntity().transform.pos.x; }
-    public void setBallPosY(World world) { this.ballPosY = world.getFootballEntity().transform.pos.y; }
+    public void setBallPosX(World world) { this.ballPosX = world.getFootballEntity().transform.pos.x - .6f; }
+    public void setBallPosY(World world) { this.ballPosY = world.getFootballEntity().transform.pos.y + .3f; }
 
     public float getBallPosX() { return ballPosX; }
     public float getBallPosY() { return ballPosY; }

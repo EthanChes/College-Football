@@ -86,8 +86,8 @@ public class Football extends Entity {
         }
 
         if (passDropStart != 0) {
-            if (passDropStart + .75 > Timer.getTime()) {
-                movement.add(-delta*5, 0);
+            if (passDropStart + .375 > Timer.getTime()) {
+                movement.add(-delta*2, 0);
             } else {
                 passDropStart = 0;
                 canPlay = false;
@@ -112,7 +112,9 @@ public class Football extends Entity {
             world.getFootballEntity().useAnimation(0);
         }
 
-        move(movement);
+        if (canPlay) {
+            move(movement);
+        }
 
         camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), .07f); // Camera adjusts to center football
     }

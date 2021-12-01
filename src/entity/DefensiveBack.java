@@ -37,7 +37,7 @@ public class DefensiveBack extends Entity {
         setAnimation(ANIM_UNKNOWN, new Animation(0,0, "defensivelinemovement"));
         setAnimation(ANIM_FALL, new Animation(1,1, "defensivefall"));
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/defensiveback"));
-        speed = 9f;
+        speed = 10f;
         manCoverage = 10f;
         strength = 10f;
         catching = 10f;
@@ -118,18 +118,16 @@ public class DefensiveBack extends Entity {
         }
 
         // Cornerback Plays Off Ball Defense in Man-Man or Blitzes
-        if (uniqueEvents && canPlay) {
+        if (uniqueEvents && canPlay && ! pancaked) {
             canCollide = true;
             movement.add(defensive_movement(world.getBallCarrier(),delta));
         }
         else if (canPlay) {
             switch (route) {
                 case -3:
-                    uniqueEvents = true;
-                    break; // Blitz Left
+                    // Blitz Left
                 case -2:
-                    uniqueEvents = true;
-                    break; // Blitz Right
+                    // Blitz Right
                 case -1:
                     uniqueEvents = true;
                     break; // Blitz Middle
@@ -139,7 +137,7 @@ public class DefensiveBack extends Entity {
                         Entity receiver = world.getCountingUpEntity(22 - guardedReceiver);
                         boolean canDefend = true;
                         Random rand = new Random();
-                        int rand_check = rand.nextInt(((int) manCoverage * 100) + 1500);
+                        int rand_check = rand.nextInt(((int) manCoverage * 100) + 2500);
                         if (rand_check <= manCoverage * 100 && receiverKnownPos.x != 0) {
                             timeSinceLastCoverageAttempt = Timer.getTime();
 
@@ -189,11 +187,35 @@ public class DefensiveBack extends Entity {
                 case 1: { // Low Zone Top
                     int zoneRadius = 6;
                     Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 5, -240);
+                    movement.add(moveToward(zoneLoc.x, zoneLoc.y,delta));
                     break; // Zones
-                  }
+                }
                 case 2 : { // Low Zone Bottom
                     int zoneRadius = 6;
                     Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 5, -260);
+                    movement.add(moveToward(zoneLoc.x, zoneLoc.y,delta));
+                    break;
+                }
+
+                case 3 : { // High Zone Bottom
+                    int zoneRadius = 6;
+                    Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 20, -260);
+                    movement.add(moveToward(zoneLoc.x, zoneLoc.y,delta));
+                    break;
+                }
+
+
+                case 4 : { // High Zone Top
+                    int zoneRadius = 6;
+                    Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 20, -240);
+                    movement.add(moveToward(zoneLoc.x, zoneLoc.y,delta));
+                    break;
+                }
+
+                case 5 : { // Mid Zone Mid
+                    int zoneRadius = 6;
+                    Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 12, -250);
+                    movement.add(moveToward(zoneLoc.x, zoneLoc.y,delta));
                     break;
                 }
 
@@ -202,12 +224,21 @@ public class DefensiveBack extends Entity {
 
         }
 
-        move(movement);
+        if (! pancaked) {
+            move(movement);
+        }
 
 
 
-
-        if (movement.x != 0 || movement.y != 0) {
+        if (pancaked) {
+            useAnimation(ANIM_FALL);
+            canCollide = false;
+            if (Timer.getTime() > timePancaked + 3) {
+                pancaked = false;
+                canCollide = true;
+            }
+        }
+        else if (movement.x != 0 || movement.y != 0) {
             useAnimation(ANIM_MOVE);
         }
         else {
@@ -221,9 +252,16 @@ public class DefensiveBack extends Entity {
                 if (collidingWithFootball(this,world)); // Interception, keep this nothing for now?
             }
             else if (canCollide) {
-                if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && tackle(world.getBallCarrier())) {
-                    world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
-                    canPlay = false;
+                if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime()) {
+                    boolean tackResult = tackle(world.getBallCarrier());
+                    if (tackResult) {
+                        world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
+                        canPlay = false;
+                    }
+                    else {
+                        this.pancaked = true;
+                        timePancaked = Timer.getTime();
+                    }
                 }
             }
 
