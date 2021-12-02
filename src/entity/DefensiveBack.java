@@ -126,12 +126,12 @@ public class DefensiveBack extends Entity {
         }
 
         // Cornerback Plays Off Ball Defense in Man-Man or Blitzes
-        if (uniqueEvents && canPlay && ! pancaked) {
+        if (uniqueEvents && canPlay && world.getBallCarrier() != world.getFootballEntity() && ! pancaked) {
             canCollide = true;
             movement.add(defensive_movement(world.getBallCarrier(),delta));
         }
-        else if (pass) {
-            moveToward(Football.wideReceiverX, Football.wideReceiverY,delta);
+        else if (world.getFootballEntity().pass) {
+            movement.add(moveToward(Football.wideReceiverX, Football.wideReceiverY,delta));
         }
         else if (canPlay) {
             switch (route) {
@@ -362,7 +362,7 @@ public class DefensiveBack extends Entity {
         if (canCollide && collidingWithBallCarrier(this,world)) {
             if (world.getBallCarrier() == world.getFootballEntity()) {
                 if (collidingWithFootball(this,world)) { // Interception
-
+                    System.out.println("Interception");
                 }
             }
             else if (canCollide) {

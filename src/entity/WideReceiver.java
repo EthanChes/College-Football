@@ -68,7 +68,6 @@ public class WideReceiver extends Entity {
             Random rand = new Random();
             if (closestDefender.transform.pos.distance(this.transform.pos) <= 2.75f && catchAttempt) {
                 int rand_output = rand.nextInt((int) (this.catching * 100 + closestDefender.catching * 100));
-                System.out.println(rand_output + " " + closestDefender.transform.pos.distance(this.transform.pos));
                 if (rand_output <= this.catching * 100) {
                     this.inCatch = true;
                     this.timeCatch = Timer.getTime();
@@ -109,7 +108,7 @@ public class WideReceiver extends Entity {
             movement.add(speed*delta,0);
         }
 
-        if (!hasBall && canPlay) { // Route Movements
+        if (!hasBall && canPlay && !world.getFootballEntity().pass) { // Route Movements
             switch (route) {
 
                 case 0 : if (routeMovement <= 90) { // Fade
@@ -147,6 +146,9 @@ public class WideReceiver extends Entity {
                     break;
 
             }
+        }
+        else if (world.getFootballEntity().pass) {
+            movement.add(moveToward(Football.wideReceiverX, Football.wideReceiverY,delta));
         }
 
         if (canPlay) {

@@ -112,7 +112,6 @@ public abstract class Entity {
         Collision collision = world.getFootballEntity().bounding_box.getCollision(entity.bounding_box);
 
         if (collision.isIntersecting && throw_height > 0 && throw_height < 6) { // 6 Will Be Starting Receiver Height
-            System.out.println("Catch");
             return true;
         }
         else if (collision.isIntersecting && ! entity.hasBall) { // Remove ! entity.hasBall for final version, this just helps with print message

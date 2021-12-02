@@ -44,7 +44,7 @@ public class Football extends Entity {
             useAnimation(ANIM_QB_THROW);
 
             if (gotWideReceiverPos) { // Gets Location of WR at time of pass
-                this.throw_power = (world.getQuarterbackEntity().throw_power) * 2.5f;
+                this.throw_power = (world.getQuarterbackEntity().throw_power) * 5f;
                 Entity wideReceiver = world.getSpecifiedEntity(WideReceiver.totalReceivers + Quarterback.receiverPass + 1);
                 Vector2f projLoc = getProjectedLocation(wideReceiver, this, delta,world);
 
