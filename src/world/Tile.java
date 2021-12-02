@@ -27,6 +27,7 @@ public class Tile {
     public static final Tile midtopZero = new Tile("fieldinfo/midtopzero"); // id 19
     public static final Tile midbottomZero = new Tile("fieldinfo/midbottomzero"); // id 20
     public static final Tile midTopFive = new Tile("fieldinfo/midtopfive"); // id 21
+    public static final Tile alabamaLogo = new Tile("fieldinfo/alabamaLogo"); // id 22
 
     private byte id; // Represents constant textures above
     private boolean solid; // represents if tile should collide with entities.

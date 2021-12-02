@@ -6,6 +6,8 @@ import graphics.Window;
 import org.joml.Vector2f;
 import world.World;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
@@ -101,8 +103,11 @@ public class DefensiveBack extends Entity {
                         case 2 : this.transform.pos.y = GameManager.ballPosY - 4f; break; // Right
                     }
                     break;
-                case 1 : break; // Zones
-                case 2 : break;
+                case 1 : this.transform.pos.set(GameManager.ballPosX + 5, -240,0); break; // Zones
+                case 2 : this.transform.pos.set(GameManager.ballPosX + 5, -260,0); break;
+                case 3 : this.transform.pos.set(GameManager.ballPosX + 20, -260,0); break;
+                case 4 : this.transform.pos.set(GameManager.ballPosX + 20, -240,0); break;
+                case 5 : this.transform.pos.set(GameManager.ballPosX + 12, -250,0); break;
             }
         }
     }
@@ -185,37 +190,127 @@ public class DefensiveBack extends Entity {
 
                     break;
                 case 1: { // Low Zone Top
-                    int zoneRadius = 6;
+                    int zoneRadius = 8;
                     Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 5, -240);
-                    movement.add(moveToward(zoneLoc.x, zoneLoc.y,delta));
+                    List<Entity> receiversInZone = new ArrayList<Entity>();;
+                    for (int i = 16; i < 22; i++) {
+                        if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x,zoneLoc.y,0) < zoneRadius) {
+                            receiversInZone.add(world.getCountingUpEntity(i));
+                        }
+                    }
+                    Vector2f averageZonePos = new Vector2f(0,0);
+                    for (int i = 0; i < receiversInZone.size(); i++) {
+                        averageZonePos.x += receiversInZone.get(i).transform.pos.x;
+                        averageZonePos.y += receiversInZone.get(i).transform.pos.y;
+                    }
+                    averageZonePos.x /= receiversInZone.size();
+                    averageZonePos.y /= receiversInZone.size();
+                    if (receiversInZone.size() == 0) {
+                        movement.add(moveToward(zoneLoc.x, zoneLoc.y, delta));
+                    } else {
+                        movement.add(moveToward(averageZonePos.x, averageZonePos.y,delta));
+                    }
                     break; // Zones
                 }
                 case 2 : { // Low Zone Bottom
-                    int zoneRadius = 6;
+                    int zoneRadius = 8;
                     Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 5, -260);
-                    movement.add(moveToward(zoneLoc.x, zoneLoc.y,delta));
+                    List<Entity> receiversInZone = new ArrayList<Entity>();;
+                    for (int i = 16; i < 22; i++) {
+                        if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x,zoneLoc.y,0) < zoneRadius) {
+                            receiversInZone.add(world.getCountingUpEntity(i));
+                        }
+                    }
+                    Vector2f averageZonePos = new Vector2f(0,0);
+                    for (int i = 0; i < receiversInZone.size(); i++) {
+                        averageZonePos.x += receiversInZone.get(i).transform.pos.x;
+                        averageZonePos.y += receiversInZone.get(i).transform.pos.y;
+                    }
+                    averageZonePos.x /= receiversInZone.size();
+                    averageZonePos.y /= receiversInZone.size();
+                    if (receiversInZone.size() == 0) {
+                        movement.add(moveToward(zoneLoc.x, zoneLoc.y, delta));
+                    } else {
+                        movement.add(moveToward(averageZonePos.x, averageZonePos.y,delta));
+                    }
                     break;
                 }
 
                 case 3 : { // High Zone Bottom
-                    int zoneRadius = 6;
+                    int zoneRadius = 15;
                     Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 20, -260);
-                    movement.add(moveToward(zoneLoc.x, zoneLoc.y,delta));
+                    List<Entity> receiversInZone = new ArrayList<Entity>();;
+                    for (int i = 16; i < 22; i++) {
+                        if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x,zoneLoc.y,0) < zoneRadius) {
+                            receiversInZone.add(world.getCountingUpEntity(i));
+                        }
+                    }
+                    Vector2f averageZonePos = new Vector2f(0,0);
+                    for (int i = 0; i < receiversInZone.size(); i++) {
+                        averageZonePos.x += receiversInZone.get(i).transform.pos.x;
+                        averageZonePos.y += receiversInZone.get(i).transform.pos.y;
+                    }
+                    averageZonePos.x /= receiversInZone.size();
+                    averageZonePos.y /= receiversInZone.size();
+                    if (receiversInZone.size() == 0) {
+                        movement.add(moveToward(zoneLoc.x, zoneLoc.y, delta));
+                    } else {
+                        movement.add(moveToward(averageZonePos.x, averageZonePos.y,delta));
+                    }
                     break;
                 }
 
 
                 case 4 : { // High Zone Top
-                    int zoneRadius = 6;
+                    int zoneRadius = 15;
                     Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 20, -240);
-                    movement.add(moveToward(zoneLoc.x, zoneLoc.y,delta));
+                    List<Entity> receiversInZone = new ArrayList<Entity>();;
+                    boolean playerBeyondSafety = false;
+                    for (int i = 16; i < 22; i++) {
+                        if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x,zoneLoc.y,0) < zoneRadius) {
+                            receiversInZone.add(world.getCountingUpEntity(i));
+                        }
+                        if (world.getCountingUpEntity(i).transform.pos.x > this.transform.pos.x) {
+                            playerBeyondSafety = true;
+                            i = 22;
+                        }
+                    }
+                    Vector2f averageZonePos = new Vector2f(0,0);
+                    for (int i = 0; i < receiversInZone.size(); i++) {
+                        averageZonePos.x += receiversInZone.get(i).transform.pos.x;
+                        averageZonePos.y += receiversInZone.get(i).transform.pos.y;
+                    }
+                    averageZonePos.x /= receiversInZone.size();
+                    averageZonePos.y /= receiversInZone.size();
+                    if (receiversInZone.size() == 0) {
+                        movement.add(moveToward(zoneLoc.x, zoneLoc.y, delta));
+                    } else {
+                        movement.add(moveToward(averageZonePos.x, averageZonePos.y,delta));
+                    }
                     break;
                 }
 
                 case 5 : { // Mid Zone Mid
-                    int zoneRadius = 6;
+                    int zoneRadius = 8;
                     Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 12, -250);
-                    movement.add(moveToward(zoneLoc.x, zoneLoc.y,delta));
+                    List<Entity> receiversInZone = new ArrayList<Entity>();;
+                    for (int i = 16; i < 22; i++) {
+                        if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x,zoneLoc.y,0) < zoneRadius) {
+                            receiversInZone.add(world.getCountingUpEntity(i));
+                        }
+                    }
+                    Vector2f averageZonePos = new Vector2f(0,0);
+                    for (int i = 0; i < receiversInZone.size(); i++) {
+                        averageZonePos.x += receiversInZone.get(i).transform.pos.x;
+                        averageZonePos.y += receiversInZone.get(i).transform.pos.y;
+                    }
+                    averageZonePos.x /= receiversInZone.size();
+                    averageZonePos.y /= receiversInZone.size();
+                    if (receiversInZone.size() == 0) {
+                        movement.add(moveToward(zoneLoc.x, zoneLoc.y, delta));
+                    } else {
+                        movement.add(moveToward(averageZonePos.x + 3, averageZonePos.y,delta));
+                    }
                     break;
                 }
 

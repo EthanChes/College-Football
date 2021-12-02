@@ -11,6 +11,7 @@ import org.joml.Vector3f;
 import plays.Four_Verticals;
 import plays.Line_Blitz;
 import plays.RB_Dive;
+import plays.Zone;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -77,7 +78,8 @@ public class World {
 
             Four_Verticals O_play = new Four_Verticals(GameManager.ballPosX,GameManager.ballPosY);
             //RB_Dive O_play = new RB_Dive(194 - 2,-250);
-            Line_Blitz D_play = new Line_Blitz(GameManager.ballPosX,GameManager.ballPosY);
+            Zone D_play = new Zone(GameManager.ballPosX,GameManager.ballPosY);
+            //Line_Blitz D_play = new Line_Blitz(GameManager.ballPosX,GameManager.ballPosY);
             entities.addAll(D_play.getEntities());
             entities.addAll(O_play.getEntities());
             setBallCarrier(this.getFootballEntity());
