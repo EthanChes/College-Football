@@ -20,7 +20,6 @@ public class WideReceiver extends Entity {
     public static final int ANIM_RUN = 1;
     public static final int ANIM_IDLE = 0;
 
-    public boolean inCatch = false;
     public double timeCatch = 0;
 
     public WideReceiver(Transform transform) {
@@ -50,6 +49,9 @@ public class WideReceiver extends Entity {
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
         Entity football = world.getFootballEntity();
+
+        System.out.println(hasBall + " W");
+
 
         if (this.uniqueEvents) {
             this.canCollide = true;
@@ -224,7 +226,7 @@ public class WideReceiver extends Entity {
         else if (timeCatch + .125 > Timer.getTime()) {
             useAnimation(ANIM_CATCH);
             if (inCatch) {
-                football.transform.pos.set(transform.pos.x, transform.pos.y, 0);
+                world.getFootballEntity().transform.pos.set(transform.pos.x, transform.pos.y, 0);
             }
         }
         else if (movement.x != 0 || movement.y != 0) {

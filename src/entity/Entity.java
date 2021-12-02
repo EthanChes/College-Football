@@ -39,6 +39,7 @@ public abstract class Entity {
     public boolean catchAttempt = true;
     public static double timeSnapped;
     public double timeSinceLastTackleAttempt = 0;
+    public boolean inCatch = false;
 
     // Player Info
     public byte route = 0;
@@ -194,8 +195,12 @@ public abstract class Entity {
             bounding_box.correctPosition(entity.bounding_box, collision);
             transform.pos.set(bounding_box.getCenter().x, bounding_box.getCenter().y, 0);
 
-            if (this.hasBall) {
+            if (this.hasBall || this.inCatch) {
                 world.getFootballEntity().bounding_box.correctPosition(entity.bounding_box,collision);
+                world.getFootballEntity().transform.pos.set(world.getFootballEntity().bounding_box.getCenter().x,world.getFootballEntity().bounding_box.getCenter().y,0);
+            }
+            if (entity.hasBall || entity.inCatch) {
+                world.getFootballEntity().bounding_box.correctPosition(bounding_box,collision);
                 world.getFootballEntity().transform.pos.set(world.getFootballEntity().bounding_box.getCenter().x,world.getFootballEntity().bounding_box.getCenter().y,0);
             }
 

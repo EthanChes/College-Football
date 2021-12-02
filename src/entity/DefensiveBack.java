@@ -28,7 +28,6 @@ public class DefensiveBack extends Entity {
     public int defenderID = 0; // For Linebackers (Consistent Placement)
     public Vector2f coverageMovement = new Vector2f(0,0);
     public Vector2f receiverKnownPos = new Vector2f(0,0);
-    public boolean inCatch = false;
     public double timeCatch = 0;
     Random rand = new Random();
     float xZoneError = rand.nextInt((int) (11 - zoneCoverage)) - ((1/2) * (11 - zoneCoverage));
