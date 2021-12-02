@@ -48,7 +48,15 @@ public class GameManager {
     }
 
     public void setBallPosX(World world) { this.ballPosX = world.getFootballEntity().transform.pos.x - .6f; }
-    public void setBallPosY(World world) { this.ballPosY = world.getFootballEntity().transform.pos.y + .3f; }
+    public void setBallPosY(World world) {
+        if (world.getFootballEntity().transform.pos.y > -245.9) {
+            this.ballPosY = -245.9f;
+        }
+        else if (world.getFootballEntity().transform.pos.y < -254) {
+            this.ballPosY = -254f;
+        }
+        else { this.ballPosY = world.getFootballEntity().transform.pos.y; }
+    }
 
     public float getBallPosX() { return ballPosX; }
     public float getBallPosY() { return ballPosY; }

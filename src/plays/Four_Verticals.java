@@ -28,13 +28,13 @@ public class Four_Verticals {
         // Add WRs
         entities.add(new WideReceiver(new Transform(ballX, ballY+10)));
         entities.get(6).setRoute(2);
-        entities.add(new WideReceiver(new Transform(ballX, ballY+14)));
+        entities.add(new WideReceiver(new Transform(ballX, ballY+8)));
         entities.get(7).setRoute(0);
         entities.add(new WideReceiver(new Transform(ballX, ballY - 10)));
         entities.get(8).setRoute(0);
-        entities.add(new WideReceiver(new Transform(ballX,ballY-14)));
+        entities.add(new WideReceiver(new Transform(ballX,ballY-8)));
         entities.get(9).setRoute(0);
-        entities.add(new WideReceiver(new Transform(ballX - 3, ballY + 12)));
+        entities.add(new WideReceiver(new Transform(ballX - 3, ballY + 9)));
         entities.get(10).setRoute(0);
 
         // Symbols for Pass

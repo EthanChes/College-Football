@@ -87,7 +87,9 @@ public class Football extends Entity {
                 movement.add(-delta*2, 0);
             } else {
                 passDropStart = 0;
-                canPlay = false;
+                if (world.getFootballEntity() == world.getBallCarrier()) {
+                    canPlay = false;
+                }
             }
         }
 

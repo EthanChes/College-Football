@@ -32,7 +32,7 @@ public class WideReceiver extends Entity {
         setAnimation(ANIM_RUN_BALL, new Animation(4,16,"widereceiverrunwithball"));
         setAnimation(ANIM_IDLE_BALL, new Animation(1,1,"widereceiveridlewithball"));
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/receiver"));
-        speed = 10f;
+        speed = 8f;
         catching = 10f;
         strength = 10f;
         totalReceivers++;
@@ -68,10 +68,13 @@ public class WideReceiver extends Entity {
 
             Random rand = new Random();
             if (closestDefender.transform.pos.distance(this.transform.pos) <= 2.75f && catchAttempt) {
-                int rand_output = rand.nextInt((int) (this.catching * 100 + closestDefender.catching * 100));
+                int rand_output = rand.nextInt((int) (this.catching * 100 + (closestDefender.catching * 100) * (3 - closestDefender.transform.pos.distance(this.transform.pos))));
                 if (rand_output <= this.catching * 100) {
                     this.inCatch = true;
                     this.timeCatch = Timer.getTime();
+                    for (int i = 0; i < 22; i++) {
+                        world.getCountingUpEntity(i).timeSinceLastTackleAttempt = Timer.getTime() - 1;
+                    }
                 } else {
                     world.getFootballEntity().pass = false;
                     timeCatch = Timer.getTime();
@@ -79,6 +82,9 @@ public class WideReceiver extends Entity {
                 }
             } else if (catchAttempt) {
                 this.inCatch = true;
+                for (int i = 0; i < 22; i++) {
+                    world.getCountingUpEntity(i).timeSinceLastTackleAttempt = Timer.getTime() - 1;
+                }
                 this.timeCatch = Timer.getTime();
             }
             catchAttempt = false;
@@ -194,11 +200,18 @@ public class WideReceiver extends Entity {
             zoomOutWhenNotVisible(this, camera);
         }
 
+        if (hasBall) {
+            System.out.println(getAnimationIndex());
+            System.out.println(canPlay);
+        }
+
 
         // Animations for wide receiver catch & football translations, try to move some of these for more effective coding
         if (getAnimationIndex() == ANIM_FALL) {
             useAnimation(ANIM_FALL);
-            world.getFootballEntity().transform.pos.set(this.transform.pos.x,this.transform.pos.y, 0);
+            if (hasBall) {
+                world.getFootballEntity().transform.pos.set(this.transform.pos.x, this.transform.pos.y, 0);
+            }
         }
         else if (hasBall && (movement.x != 0 || movement.y != 0)) {
             useAnimation(ANIM_RUN_BALL);

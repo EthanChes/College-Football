@@ -42,7 +42,7 @@ public class DefensiveBack extends Entity {
         setAnimation(ANIM_UNKNOWN, new Animation(0,0, "defensivelinemovement"));
         setAnimation(ANIM_FALL, new Animation(1,1, "defensivefall"));
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/defensiveback"));
-        speed = 10f;
+        speed = 8f;
         manCoverage = 10f;
         strength = 10f;
         catching = 10f;
@@ -356,8 +356,8 @@ public class DefensiveBack extends Entity {
             if (world.getBallCarrier() == world.getFootballEntity()) {
                 if ((! (inCatch || hasBall)) && collidingWithFootball(this,world)) { // Interception
 
-                    Entity closestDefender = world.getCountingUpEntity(0);
-                    for (int i = 0; i < 11; i++) {
+                    Entity closestDefender = world.getCountingUpEntity(11);
+                    for (int i = 11; i < 22; i++) {
                         if (closestDefender.transform.pos.distance(this.transform.pos) > world.getCountingUpEntity(i).transform.pos.distance(this.transform.pos)) {
                             closestDefender = world.getCountingUpEntity(i);
                         }
@@ -365,9 +365,12 @@ public class DefensiveBack extends Entity {
 
                     Random rand = new Random();
                     if (closestDefender.transform.pos.distance(this.transform.pos) <= 2.75f && catchAttempt) {
-                        int rand_output = rand.nextInt((int) (this.catching * 100 + closestDefender.catching * 100));
+                        int rand_output = rand.nextInt((int) (this.catching * 100 + (closestDefender.catching * 100) * (3 - closestDefender.transform.pos.distance(this.transform.pos))));
                         if (rand_output <= this.catching * 100) {
                             this.inCatch = true;
+                            for (int i = 0; i < 22; i++) {
+                                world.getCountingUpEntity(i).timeSinceLastTackleAttempt = Timer.getTime() - 1;
+                            }
                             this.timeCatch = Timer.getTime();
                             GameManager.offenseBall = false;
                         } else {
@@ -377,6 +380,9 @@ public class DefensiveBack extends Entity {
                         }
                     } else if (catchAttempt) {
                         this.inCatch = true;
+                        for (int i = 0; i < 22; i++) {
+                            world.getCountingUpEntity(i).timeSinceLastTackleAttempt = Timer.getTime() - 1;
+                        }
                         GameManager.offenseBall = false;
                         this.timeCatch = Timer.getTime();
                     }
