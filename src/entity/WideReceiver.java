@@ -21,7 +21,7 @@ public class WideReceiver extends Entity {
     public static final int ANIM_IDLE = 0;
 
     public boolean inCatch = false;
-    public double timeCatch;
+    public double timeCatch = 0;
 
     public WideReceiver(Transform transform) {
         super(ANIM_SIZE,transform);
@@ -73,6 +73,7 @@ public class WideReceiver extends Entity {
                     this.timeCatch = Timer.getTime();
                 } else {
                     world.getFootballEntity().pass = false;
+                    timeCatch = Timer.getTime();
                     Football.passDropStart = Timer.getTime();
                 }
             } else if (catchAttempt) {
@@ -181,9 +182,12 @@ public class WideReceiver extends Entity {
             useAnimation(ANIM_IDLE_BALL);
             football.transform.pos.set(transform.pos.x - .3f,transform.pos.y + .1f,0);
         }
-        else if (inCatch) {
+        else if (timeCatch + .125 > Timer.getTime()) {
+            System.out.println("True");
             useAnimation(ANIM_CATCH);
-            football.transform.pos.set(transform.pos.x,transform.pos.y,0);
+            if (inCatch) {
+                football.transform.pos.set(transform.pos.x, transform.pos.y, 0);
+            }
         }
         else if (movement.x != 0 || movement.y != 0) {
             useAnimation(ANIM_RUN);
