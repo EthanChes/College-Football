@@ -131,7 +131,7 @@ public class DefensiveBack extends Entity {
             movement.add(defensive_movement(world.getBallCarrier(),delta));
         }
         else if (world.getFootballEntity().pass) {
-            movement.add(moveToward(Football.wideReceiverX, Football.wideReceiverY,delta));
+            movement.add(moveToward(Football.wideReceiverX - 1, Football.wideReceiverY,delta));
         }
         else if (canPlay) {
             switch (route) {

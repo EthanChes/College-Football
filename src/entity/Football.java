@@ -52,9 +52,6 @@ public class Football extends Entity {
                 int rand_outputX = rand.nextInt((int) (12 - world.getQuarterbackEntity().throw_accuracy));
                 int rand_outputY = rand.nextInt((int) (12 - world.getQuarterbackEntity().throw_accuracy));
 
-                rand_outputX = (rand_outputX * 2) - rand_outputX;
-                rand_outputY = (rand_outputY * 2) - rand_outputY;
-
                 wideReceiverX = projLoc.x + rand_outputX;
                 wideReceiverY = projLoc.y + rand_outputY;
 
