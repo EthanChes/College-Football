@@ -88,11 +88,11 @@ public class Quarterback extends Entity {
                     if (hasBall && ! GameManager.userOffense) {
                         movement.add(offenseHasBallMove(world,delta));
                     }
-                    else {
-                        // Block
+                    else if (! hasBall) {
+                        movement.add(offenseBlockUnique(world, delta));
                     }
                 } else {
-                    movement.set(defensive_movement(world.getBallCarrier(), delta));
+                    movement.add(defensive_movement(world.getBallCarrier(), delta));
 
                     if (collidingWithBallCarrier(this,world)) {
                         if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && ! GameManager.offenseBall) {

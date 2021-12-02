@@ -9,6 +9,7 @@ import org.joml.Vector3f;
 import world.World;
 
 import java.util.Random;
+import java.util.Vector;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
@@ -448,6 +449,38 @@ public abstract class Entity {
         timeSinceLastTackleAttempt = Timer.getTime();
 
         return tackle;
+    }
+
+    public Vector2f offenseBlockUnique(World world, float delta) {
+        Vector2f move = new Vector2f();
+
+        int addY;
+
+        if (this.transform.pos.y > world.getBallCarrier().transform.pos.y) {
+            addY = 3;
+        } else {
+            addY = -3;
+        }
+
+        move.add(moveToward(world.getBallCarrier().transform.pos.x + 3, world.getBallCarrier().transform.pos.y + addY,delta));
+
+        return move;
+    }
+
+    public Vector2f defenseBlockUnique(World world, float delta) {
+        Vector2f move = new Vector2f();
+
+        int addY;
+
+        if (this.transform.pos.y > world.getBallCarrier().transform.pos.y) {
+            addY = 3;
+        } else {
+            addY = -3;
+        }
+
+        move.add(moveToward(world.getBallCarrier().transform.pos.x - 3, world.getBallCarrier().transform.pos.y + addY,delta));
+
+        return move;
     }
 
 

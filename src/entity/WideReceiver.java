@@ -161,8 +161,8 @@ public class WideReceiver extends Entity {
             if (GameManager.offenseBall) {
                 if (hasBall && ! GameManager.userOffense) {
                     movement.add(offenseHasBallMove(world,delta));
-                } else {
-                    // Block
+                } else if (! hasBall) {
+                    movement.add(offenseBlockUnique(world, delta));
                 }
             }
             else {

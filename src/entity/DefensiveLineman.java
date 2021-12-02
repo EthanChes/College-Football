@@ -92,7 +92,7 @@ public class DefensiveLineman extends Entity {
                     // Search For Nearby Players Too
                     movement.add(defenseHasBallMove(world,delta));
                 } else {
-                    // Block For Player
+                    movement.add(defenseBlockUnique(world,delta));
                 }
             }
         }

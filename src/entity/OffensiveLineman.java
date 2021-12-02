@@ -231,8 +231,8 @@ public class OffensiveLineman extends Entity {
             } else if (uniqueEvents && GameManager.offenseBall) {
                 if (hasBall) {
                     movement.add(speed*delta,0);
-                } else {
-                    // Block
+                } else if (! hasBall) {
+                    movement.add(offenseBlockUnique(world, delta));
                 }
             } else if (uniqueEvents) {
                 movement.add(defensive_movement(world.getBallCarrier(), delta));

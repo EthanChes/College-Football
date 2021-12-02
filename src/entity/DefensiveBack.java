@@ -111,7 +111,7 @@ public class DefensiveBack extends Entity {
                 movement.add(defenseHasBallMove(world,delta));
             }
             else {
-                    // Block For Player
+                movement.add(defenseBlockUnique(world,delta));
             }
         }
         else if (world.getFootballEntity().pass) {
