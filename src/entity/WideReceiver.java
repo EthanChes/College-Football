@@ -154,13 +154,27 @@ public class WideReceiver extends Entity {
         } else if (uniqueEvents && ! (pancaked || isBeingMovedExternally)) {
             if (GameManager.offenseBall) {
                 if (hasBall && ! GameManager.userOffense) {
-                    movement.add(speed*delta,0);
+                    movement.add(offenseHasBallMove(world,delta));
                 } else {
                     // Block
                 }
             }
             else {
-                // Defense Movements
+                movement.add(defensive_movement(world.getBallCarrier(), delta));
+
+                if (collidingWithBallCarrier(this,world)) {
+                    if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && ! GameManager.offenseBall) {
+                        boolean tackResult = tackle(world.getBallCarrier());
+                        if (tackResult) {
+                            world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
+                            canPlay = false;
+                        }
+                        else {
+                            this.pancaked = true;
+                            timePancaked = Timer.getTime();
+                        }
+                    }
+                }
             }
         }
 

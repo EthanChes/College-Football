@@ -17,8 +17,6 @@ public class DefensiveLineman extends Entity {
     public static final int ANIM_MOVE = 1;
     public static final int ANIM_IDLE = 0;
 
-    public double timeSinceLastTackleAttempt;
-
     public DefensiveLineman(Transform transform) {
         super(ANIM_SIZE, transform);
         uniqueEvents = false;
@@ -29,24 +27,6 @@ public class DefensiveLineman extends Entity {
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/defensiveline"));
         speed = 3f; // 8
         strength = 10f; // 10
-    }
-
-    public Vector2f defensive_movement(Entity ballCarrier, float delta) {
-        Vector2f movement = new Vector2f();
-
-        float posX = ballCarrier.transform.pos.x;
-        float posY = ballCarrier.transform.pos.y;
-
-        if (posX - speed*delta > this.transform.pos.x) {
-            movement.add(speed*delta,0);
-        }
-        else if (posX + speed*delta < this.transform.pos.x){ movement.add(-speed*delta,0); }
-        if (posY - delta*speed > this.transform.pos.y) {
-            movement.add(0,speed*delta);
-        }
-        else if (posY + delta*speed < this.transform.pos.y){ movement.add(0,-speed*delta); }
-
-        return movement;
     }
 
     public Vector2f pursuit(Entity ballCarrier, float delta, World world) {
@@ -65,24 +45,6 @@ public class DefensiveLineman extends Entity {
         }
 
         return movement;
-    }
-
-    public boolean tackle(Entity ballCarrier) {
-        boolean tackle = false;
-
-        Random rand = new Random();
-        int rand_output = rand.nextInt((int) (this.strength*200 + ballCarrier.strength*100));
-
-        if (rand_output <= this.strength*200) {
-            tackle = true;
-            System.out.println("Tackle");
-        }
-        else {
-            System.out.println("Tackle Evaded");
-        }
-        timeSinceLastTackleAttempt = Timer.getTime();
-
-        return tackle;
     }
 
     @Override
@@ -128,7 +90,7 @@ public class DefensiveLineman extends Entity {
             } else {
                 if (hasBall) {
                     // Search For Nearby Players Too
-                    movement.add(-speed*delta,0);
+                    movement.add(defenseHasBallMove(world,delta));
                 } else {
                     // Block For Player
                 }
@@ -161,7 +123,7 @@ public class DefensiveLineman extends Entity {
                 if (collidingWithFootball(this,world)); // Interception, keep this nothing for now?
             }
             else if (canCollide) {
-                if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && tackle(world.getBallCarrier())) {
+                if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && GameManager.offenseBall && tackle(world.getBallCarrier())) {
                     world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
                     canPlay = false;
                 }

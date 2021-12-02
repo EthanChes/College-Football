@@ -1,4 +1,5 @@
 package entity;
+import gameplay.Timer;
 import graphics.Animation;
 import graphics.Camera;
 import graphics.Window;
@@ -10,7 +11,8 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 
 public class Quarterback extends Entity {
-    public static final int ANIM_SIZE = 6;
+    public static final int ANIM_SIZE = 7;
+    public static final int ANIM_RUN = 6;
     public static final int ANIM_PRESNAP = 5;
     public static final int ANIM_HANDOFF = 4;
     public static final int ANIM_FALL = 3;
@@ -29,6 +31,7 @@ public class Quarterback extends Entity {
         setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall"));
         setAnimation(ANIM_HANDOFF, new Animation(1,1,"qbhandoff"));
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/quarterback"));
+        setAnimation(ANIM_RUN, new Animation(4, 16, "widereceiverrouterun"));
         speed = 7f;
         throw_accuracy = 10f;
     }
@@ -83,15 +86,34 @@ public class Quarterback extends Entity {
             if (canPlay && ! (pancaked || isBeingMovedExternally)) {
                 if (GameManager.offenseBall) {
                     if (hasBall && ! GameManager.userOffense) {
-                        movement.add(speed*delta,0);
+                        movement.add(offenseHasBallMove(world,delta));
                     }
                     else {
                         // Block
                     }
                 } else {
-                    // Chase down defenders
+                    movement.set(defensive_movement(world.getBallCarrier(), delta));
+
+                    if (collidingWithBallCarrier(this,world)) {
+                        if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && ! GameManager.offenseBall) {
+                            boolean tackResult = tackle(world.getBallCarrier());
+                            if (tackResult) {
+                                world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
+                                canPlay = false;
+                            }
+                            else {
+                                this.pancaked = true;
+                                timePancaked = Timer.getTime();
+                            }
+                        }
+                    }
                 }
             }
+
+            move(movement);
+
+            useAnimation(ANIM_RUN);
+
         }
         else if (route != 1) {
 

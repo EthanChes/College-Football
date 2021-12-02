@@ -21,7 +21,6 @@ public class DefensiveBack extends Entity {
     public static final int ANIM_MOVE = 1;
     public static final int ANIM_IDLE = 0;
 
-    public double timeSinceLastTackleAttempt;
     public double timeSinceLastCoverageAttempt = -12f;
     public static int guardedReceivers = 0;
     public int guardedReceiver = 0;
@@ -47,7 +46,7 @@ public class DefensiveBack extends Entity {
         manCoverage = 10f;
         strength = 10f;
         catching = 10f;
-        zoneCoverage = 6f;
+        zoneCoverage = 10f;
     }
 
     public void catching() {
@@ -55,43 +54,6 @@ public class DefensiveBack extends Entity {
             this.inCatch = false;
             this.hasBall = true;
         }
-    }
-
-
-    public boolean tackle(Entity ballCarrier) {
-        boolean tackle = false;
-
-        Random rand = new Random();
-        int rand_output = rand.nextInt((int) (this.strength*200 + ballCarrier.strength*100));
-
-        if (rand_output <= this.strength*200) {
-            tackle = true;
-            System.out.println("Tackle");
-        }
-        else {
-            System.out.println("Tackle Evaded");
-        }
-        timeSinceLastTackleAttempt = Timer.getTime();
-
-        return tackle;
-    }
-
-    public Vector2f defensive_movement(Entity ballCarrier, float delta) {
-        Vector2f movement = new Vector2f();
-
-        float posX = ballCarrier.transform.pos.x;
-        float posY = ballCarrier.transform.pos.y;
-
-        if (posX - speed*delta > this.transform.pos.x) {
-            movement.add(speed*delta,0);
-        }
-        else if (posX + speed*delta < this.transform.pos.x){ movement.add(-speed*delta,0); }
-        if (posY - delta*speed > this.transform.pos.y) {
-            movement.add(0,speed*delta);
-        }
-        else if (posY + delta*speed < this.transform.pos.y){ movement.add(0,-speed*delta); }
-
-        return movement;
     }
 
     public void setLocation(World world, float ballX) {
@@ -144,13 +106,12 @@ public class DefensiveBack extends Entity {
             canCollide = true;
             if (GameManager.offenseBall) {
                 movement.add(defensive_movement(world.getBallCarrier(), delta));
-            } else {
-                if (hasBall) {
-                    // Search For Nearby Players Too
-                    movement.add(-speed*delta,0);
-                } else {
+            } else if (hasBall) {
+                // Search For Nearby Players Too
+                movement.add(defenseHasBallMove(world,delta));
+            }
+            else {
                     // Block For Player
-                }
             }
         }
         else if (world.getFootballEntity().pass) {
@@ -358,7 +319,7 @@ public class DefensiveBack extends Entity {
 
         }
 
-        if (! pancaked) {
+        if (! (pancaked || isBeingMovedExternally)) {
             move(movement);
         }
 
@@ -372,6 +333,10 @@ public class DefensiveBack extends Entity {
                 canCollide = true;
             }
         }
+        else if (getAnimationIndex() == 3 && ! canPlay) {
+            useAnimation(ANIM_FALL);
+            world.getFootballEntity().transform.pos.set(this.transform.pos);
+        }
         else if (movement.x != 0 || movement.y != 0) {
             useAnimation(ANIM_MOVE);
             if (hasBall) {
@@ -381,7 +346,6 @@ public class DefensiveBack extends Entity {
         else {
             useAnimation(ANIM_IDLE);
             if (hasBall) {
-                System.out.println(this);
                 world.getFootballEntity().transform.pos.set(this.transform.pos.x, this.transform.pos.y,0);
             }
         }
@@ -391,7 +355,6 @@ public class DefensiveBack extends Entity {
         if (canCollide && collidingWithBallCarrier(this,world)) {
             if (world.getBallCarrier() == world.getFootballEntity()) {
                 if ((! (inCatch || hasBall)) && collidingWithFootball(this,world)) { // Interception
-                    System.out.println("Interception");
 
                     Entity closestDefender = world.getCountingUpEntity(0);
                     for (int i = 0; i < 11; i++) {

@@ -8,6 +8,8 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import world.World;
 
+import java.util.Random;
+
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 public abstract class Entity {
@@ -35,6 +37,7 @@ public abstract class Entity {
     public boolean center = false;
     public boolean catchAttempt = true;
     public static double timeSnapped;
+    public double timeSinceLastTackleAttempt = 0;
 
     // Player Info
     public byte route = 0;
@@ -333,6 +336,118 @@ public abstract class Entity {
         }
 
         return movement;
+    }
+
+    public Vector2f offenseHasBallMove(World world, float delta) {
+        Vector2f move = new Vector2f();
+
+        int playersLeft = 0;
+        int playersRight = 0;
+
+        for (int i = 0; i <= 22; i++) {
+            if (world.getCountingUpEntity(i).transform.pos.distance(this.transform.pos) < 6 && world.getCountingUpEntity(i).transform.pos.x > this.transform.pos.x) {
+                if (world.getCountingUpEntity(i).transform.pos.y > this.transform.pos.y) {
+                    playersRight++;
+                } else {
+                    playersLeft++;
+                }
+            }
+        }
+
+        if (playersRight + playersLeft == 0) {
+            move.add(speed*delta,0);
+            return move;
+        }
+
+        if (playersRight > playersLeft) {
+            if (this.transform.pos.y - speed*delta < -265.9) {
+                move.add(speed*delta,0);
+            } else {
+                move.add(speed*delta, -speed*delta);
+            }
+        } else {
+            if (this.transform.pos.y + speed*delta > -234.3) {
+                move.add(speed*delta,0);
+            } else {
+                move.add(speed * delta, speed * delta);
+            }
+        }
+
+        return move;
+    }
+
+    public Vector2f defenseHasBallMove(World world, float delta) {
+        Vector2f move = new Vector2f();
+
+        int playersLeft = 0;
+        int playersRight = 0;
+
+        for (int i = 0; i <= 22; i++) {
+            if (world.getCountingUpEntity(i).transform.pos.distance(this.transform.pos) < 6 && world.getCountingUpEntity(i).transform.pos.x < this.transform.pos.x) {
+                if (world.getCountingUpEntity(i).transform.pos.y > this.transform.pos.y) {
+                    playersRight++;
+                } else {
+                    playersLeft++;
+                }
+            }
+        }
+
+        if (playersRight + playersLeft == 0) {
+            move.add(-speed*delta,0);
+            return move;
+        }
+
+        if (playersRight > playersLeft) {
+            if (this.transform.pos.y - speed*delta < -265.9) {
+                move.add(-speed*delta,0);
+            } else {
+            move.add(-speed*delta, -speed*delta);
+            }
+        } else {
+            if (this.transform.pos.y + speed*delta > -234.3) {
+                move.add(-speed*delta,0);
+            } else {
+                move.add(-speed * delta, speed * delta);
+            }
+        }
+
+        return move;
+    }
+
+    public Vector2f defensive_movement(Entity ballCarrier, float delta) {
+        Vector2f movement = new Vector2f();
+
+        float posX = ballCarrier.transform.pos.x;
+        float posY = ballCarrier.transform.pos.y;
+
+        if (posX - speed*delta > this.transform.pos.x) {
+            movement.add(speed*delta,0);
+        }
+        else if (posX + speed*delta < this.transform.pos.x){ movement.add(-speed*delta,0); }
+        if (posY - delta*speed > this.transform.pos.y) {
+            movement.add(0,speed*delta);
+        }
+        else if (posY + delta*speed < this.transform.pos.y){ movement.add(0,-speed*delta); }
+
+        return movement;
+    }
+
+    public boolean tackle(Entity ballCarrier) {
+        boolean tackle = false;
+
+        Random rand = new Random();
+        int rand_output = rand.nextInt((int) (this.strength*100 + ballCarrier.strength*100));
+
+        if (rand_output <= this.strength*100) {
+            tackle = true;
+            System.out.println("Tackle");
+        }
+        else {
+            System.out.println("Tackle Evaded");
+        }
+        timeSinceLastTackleAttempt = Timer.getTime();
+
+        return tackle;
     }
 
 
