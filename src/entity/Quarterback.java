@@ -146,15 +146,14 @@ public class Quarterback extends Entity {
                 useAnimation(ANIM_IDLE);
             }
         }
-        else if (hasBall) {
+        else if (route == 1) {
             if (getAnimationIndex() == ANIM_FALL) {
                 useAnimation(ANIM_FALL);
                 world.getFootballEntity().transform.pos.set(this.transform.pos.x, this.transform.pos.y, 0);
             }
             else {
-            useAnimation(ANIM_HANDOFF);
-            world.getFootballEntity().transform.pos.set(this.transform.pos.x,this.transform.pos.y,0); }
-
+                useAnimation(ANIM_HANDOFF);
+            }
             if (canPlay) {
                 move(movement);
             }

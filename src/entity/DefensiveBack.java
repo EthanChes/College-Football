@@ -33,7 +33,6 @@ public class DefensiveBack extends Entity {
     public DefensiveBack(Transform transform) {
         super(ANIM_SIZE, transform);
         uniqueEvents = false;
-        canCollide = false;
         setAnimation(ANIM_IDLE, new Animation(1, 1, "defensivelineidle"));
         setAnimation(ANIM_MOVE, new Animation(4,16,"defensivemovement"));
         setAnimation(ANIM_UNKNOWN, new Animation(0,0, "defensivelinemovement"));
@@ -116,6 +115,10 @@ public class DefensiveBack extends Entity {
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
 
+        if (world.getBallCarrier().transform.pos.x > GameManager.ballPosX + .7f) {
+            uniqueEvents = true;
+        }
+
         // Set DB Position In Accordance With Receivers
         if (this.setLoc) {
             this.setLocation(world, GameManager.ballPosX);
@@ -126,6 +129,9 @@ public class DefensiveBack extends Entity {
         if (uniqueEvents && canPlay && ! pancaked) {
             canCollide = true;
             movement.add(defensive_movement(world.getBallCarrier(),delta));
+        }
+        else if (pass) {
+            moveToward(Football.wideReceiverX, Football.wideReceiverY,delta);
         }
         else if (canPlay) {
             switch (route) {
@@ -238,11 +244,16 @@ public class DefensiveBack extends Entity {
 
                 case 3 : { // High Zone Bottom
                     int zoneRadius = 15;
+                    boolean playerBeyondSafety = false;
                     Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 20, -260);
                     List<Entity> receiversInZone = new ArrayList<Entity>();;
                     for (int i = 16; i < 22; i++) {
                         if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x,zoneLoc.y,0) < zoneRadius) {
                             receiversInZone.add(world.getCountingUpEntity(i));
+                        }
+                        if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x, zoneLoc.y,0)  < zoneRadius) {
+                            playerBeyondSafety = true;
+                            i = 22;
                         }
                     }
                     Vector2f averageZonePos = new Vector2f(0,0);
@@ -252,7 +263,10 @@ public class DefensiveBack extends Entity {
                     }
                     averageZonePos.x /= receiversInZone.size();
                     averageZonePos.y /= receiversInZone.size();
-                    if (receiversInZone.size() == 0) {
+                    if (playerBeyondSafety) {
+                        movement.add(speed*delta,0);
+                    }
+                    else if (receiversInZone.size() == 0) {
                         movement.add(moveToward(zoneLoc.x, zoneLoc.y, delta));
                     } else {
                         movement.add(moveToward(averageZonePos.x, averageZonePos.y,delta));
@@ -282,7 +296,10 @@ public class DefensiveBack extends Entity {
                     }
                     averageZonePos.x /= receiversInZone.size();
                     averageZonePos.y /= receiversInZone.size();
-                    if (receiversInZone.size() == 0) {
+                    if (playerBeyondSafety) {
+                        movement.add(speed*delta,0);
+                    }
+                    else if (receiversInZone.size() == 0) {
                         movement.add(moveToward(zoneLoc.x, zoneLoc.y, delta));
                     } else {
                         movement.add(moveToward(averageZonePos.x, averageZonePos.y,delta));
@@ -344,7 +361,9 @@ public class DefensiveBack extends Entity {
 
         if (canCollide && collidingWithBallCarrier(this,world)) {
             if (world.getBallCarrier() == world.getFootballEntity()) {
-                if (collidingWithFootball(this,world)); // Interception, keep this nothing for now?
+                if (collidingWithFootball(this,world)) { // Interception
+
+                }
             }
             else if (canCollide) {
                 if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime()) {
