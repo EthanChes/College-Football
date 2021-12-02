@@ -45,6 +45,7 @@ public abstract class Entity {
     public float throw_power = 10f;
     public float throw_accuracy = 10f;
     public float catching = 10f;
+    public float zoneCoverage = 10f;
 
     public Entity(int max_animations, Transform transform) {
         this.transform = transform;

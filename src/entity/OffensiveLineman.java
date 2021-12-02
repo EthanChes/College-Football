@@ -223,9 +223,19 @@ public class OffensiveLineman extends Entity {
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
 
-        if ((route == 0 || route == -1) && canPlay) {
-            movement.add(passBlockMovement(delta,world));
-        } else if (canPlay) { movement.add(runBlockMovement(delta,world)); }
+        if (canPlay || ! (pancaked || isBeingMovedExternally)) {
+            if ((route == 0 || route == -1) && !uniqueEvents) {
+                movement.add(passBlockMovement(delta, world));
+            } else if (!uniqueEvents) {
+                movement.add(runBlockMovement(delta, world));
+            } else if (uniqueEvents && GameManager.offenseBall) {
+                if (hasBall) {
+                    movement.add(speed*delta,0);
+                } else {
+                    // Block
+                }
+            }
+        }
 
         if (canPlay)
             move(movement);

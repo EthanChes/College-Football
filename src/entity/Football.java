@@ -49,8 +49,8 @@ public class Football extends Entity {
                 Vector2f projLoc = getProjectedLocation(wideReceiver, this, delta,world);
 
                 Random rand = new Random();
-                int rand_outputX = rand.nextInt((int) (12 - world.getQuarterbackEntity().throw_accuracy));
-                int rand_outputY = rand.nextInt((int) (12 - world.getQuarterbackEntity().throw_accuracy));
+                float rand_outputX = rand.nextInt((int) (12 - world.getQuarterbackEntity().throw_accuracy)) - (1/2 * (12 - world.getQuarterbackEntity().throw_accuracy));
+                float rand_outputY = rand.nextInt((int) (12 - world.getQuarterbackEntity().throw_accuracy)) - (1/2 * (12 - world.getQuarterbackEntity().throw_accuracy));
 
                 wideReceiverX = projLoc.x + rand_outputX;
                 wideReceiverY = projLoc.y + rand_outputY;

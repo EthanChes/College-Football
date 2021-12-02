@@ -120,8 +120,19 @@ public class DefensiveLineman extends Entity {
 
         if (canPlay && (! uniqueEvents) && (! pancaked) && ! isBeingMovedExternally) {
             movement.add(pursuit(world.getBallCarrier(), delta,world));
-        } else if (uniqueEvents && canPlay && (! pancaked) && ! isBeingMovedExternally) {
-            movement.add(defensive_movement(world.getBallCarrier(),delta));
+        }
+        else if (uniqueEvents && canPlay && world.getBallCarrier() != world.getFootballEntity() && ! (pancaked || isBeingMovedExternally)) {
+            canCollide = true;
+            if (GameManager.offenseBall) {
+                movement.add(defensive_movement(world.getBallCarrier(), delta));
+            } else {
+                if (hasBall) {
+                    // Search For Nearby Players Too
+                    movement.add(-speed*delta,0);
+                } else {
+                    // Block For Player
+                }
+            }
         }
 
         if (canPlay && ! isBeingMovedExternally) {

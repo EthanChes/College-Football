@@ -34,6 +34,7 @@ public class WideReceiver extends Entity {
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/receiver"));
         speed = 10f;
         catching = 10f;
+        strength = 10f;
         totalReceivers++;
         noCollision();
     }
@@ -109,7 +110,7 @@ public class WideReceiver extends Entity {
             movement.add(speed*delta,0);
         }
 
-        if (!hasBall && canPlay && !world.getFootballEntity().pass) { // Route Movements
+        if (!hasBall && canPlay && ! (world.getFootballEntity().pass || uniqueEvents)) { // Route Movements
             switch (route) {
 
                 case 0 : if (routeMovement <= 90) { // Fade
@@ -148,8 +149,19 @@ public class WideReceiver extends Entity {
 
             }
         }
-        else if (world.getFootballEntity().pass) {
+        else if (world.getFootballEntity().pass && !uniqueEvents) {
             movement.add(moveToward(Football.wideReceiverX, Football.wideReceiverY,delta));
+        } else if (uniqueEvents && ! (pancaked || isBeingMovedExternally)) {
+            if (GameManager.offenseBall) {
+                if (hasBall && ! GameManager.userOffense) {
+                    movement.add(speed*delta,0);
+                } else {
+                    // Block
+                }
+            }
+            else {
+                // Defense Movements
+            }
         }
 
         if (canPlay) {
@@ -183,7 +195,6 @@ public class WideReceiver extends Entity {
             football.transform.pos.set(transform.pos.x - .3f,transform.pos.y + .1f,0);
         }
         else if (timeCatch + .125 > Timer.getTime()) {
-            System.out.println("True");
             useAnimation(ANIM_CATCH);
             if (inCatch) {
                 football.transform.pos.set(transform.pos.x, transform.pos.y, 0);

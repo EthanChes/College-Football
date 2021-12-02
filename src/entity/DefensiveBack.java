@@ -29,6 +29,11 @@ public class DefensiveBack extends Entity {
     public int defenderID = 0; // For Linebackers (Consistent Placement)
     public Vector2f coverageMovement = new Vector2f(0,0);
     public Vector2f receiverKnownPos = new Vector2f(0,0);
+    public boolean inCatch = false;
+    public double timeCatch = 0;
+    Random rand = new Random();
+    float xZoneError = rand.nextInt((int) (11 - zoneCoverage)) - ((1/2) * (11 - zoneCoverage));
+    float yZoneError = rand.nextInt((int) (11 - zoneCoverage)) - ((1/2) * (11 - zoneCoverage));
 
     public DefensiveBack(Transform transform) {
         super(ANIM_SIZE, transform);
@@ -42,7 +47,16 @@ public class DefensiveBack extends Entity {
         manCoverage = 10f;
         strength = 10f;
         catching = 10f;
+        zoneCoverage = 6f;
     }
+
+    public void catching() {
+        if (timeCatch <= Timer.getTime()) { // Parameter for time during catch, then set hasball and incatch in here.
+            this.inCatch = false;
+            this.hasBall = true;
+        }
+    }
+
 
     public boolean tackle(Entity ballCarrier) {
         boolean tackle = false;
@@ -126,9 +140,18 @@ public class DefensiveBack extends Entity {
         }
 
         // Cornerback Plays Off Ball Defense in Man-Man or Blitzes
-        if (uniqueEvents && canPlay && world.getBallCarrier() != world.getFootballEntity() && ! pancaked) {
+        if (uniqueEvents && canPlay && world.getBallCarrier() != world.getFootballEntity() && ! (pancaked || isBeingMovedExternally)) {
             canCollide = true;
-            movement.add(defensive_movement(world.getBallCarrier(),delta));
+            if (GameManager.offenseBall) {
+                movement.add(defensive_movement(world.getBallCarrier(), delta));
+            } else {
+                if (hasBall) {
+                    // Search For Nearby Players Too
+                    movement.add(-speed*delta,0);
+                } else {
+                    // Block For Player
+                }
+            }
         }
         else if (world.getFootballEntity().pass) {
             movement.add(moveToward(Football.wideReceiverX - 1, Football.wideReceiverY,delta));
@@ -147,7 +170,6 @@ public class DefensiveBack extends Entity {
                         Vector2f newReceiverPos = new Vector2f();
                         Entity receiver = world.getCountingUpEntity(22 - guardedReceiver);
                         boolean canDefend = true;
-                        Random rand = new Random();
                         int rand_check = rand.nextInt(((int) manCoverage * 100) + 2500);
                         if (rand_check <= manCoverage * 100 && receiverKnownPos.x != 0) {
                             timeSinceLastCoverageAttempt = Timer.getTime();
@@ -212,9 +234,9 @@ public class DefensiveBack extends Entity {
                     averageZonePos.x /= receiversInZone.size();
                     averageZonePos.y /= receiversInZone.size();
                     if (receiversInZone.size() == 0) {
-                        movement.add(moveToward(zoneLoc.x, zoneLoc.y, delta));
+                        movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
                     } else {
-                        movement.add(moveToward(averageZonePos.x, averageZonePos.y,delta));
+                        movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError,delta));
                     }
                     break; // Zones
                 }
@@ -235,9 +257,9 @@ public class DefensiveBack extends Entity {
                     averageZonePos.x /= receiversInZone.size();
                     averageZonePos.y /= receiversInZone.size();
                     if (receiversInZone.size() == 0) {
-                        movement.add(moveToward(zoneLoc.x, zoneLoc.y, delta));
+                        movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
                     } else {
-                        movement.add(moveToward(averageZonePos.x, averageZonePos.y,delta));
+                        movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError,delta));
                     }
                     break;
                 }
@@ -267,9 +289,9 @@ public class DefensiveBack extends Entity {
                         movement.add(speed*delta,0);
                     }
                     else if (receiversInZone.size() == 0) {
-                        movement.add(moveToward(zoneLoc.x, zoneLoc.y, delta));
+                        movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
                     } else {
-                        movement.add(moveToward(averageZonePos.x, averageZonePos.y,delta));
+                        movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError,delta));
                     }
                     break;
                 }
@@ -300,9 +322,9 @@ public class DefensiveBack extends Entity {
                         movement.add(speed*delta,0);
                     }
                     else if (receiversInZone.size() == 0) {
-                        movement.add(moveToward(zoneLoc.x, zoneLoc.y, delta));
+                        movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
                     } else {
-                        movement.add(moveToward(averageZonePos.x, averageZonePos.y,delta));
+                        movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError,delta));
                     }
                     break;
                 }
@@ -324,9 +346,9 @@ public class DefensiveBack extends Entity {
                     averageZonePos.x /= receiversInZone.size();
                     averageZonePos.y /= receiversInZone.size();
                     if (receiversInZone.size() == 0) {
-                        movement.add(moveToward(zoneLoc.x, zoneLoc.y, delta));
+                        movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
                     } else {
-                        movement.add(moveToward(averageZonePos.x + 3, averageZonePos.y,delta));
+                        movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError,delta));
                     }
                     break;
                 }
@@ -352,21 +374,55 @@ public class DefensiveBack extends Entity {
         }
         else if (movement.x != 0 || movement.y != 0) {
             useAnimation(ANIM_MOVE);
+            if (hasBall) {
+                world.getFootballEntity().transform.pos.set(this.transform.pos.x, this.transform.pos.y,0);
+            }
         }
         else {
             useAnimation(ANIM_IDLE);
+            if (hasBall) {
+                System.out.println(this);
+                world.getFootballEntity().transform.pos.set(this.transform.pos.x, this.transform.pos.y,0);
+            }
         }
 
 
 
         if (canCollide && collidingWithBallCarrier(this,world)) {
             if (world.getBallCarrier() == world.getFootballEntity()) {
-                if (collidingWithFootball(this,world)) { // Interception
+                if ((! (inCatch || hasBall)) && collidingWithFootball(this,world)) { // Interception
                     System.out.println("Interception");
+
+                    Entity closestDefender = world.getCountingUpEntity(0);
+                    for (int i = 0; i < 11; i++) {
+                        if (closestDefender.transform.pos.distance(this.transform.pos) > world.getCountingUpEntity(i).transform.pos.distance(this.transform.pos)) {
+                            closestDefender = world.getCountingUpEntity(i);
+                        }
+                    }
+
+                    Random rand = new Random();
+                    if (closestDefender.transform.pos.distance(this.transform.pos) <= 2.75f && catchAttempt) {
+                        int rand_output = rand.nextInt((int) (this.catching * 100 + closestDefender.catching * 100));
+                        if (rand_output <= this.catching * 100) {
+                            this.inCatch = true;
+                            this.timeCatch = Timer.getTime();
+                            GameManager.offenseBall = false;
+                        } else {
+                            world.getFootballEntity().pass = false;
+                            timeCatch = Timer.getTime();
+                            Football.passDropStart = Timer.getTime();
+                        }
+                    } else if (catchAttempt) {
+                        this.inCatch = true;
+                        GameManager.offenseBall = false;
+                        this.timeCatch = Timer.getTime();
+                    }
+
+                    catchAttempt = false;
                 }
             }
             else if (canCollide) {
-                if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime()) {
+                if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && GameManager.offenseBall) {
                     boolean tackResult = tackle(world.getBallCarrier());
                     if (tackResult) {
                         world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
@@ -379,6 +435,18 @@ public class DefensiveBack extends Entity {
                 }
             }
 
+        }
+
+        if (inCatch) {
+            for (int i = 0; i < 22; i++) {
+                world.getCountingUpEntity(i).uniqueEvents = true;
+            }
+
+            world.getFootballEntity().useAnimation(1);
+            passCaught(world);
+            catching();
+            world.setBallCarrier(this);
+            camera.setProjection(640,480);
         }
 
         if (! (canPlay || playStart)) {

@@ -79,7 +79,21 @@ public class Quarterback extends Entity {
         double time_current = getTime();
         Entity football = world.getFootballEntity();
 
-        if (route != 1) {
+        if (uniqueEvents) {
+            if (canPlay && ! (pancaked || isBeingMovedExternally)) {
+                if (GameManager.offenseBall) {
+                    if (hasBall && ! GameManager.userOffense) {
+                        movement.add(speed*delta,0);
+                    }
+                    else {
+                        // Block
+                    }
+                } else {
+                    // Chase down defenders
+                }
+            }
+        }
+        else if (route != 1) {
 
             if (hasBall && true) userControl = true; // change && true to gamemanger user is on team on offense
             else userControl = false;
