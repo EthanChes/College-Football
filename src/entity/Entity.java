@@ -441,6 +441,10 @@ public abstract class Entity {
         return movement;
     }
 
+    public void preventBallGlitchAfterPlay(Entity football) {
+        football.transform.pos.set(this.transform.pos);
+    }
+
     public boolean tackle(Entity ballCarrier) {
         boolean tackle = false;
 

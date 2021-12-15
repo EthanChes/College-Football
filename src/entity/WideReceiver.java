@@ -196,8 +196,10 @@ public class WideReceiver extends Entity {
             }
         }
 
-        if (canPlay) {
+        if (canPlay && ! (isBeingMovedExternally || pancaked)) {
             move(movement);
+        } else {
+            isBeingMovedExternally = false;
         }
 
         // Movements for receiver symbol

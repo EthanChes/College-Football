@@ -173,6 +173,8 @@ public class World {
         for (int i = 0; i < 22; i++) {
             if (getCountingUpEntity(i).hasBall && getBallCarrier() != getCountingUpEntity(i)) {
                 getCountingUpEntity(i).hasBall = false;
+            } else if (! Entity.canPlay && getCountingUpEntity(i) == getBallCarrier()) {
+                getCountingUpEntity(i).preventBallGlitchAfterPlay(getFootballEntity());
             }
         }
 

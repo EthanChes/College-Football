@@ -8,6 +8,9 @@ import org.joml.Vector2f;
 import world.World;
 import java.util.Random;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
+
 public class OffensiveLineman extends Entity {
     public static final int ANIM_SIZE = 7;
     public static final int ANIM_IDLE = 0;
@@ -32,7 +35,7 @@ public class OffensiveLineman extends Entity {
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/offensiveline"));
         setAnimation(ANIM_CENTER, new Animation(2, 4, "presnap/center"));
         speed = 3f;
-        strength = 10f;
+        strength = 50f;
     }
 
     public Vector2f passBlockMovement(float delta, World world) {
@@ -223,34 +226,51 @@ public class OffensiveLineman extends Entity {
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
 
-        if (canPlay || ! (pancaked || isBeingMovedExternally)) {
-            if ((route == 0 || route == -1) && !uniqueEvents) {
-                movement.add(passBlockMovement(delta, world));
-            } else if (!uniqueEvents) {
-                movement.add(runBlockMovement(delta, world));
-            }
-            else if (timeFumble > 0 && getAnimationIndex() != 3) {
-                movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
-            }
-            else if (uniqueEvents && GameManager.offenseBall) {
-                if (hasBall) {
-                    movement.add(speed*delta,0);
-                } else if (! hasBall) {
-                    movement.add(offenseBlockUnique(world, delta));
-                }
-            } else if (uniqueEvents) {
-                movement.add(defensive_movement(world.getBallCarrier(), delta));
+        if (hasBall && GameManager.userOffense) userControl = true; // change && true to gamemanager user controls offensive team
+        else userControl = false;
 
-                if (collidingWithBallCarrier(this,world)) {
-                    if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && ! GameManager.offenseBall) {
-                        boolean tackResult = tackle(world.getBallCarrier());
-                        if (tackResult) {
-                            world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
-                            canPlay = false;
-                        }
-                        else {
-                            this.pancaked = true;
-                            timePancaked = Timer.getTime();
+        if (window.getInput().isKeyDown(GLFW_KEY_S) && userControl) { // When S is pressed, player moves 5 down
+            movement.add(0,-speed*delta); // multiply by delta (framecap) to move 10 frames in a second.
+        }
+        if (window.getInput().isKeyDown(GLFW_KEY_A) && userControl) { // When A is pressed, camera shifts left 5
+            movement.add(-speed*delta,0);
+        }
+        if (window.getInput().isKeyDown(GLFW_KEY_W) && userControl) { // When W is pressed, camera shifts up 5
+            movement.add(0,speed*delta);
+        }
+        if (window.getInput().isKeyDown(GLFW_KEY_D) && userControl) { // When D is pressed, camera shifts right 5
+            movement.add(speed*delta,0);
+        }
+
+
+
+        if (! userControl) {
+            if (canPlay || !(pancaked || isBeingMovedExternally)) {
+                if ((route == 0 || route == -1) && !uniqueEvents) {
+                    movement.add(passBlockMovement(delta, world));
+                } else if (!uniqueEvents) {
+                    movement.add(runBlockMovement(delta, world));
+                } else if (timeFumble > 0 && getAnimationIndex() != 3) {
+                    movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
+                } else if (uniqueEvents && GameManager.offenseBall) {
+                    if (hasBall) {
+                        movement.add(speed * delta, 0);
+                    } else if (!hasBall) {
+                        movement.add(offenseBlockUnique(world, delta));
+                    }
+                } else if (uniqueEvents) {
+                    movement.add(defensive_movement(world.getBallCarrier(), delta));
+
+                    if (collidingWithBallCarrier(this, world)) {
+                        if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && !GameManager.offenseBall) {
+                            boolean tackResult = tackle(world.getBallCarrier());
+                            if (tackResult) {
+                                world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
+                                canPlay = false;
+                            } else {
+                                this.pancaked = true;
+                                timePancaked = Timer.getTime();
+                            }
                         }
                     }
                 }

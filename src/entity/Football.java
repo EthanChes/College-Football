@@ -123,6 +123,15 @@ public class Football extends Entity {
                 float setX = rand.nextInt(500) - 250;
                 float setY = rand.nextInt(500) - 250;
 
+                // Set X and Y Vectors for Fumble Movements if They Are Too Low
+                if (setX < 100 && setX > -100) {
+                    setX = 100;
+                }
+
+                if (setY < 100 && setY > -100) {
+                    setY = 100;
+                }
+
                 fumbleMovements.set(setX/25*delta, setY/25*delta);
 
                 for (int i = 0; i < 22; i++) {
@@ -139,7 +148,7 @@ public class Football extends Entity {
             for (int i = 0; i < 22 && timeFumble != -1; i++) {
                 Collision collide = world.getFootballEntity().bounding_box.getCollision(world.getCountingUpEntity(i).bounding_box);
 
-                if (collide.isIntersecting && world.getCountingUpEntity(i).timeFumbled + 3 < Timer.getTime() && (! world.getCountingUpEntity(i).pancaked || ! world.getCountingUpEntity(i).isBeingMovedExternally)) {
+                if (collide.isIntersecting && world.getCountingUpEntity(i).timeFumbled + 3 < Timer.getTime() && ! (world.getCountingUpEntity(i).pancaked || world.getCountingUpEntity(i).isBeingMovedExternally)) {
                     if (i < 11) {
                         GameManager.offenseBall = false;
                     } else {
@@ -147,6 +156,7 @@ public class Football extends Entity {
                     }
 
                     useAnimation(ANIM_QB_THROW_START);
+                    world.getFootballEntity().transform.pos.set(world.getCountingUpEntity(i).transform.pos);
                     world.getCountingUpEntity(i).hasBall = true;
                     world.setBallCarrier(world.getCountingUpEntity(i));
                     System.out.println("Ball Picked Up");
