@@ -247,7 +247,7 @@ public class OffensiveLineman extends Entity {
 
 
         if (! userControl) {
-            if (canPlay || !(pancaked || isBeingMovedExternally)) {
+            if (canPlay && !(pancaked || isBeingMovedExternally)) {
                 if ((route == 0 || route == -1) && !uniqueEvents) {
                     movement.add(passBlockMovement(delta, world));
                 } else if (!uniqueEvents) {
