@@ -50,12 +50,14 @@ public class WideReceiver extends Entity {
         Vector2f movement = new Vector2f();
         Entity football = world.getFootballEntity();
 
+        selectOffensivePlayer(window, world);
+
 
         if (this.uniqueEvents) {
             this.canCollide = true;
         }
 
-        if (hasBall && GameManager.userOffense) userControl = true; // change && true to gamemanager user controls offensive team
+        if ((hasBall && GameManager.userOffense) || forceUserControl) userControl = true; // change && true to gamemanager user controls offensive team
         else userControl = false;
 
         if (! (inCatch || hasBall) && collidingWithFootball(this,world)) { // Put Random Catch Element here

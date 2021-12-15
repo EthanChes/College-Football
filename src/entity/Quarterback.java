@@ -32,7 +32,7 @@ public class Quarterback extends Entity {
         setAnimation(ANIM_HANDOFF, new Animation(1,1,"qbhandoff"));
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/quarterback"));
         setAnimation(ANIM_RUN, new Animation(4, 16, "widereceiverrouterun"));
-        speed = 10f;
+        speed = 7f;
         strength = 10f;
         throw_accuracy = 10f;
     }
@@ -83,6 +83,8 @@ public class Quarterback extends Entity {
         double time_current = getTime();
         Entity football = world.getFootballEntity();
 
+        selectOffensivePlayer(window, world);
+
          if (route != 1) {
             if (timeFumble > 0) {
                 movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
@@ -117,7 +119,7 @@ public class Quarterback extends Entity {
 
             }
 
-            if (hasBall && true) userControl = true; // change && true to gamemanger user is on team on offense
+            if ((hasBall && GameManager.offenseBall) || forceUserControl) userControl = true; // change && true to gamemanger user is on team on offense
             else userControl = false;
 
             if (time_current - timePass < .35) {

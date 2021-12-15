@@ -12,6 +12,7 @@ import java.util.Random;
 import java.util.Vector;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
 
 public abstract class Entity {
     protected static Model model;
@@ -23,9 +24,10 @@ public abstract class Entity {
     // Game booleans
     public static float throw_height;
     public static int totalReceivers = 0;
-    public static int defensiveBacks = 0;
     public static boolean canPlay = false;
     public static boolean playStart = false;
+    public boolean forceUserControl = false;
+    public double timeUserControl;
     protected boolean canCollide = true;
     protected boolean pass = false;
     public boolean hasBall = false;
@@ -185,6 +187,46 @@ public abstract class Entity {
                 transform.pos.set(bounding_box.getCenter(), 0);
             }
         }
+    }
+
+    public void selectOffensivePlayer(Window win, World world) {
+        // Upon Key Press, Switch Player
+        if (win.getInput().isKeyPressed(GLFW_KEY_Z) && GameManager.userOffense && ! GameManager.offenseBall) {
+
+            // Sort To Find New Closest Player
+            Entity closestPlayer = world.getCountingUpEntity(11);
+            for (int i = 11; i < 22; i++) {
+                world.getCountingUpEntity(i).forceUserControl = false;
+                if (closestPlayer.timeUserControl + .5 < Timer.getTime()) {
+                    if (world.getCountingUpEntity(i).transform.pos.distance(world.getBallCarrier().transform.pos) < closestPlayer.transform.pos.distance(world.getBallCarrier().transform.pos)) {
+                        closestPlayer = world.getCountingUpEntity(i);
+                    }
+                }
+            }
+
+            // Force User Control to closestPlayer
+            closestPlayer.forceUserControl = true;
+            closestPlayer.timeUserControl = Timer.getTime();
+            System.out.println(closestPlayer);
+        }
+    }
+
+    public void forceSelectOffensivePlayer(Window win, World world) {
+        // Sort To Find New Closest Player
+        Entity closestPlayer = world.getCountingUpEntity(11);
+        for (int i = 11; i < 22; i++) {
+            world.getCountingUpEntity(i).forceUserControl = false;
+            if (closestPlayer.timeUserControl + .5 < Timer.getTime()) {
+                if (world.getCountingUpEntity(i).transform.pos.distance(world.getBallCarrier().transform.pos) < closestPlayer.transform.pos.distance(world.getBallCarrier().transform.pos)) {
+                    closestPlayer = world.getCountingUpEntity(i);
+                }
+            }
+        }
+
+        // Force User Control to closestPlayer
+        closestPlayer.forceUserControl = true;
+        closestPlayer.timeUserControl = Timer.getTime();
+        System.out.println(closestPlayer);
     }
 
 
@@ -451,7 +493,7 @@ public abstract class Entity {
         Random rand = new Random();
         int rand_output = rand.nextInt((int) (this.strength*100 + ballCarrier.strength*100));
 
-        if (rand_output <= this.strength*50) {
+        if (rand_output <= this.strength*2) { // set to 2
             timeFumble = Timer.getTime();
             ballCarrier.pancaked = true;
             ballCarrier.timePancaked = Timer.getTime();

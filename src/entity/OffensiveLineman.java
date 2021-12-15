@@ -35,7 +35,7 @@ public class OffensiveLineman extends Entity {
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/offensiveline"));
         setAnimation(ANIM_CENTER, new Animation(2, 4, "presnap/center"));
         speed = 3f;
-        strength = 50f;
+        strength = 10f;
     }
 
     public Vector2f passBlockMovement(float delta, World world) {
@@ -226,7 +226,9 @@ public class OffensiveLineman extends Entity {
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
 
-        if (hasBall && GameManager.userOffense) userControl = true; // change && true to gamemanager user controls offensive team
+        selectOffensivePlayer(window, world);
+
+        if ((hasBall && GameManager.userOffense) || forceUserControl) userControl = true; // change && true to gamemanager user controls offensive team
         else userControl = false;
 
         if (window.getInput().isKeyDown(GLFW_KEY_S) && userControl) { // When S is pressed, player moves 5 down
