@@ -301,6 +301,7 @@ public class World {
 
     public void initReset() {
         Entity.timeFumble = -1f;
+        Quarterback.hasHandedOff = false;
         Football.fumbleMovements = new Vector2f();
         gameManager.setBallPosX(this);
         gameManager.setBallPosY(this);
@@ -317,8 +318,8 @@ public class World {
     }
 
     public void enterEntities() {
-        //Four_Verticals O_play = new Four_Verticals(GameManager.ballPosX,GameManager.ballPosY);
-        RB_Dive O_play = new RB_Dive(GameManager.ballPosX,GameManager.ballPosY);
+        Four_Verticals O_play = new Four_Verticals(GameManager.ballPosX,GameManager.ballPosY);
+        //RB_Dive O_play = new RB_Dive(GameManager.ballPosX,GameManager.ballPosY);
         Zone D_play = new Zone(GameManager.ballPosX,GameManager.ballPosY);
         //Line_Blitz D_play = new Line_Blitz(GameManager.ballPosX,GameManager.ballPosY);
         entities.addAll(D_play.getEntities());

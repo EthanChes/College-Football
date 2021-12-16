@@ -184,7 +184,7 @@ public class WideReceiver extends Entity {
 
                     if (collidingWithBallCarrier(this, world)) {
                         if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && !GameManager.offenseBall) {
-                            boolean tackResult = tackle(world.getBallCarrier());
+                            boolean tackResult = tackle(world.getBallCarrier(), window, world);
                             if (tackResult) {
                                 world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
                                 canPlay = false;
@@ -218,7 +218,15 @@ public class WideReceiver extends Entity {
 
 
         // Animations for wide receiver catch & football translations, try to move some of these for more effective coding
-        if (getAnimationIndex() == ANIM_FALL) {
+        if (pancaked) {
+            useAnimation(ANIM_FALL);
+            canCollide = false;
+            if (Timer.getTime() > timePancaked + 3) {
+                pancaked = false;
+                canCollide = true;
+            }
+        }
+        else if (getAnimationIndex() == ANIM_FALL && world.getBallCarrier() == this) {
             useAnimation(ANIM_FALL);
             if (hasBall) {
                 world.getFootballEntity().transform.pos.set(this.transform.pos.x, this.transform.pos.y, 0);

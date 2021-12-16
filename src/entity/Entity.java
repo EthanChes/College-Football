@@ -487,7 +487,13 @@ public abstract class Entity {
         football.transform.pos.set(this.transform.pos);
     }
 
-    public boolean tackle(Entity ballCarrier) {
+    public void setAllOffenseForceUserControlFalse(World world) {
+        for (int i = 11; i < 22; i++) {
+            world.getCountingUpEntity(i).forceUserControl = false;
+        }
+    }
+
+    public boolean tackle(Entity ballCarrier, Window win, World world) {
         boolean tackle = false;
 
         Random rand = new Random();
@@ -495,6 +501,7 @@ public abstract class Entity {
 
         if (rand_output <= this.strength*2) { // set to 2
             timeFumble = Timer.getTime();
+            forceSelectOffensivePlayer(win, world);
             ballCarrier.pancaked = true;
             ballCarrier.timePancaked = Timer.getTime();
             ballCarrier.timeFumbled = Timer.getTime();

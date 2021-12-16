@@ -11,6 +11,9 @@ import world.World;
 
 import java.util.Random;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
+
 public class Football extends Entity {
     public static final int ANIM_SIZE = 3;
     public static final int ANIM_QB_THROW = 2;
@@ -153,6 +156,9 @@ public class Football extends Entity {
                         GameManager.offenseBall = false;
                     } else {
                         GameManager.offenseBall = true;
+                        if (GameManager.userOffense) {
+                            setAllOffenseForceUserControlFalse(world);
+                        }
                     }
 
                     useAnimation(ANIM_QB_THROW_START);

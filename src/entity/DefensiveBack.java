@@ -402,7 +402,7 @@ public class DefensiveBack extends Entity {
             }
             else if (canCollide) {
                 if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && GameManager.offenseBall) {
-                    boolean tackResult = tackle(world.getBallCarrier());
+                    boolean tackResult = tackle(world.getBallCarrier(), window, world);
                     if (tackResult) {
                         world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
                         canPlay = false;

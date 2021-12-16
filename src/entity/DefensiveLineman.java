@@ -131,7 +131,7 @@ public class DefensiveLineman extends Entity {
                 if (collidingWithFootball(this,world)); // Interception, keep this nothing for now?
             }
             else if (canCollide) {
-                if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && GameManager.offenseBall && tackle(world.getBallCarrier())) {
+                if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && GameManager.offenseBall && tackle(world.getBallCarrier(), window, world)) {
                     world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
                     canPlay = false;
                 }

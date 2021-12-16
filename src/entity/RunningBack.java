@@ -33,6 +33,7 @@ public class RunningBack extends Entity {
     public void receiveHandoff(World world) {
         Collision collision = this.bounding_box.getCollision(world.getBallCarrier().bounding_box);
         if (collision.isIntersecting) {
+            Quarterback.hasHandedOff = true;
             world.getBallCarrier().hasBall = false;
             hasBall = true;
             world.setBallCarrier(this);
@@ -70,6 +71,8 @@ public class RunningBack extends Entity {
 
         if ((hasBall && GameManager.offenseBall) || forceUserControl) {
             userControl = true;
+        } else {
+            userControl = false;
         }
 
         // Moves Player using various WASD directions using vectors.
@@ -86,50 +89,58 @@ public class RunningBack extends Entity {
             movement.add(speed*delta,0);
         }
 
-        if (route == 0 && canPlay && ! uniqueEvents) {
-            movement.add(speed*delta,0);
-        }
-        else if (route == 1 && canPlay && ! uniqueEvents) { // Carry Out Handoff
-            movement.add(handoff(delta, world));
-        }
-        else if (timeFumble > 0 && getAnimationIndex() != 3) {
-            movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
-        }
-        else if (uniqueEvents && ! (isBeingMovedExternally || pancaked)) {
-            if (GameManager.offenseBall) {
-                if (hasBall) {
-                    movement.add(offenseHasBallMove(world,delta));
+        if (! userControl) {
+            if (route == 0 && canPlay && !uniqueEvents) {
+                movement.add(speed * delta, 0);
+            } else if (route == 1 && canPlay && !uniqueEvents) { // Carry Out Handoff
+                movement.add(handoff(delta, world));
+            } else if (timeFumble > 0 && getAnimationIndex() != 3) {
+                movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
+            } else if (uniqueEvents && !(isBeingMovedExternally || pancaked)) {
+                if (GameManager.offenseBall) {
+                    if (hasBall) {
+                        movement.add(offenseHasBallMove(world, delta));
+                    } else {
+                        movement.add(offenseBlockUnique(world,delta));
+                    }
                 } else {
-                    // Block
-                }
-            } else {
-                movement.add(defensive_movement(world.getBallCarrier(), delta));
+                    movement.add(defensive_movement(world.getBallCarrier(), delta));
 
-                if (collidingWithBallCarrier(this,world)) {
-                    if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && ! GameManager.offenseBall) {
-                        boolean tackResult = tackle(world.getBallCarrier());
-                        if (tackResult) {
-                            world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
-                            canPlay = false;
-                        }
-                        else {
-                            this.pancaked = true;
-                            timePancaked = Timer.getTime();
+                    if (collidingWithBallCarrier(this, world)) {
+                        if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && !GameManager.offenseBall) {
+                            boolean tackResult = tackle(world.getBallCarrier(), window, world);
+                            if (tackResult) {
+                                world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
+                                canPlay = false;
+                            } else {
+                                this.pancaked = true;
+                                timePancaked = Timer.getTime();
+                            }
                         }
                     }
                 }
             }
         }
 
-        if (canPlay) {
+        if (canPlay && ! pancaked || isBeingMovedExternally) {
             move(movement);
             receiveHandoff(world);
+        } else {
+            isBeingMovedExternally = false;
         }
 
 
 
         // Set Animations
-        if (getAnimationIndex() == 3) {
+        if (pancaked) {
+            useAnimation(ANIM_FALL);
+            canCollide = false;
+            if (Timer.getTime() > timePancaked + 3) {
+                pancaked = false;
+                canCollide = true;
+            }
+        }
+        else if (getAnimationIndex() == 3 && world.getBallCarrier() == this) {
             useAnimation(ANIM_FALL);
             world.getFootballEntity().useAnimation(0);
             world.getFootballEntity().transform.pos.set(this.transform.pos.x,this.transform.pos.y,0);
