@@ -27,21 +27,31 @@ public class GameManager {
     }
 
     public boolean ballCarrierOutOfBounds(World world) { // Check if Out of Bounds (ALL)
-        if (world.getBallCarrier().transform.pos.x > xMax) {
-            Entity.canPlay = false;
-            return true;
+        if (world.getBallCarrier() != world.getFootballEntity()) {
+            if (world.getBallCarrier().transform.pos.x > xMax) {
+                Entity.canPlay = false;
+                return true;
+            } else if (world.getBallCarrier().transform.pos.x < xMin) {
+                Entity.canPlay = false;
+                return true;
+            } else if (world.getBallCarrier().transform.pos.y < yMin) {
+                Entity.canPlay = false;
+                return true;
+            } else if (world.getBallCarrier().transform.pos.y > yMax) {
+                Entity.canPlay = false;
+                return true;
+            }
         }
-        else if (world.getBallCarrier().transform.pos.x < xMin) {
-            Entity.canPlay = false;
-            return true;
-        }
-        else if (world.getBallCarrier().transform.pos.y < yMin) {
-            Entity.canPlay = false;
-            return true;
-        }
-        else if (world.getBallCarrier().transform.pos.y > yMax) {
-            Entity.canPlay = false;
-            return true;
+        else { // For FUmbles
+            if (world.getBallCarrier().transform.pos.x > 366.76367) {
+                return true;
+            } else if (world.getBallCarrier().transform.pos.x < 141.26694) {
+                return true;
+            } else if (world.getBallCarrier().transform.pos.y > -235.13287) {
+                return true;
+            } else if (world.getBallCarrier().transform.pos.y < -266.79953) {
+                return true;
+            }
         }
         return false;
     }

@@ -499,7 +499,7 @@ public abstract class Entity {
         Random rand = new Random();
         int rand_output = rand.nextInt((int) (this.strength*100 + ballCarrier.strength*100));
 
-        if (rand_output <= this.strength*2) { // set to 2
+        if (rand_output <= this.strength*300) { // set to 2
             timeFumble = Timer.getTime();
             forceSelectOffensivePlayer(win, world);
             ballCarrier.pancaked = true;
