@@ -5,6 +5,7 @@ import entity.GameManager;
 import graphics.Camera;
 import graphics.Shader;
 import graphics.Window;
+import gui.SelectPlay;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -19,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 public class World {
     GameManager gameManager = new GameManager(-234.3f, -265.9f, 366.6f, 141.8f, 153f, 354.5f);
@@ -134,32 +137,46 @@ public class World {
 
 
 
-
-
-
     public void render(TileRenderer render, Shader shader, Camera camera, Window window) {
-        int posX = ((int) camera.getPosition().x/ (scale * 2));
-        int posY = ((int) camera.getPosition().y/ (scale * 2));
+        if (! GameManager.selectedPlay) {
+            SelectPlay left = new SelectPlay(window,-2,  SelectPlay.getNextTileID());
+            SelectPlay middle = new SelectPlay(window, 0, SelectPlay.getNextTileID());
+            SelectPlay right = new SelectPlay(window, 2, SelectPlay.getNextTileID());
 
-        for (int count = 0; count < viewX; count++) {
-            for (int counter = 0; counter < viewY; counter++) {
-                Tile t = getTile(count-posX-(viewX/2)+1, counter+posY-(viewY/2));
-                if (t != null) {
-                    render.renderTile(t, count-posX-(viewX/2)+1, -counter-posY+(viewY/2), shader, world, camera);
+            SelectPlay.prepNextTileID();
+
+            left.Render();
+            middle.Render();
+            right.Render();
+
+            left.resizeCamera(window);
+            middle.resizeCamera(window);
+            right.resizeCamera(window);
+        }
+        else {
+            int posX = ((int) camera.getPosition().x / (scale * 2));
+            int posY = ((int) camera.getPosition().y / (scale * 2));
+
+            for (int count = 0; count < viewX; count++) {
+                for (int counter = 0; counter < viewY; counter++) {
+                    Tile t = getTile(count - posX - (viewX / 2) + 1, counter + posY - (viewY / 2));
+                    if (t != null) {
+                        render.renderTile(t, count - posX - (viewX / 2) + 1, -counter - posY + (viewY / 2), shader, world, camera);
+                    }
                 }
             }
-        }
 
-        for (Entity entity : entities) {
-            entity.render(shader,camera,window,this);
-        }
+            for (Entity entity : entities) {
+                entity.render(shader, camera, window, this);
+            }
 
-        for (Entity entity : misc) {
-            entity.render(shader, camera, window, this);
-        }
+            for (Entity entity : misc) {
+                entity.render(shader, camera, window, this);
+            }
 
-        for (int count = 0; count < entities.size(); count++) {
-            entities.get(count).collideWithTiles(this);
+            for (int count = 0; count < entities.size(); count++) {
+                entities.get(count).collideWithTiles(this);
+            }
         }
     }
 
@@ -177,6 +194,20 @@ public class World {
 
         for (Entity e : misc) {
             e.update(delta, window, camera, this);
+        }
+
+        if (! GameManager.selectedPlay) {
+            if (window.getInput().isKeyPressed(GLFW_KEY_1) || window.getInput().isKeyPressed(GLFW_KEY_2) || window.getInput().isKeyPressed(GLFW_KEY_3)) {
+                GameManager.selectedPlay = true;
+            }
+
+            if (window.getInput().isKeyPressed(GLFW_KEY_DOWN)) {
+                SelectPlay.incrementNextTileID();
+            }
+
+            if (window.getInput().isKeyPressed(GLFW_KEY_UP)) {
+                SelectPlay.decrementNextTileID();
+            }
         }
 
         for (int i = 0; i < 22; i++) {
@@ -309,6 +340,7 @@ public class World {
     public Entity getBallCarrier() { return ballCarrier; }
 
     public void initReset() {
+        GameManager.selectedPlay = false;
         Entity.timeFumble = -1f;
         Quarterback.hasHandedOff = false;
         Football.fumbleMovements = new Vector2f();

@@ -1,4 +1,5 @@
 package entity;
+import assets.Assets;
 import collision.AABB;
 import collision.Collision;
 import gameplay.Timer;
@@ -15,7 +16,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
 
 public abstract class Entity {
-    protected static Model model;
     protected Animation[] animations;
     private int use_animation;
     protected AABB bounding_box;
@@ -90,33 +90,7 @@ public abstract class Entity {
         shader.setUniform("sampler", sampler_0);
         shader.setUniform("projection",transform.getProjection(target));
         animations[use_animation].bind(0);
-        model.render();
-    }
-
-    public static void initAsset() {
-        // Forms Tile Structure
-        float[] vertices = new float[]{
-                // VERTICES ARE TWO RIGHT TRIANGLES, Locations of the Corners of the Square formed by the Right Triangles are found below.
-                -1f, 1f, 0, // TOP LEFT 0 (x,y,z) is the formatting
-                1f, 1f, 0, // TOP RIGHT 1
-                1f, -1f, 0, // BOTTOM RIGHT 2
-                -1f, -1f, 0, // BOTTOM LEFT 3
-        };
-
-        float[] texture = new float[]{
-                // Coordinates of Texture location on Model/Vertex Structure. (0,0 BL, 1,1 TR).
-                0, 0, // 0, (x,y), this the location on the model or square produced in the Model Class, that the texture's vertices will occupy.
-                1, 0, // 1
-                1, 1, // 2
-                0, 1, // 3
-        };
-
-        int[] indices = new int[]{ // Indices of the triangles. See Texture and Vertices comments. Each index corresponds to a vertex defined above.
-                0, 1, 2,
-                2, 3, 0,
-        };
-
-        model = new Model(vertices,texture,indices);
+        Assets.getModel().render();
     }
 
     public boolean collidingWithFootball(Entity entity, World world) {
@@ -357,7 +331,7 @@ public abstract class Entity {
     }
 
     public boolean snap(Window window, World world) {
-        if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && ! playStart) {
+        if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && ! playStart && GameManager.selectedPlay) {
             world.getCountingUpEntity(14).useAnimation(6);
             timeSnapped = Timer.getTime();
             canPlay = true;
@@ -605,10 +579,4 @@ public abstract class Entity {
 
         return move;
     }
-
-
-    public static void deleteAsset() {
-        model = null;
-    }
-
 }

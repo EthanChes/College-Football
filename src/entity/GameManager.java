@@ -16,6 +16,7 @@ public class GameManager {
     public static float firstDownLine = ballPosX + 20;
     public static boolean offenseBall = true;
     public static boolean userOffense = true;
+    public static boolean selectedPlay = false;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
         this.yMax = yMax;

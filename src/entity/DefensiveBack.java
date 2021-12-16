@@ -241,7 +241,7 @@ public class DefensiveBack extends Entity {
                         if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x,zoneLoc.y,0) < zoneRadius) {
                             receiversInZone.add(world.getCountingUpEntity(i));
                         }
-                        if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x, zoneLoc.y,0)  < zoneRadius) {
+                        if (world.getCountingUpEntity(i).transform.pos.x + 2 > this.transform.pos.x) {
                             playerBeyondSafety = true;
                             i = 22;
                         }
@@ -274,7 +274,7 @@ public class DefensiveBack extends Entity {
                         if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x,zoneLoc.y,0) < zoneRadius) {
                             receiversInZone.add(world.getCountingUpEntity(i));
                         }
-                        if (world.getCountingUpEntity(i).transform.pos.x > this.transform.pos.x) {
+                        if (world.getCountingUpEntity(i).transform.pos.x + 2 > this.transform.pos.x) {
                             playerBeyondSafety = true;
                             i = 22;
                         }

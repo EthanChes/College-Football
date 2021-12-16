@@ -1,8 +1,10 @@
 package main;
+import assets.Assets;
 import collision.AABB;
 import entity.*;
 import gameplay.Timer;
 import graphics.*;
+import gui.SelectPlay;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -47,7 +49,7 @@ public class main {
             glEnable(GL_TEXTURE_2D);
 
             TileRenderer tiles = new TileRenderer();
-            Entity.initAsset();
+            Assets.initAsset();
 
             Shader shader = new Shader("shader"); // Creates a new shader, filename is singular, because in the directory, the shader files start with "shader" Shader Class Handles Names.
             World world = new World("test");
@@ -65,7 +67,6 @@ public class main {
             // While loop for frame to stay open while it should not close.
             world.initReset();
             while (!window.shouldClose()) {
-
                 // Add Loop Code Here
                 boolean can_render = false; // Initially, images cannot render
                 double time_2 = Timer.getTime(); // Sets most recent time
@@ -85,8 +86,8 @@ public class main {
                     }
 
                     if (window.getInput().isKeyPressed(GLFW_KEY_R)) {
+
                         world.initReset();
-                        //world = new World("test");
                         camera.setProjection(640,480);
                         camera.setProjMultiplier(1);
                     }
@@ -119,7 +120,7 @@ public class main {
                 }
             }
 
-            Entity.deleteAsset(); // Deletes Entities
+            Assets.deleteAsset(); // Deletes Entities
 
         }
 
