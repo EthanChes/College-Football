@@ -243,14 +243,23 @@ public abstract class Entity {
             if (this.hasBall || this.inCatch) {
                 world.getFootballEntity().bounding_box.correctPosition(entity.bounding_box,collision);
                 world.getFootballEntity().transform.pos.set(world.getFootballEntity().bounding_box.getCenter().x,world.getFootballEntity().bounding_box.getCenter().y,0);
-            }
-            if (entity.hasBall || entity.inCatch) {
-                world.getFootballEntity().bounding_box.correctPosition(bounding_box,collision);
-                world.getFootballEntity().transform.pos.set(world.getFootballEntity().bounding_box.getCenter().x,world.getFootballEntity().bounding_box.getCenter().y,0);
+
+                if (! GameManager.userOffense) {
+                    world.getPlayerMarker().transform.pos.set(bounding_box.getCenter().x, bounding_box.getCenter().y, 0);
+                }
             }
 
             entity.bounding_box.correctPosition(bounding_box, collision);
             entity.transform.pos.set(entity.bounding_box.getCenter().x, entity.bounding_box.getCenter().y, 0);
+
+            if (entity.hasBall || entity.inCatch) {
+                world.getFootballEntity().bounding_box.correctPosition(bounding_box,collision);
+                world.getFootballEntity().transform.pos.set(world.getFootballEntity().bounding_box.getCenter().x,world.getFootballEntity().bounding_box.getCenter().y,0);
+
+                if (GameManager.userOffense) {
+                    world.getPlayerMarker().transform.pos.set(entity.bounding_box.getCenter().x, entity.bounding_box.getCenter().y, 0);
+                }
+            }
         }
     }
 
@@ -535,9 +544,18 @@ public abstract class Entity {
         move.add(moveToward(world.getBallCarrier().transform.pos.x + 3, world.getBallCarrier().transform.pos.y + addY,delta));
 
         for (int i = 0; i < 11; i++) {
-            Collision collide = this.bounding_box.getCollision(world.getCountingUpEntity(i).bounding_box);
+            boolean shouldBlock = false;
 
-            if (collide.isIntersecting) {
+            if (collidingWithBallCarrier(this, world) && world.getBallCarrier() != this && world.getCountingUpEntity(i).transform.pos.distance(this.transform.pos) < 3) {
+                this.pancaked = true;
+                this.timePancaked = Timer.getTime();
+            }
+
+            if (world.getCountingUpEntity(i).transform.pos.distance(this.transform.pos) < 3) {
+                shouldBlock = true;
+            }
+
+            if (shouldBlock) {
                 if (this.transform.pos.y > world.getBallCarrier().transform.pos.y) {
                     move.x = speed*delta;
                 } else {
@@ -565,11 +583,20 @@ public abstract class Entity {
         move.add(moveToward(world.getBallCarrier().transform.pos.x - 3, world.getBallCarrier().transform.pos.y + addY,delta));
 
         for (int i = 11; i < 22; i++) {
-            Collision collide = this.bounding_box.getCollision(world.getCountingUpEntity(i).bounding_box);
 
-            if (collide.isIntersecting) {
+            if (collidingWithBallCarrier(this, world) && world.getBallCarrier() != this && world.getCountingUpEntity(i).transform.pos.distance(this.transform.pos) < 3) {
+                this.pancaked = true;
+                this.timePancaked = Timer.getTime();
+            }
+
+            boolean shouldBlock = false;
+            if (world.getCountingUpEntity(i).transform.pos.distance(this.transform.pos) < 3) {
+                shouldBlock = true;
+            }
+
+            if (shouldBlock) {
                 if (this.transform.pos.y > world.getBallCarrier().transform.pos.y) {
-                    move.x = speed*delta;
+                    move.x = -speed*delta;
                 } else {
                     move.y = -speed*delta*addY/3;
                 }

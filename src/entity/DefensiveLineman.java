@@ -51,8 +51,8 @@ public class DefensiveLineman extends Entity {
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
 
-        if (false && hasBall) userControl = true; // change false to gamemanager on defense, make sure to have ids for different defenders to switch through them
-        else if (false) userControl = true;
+        if ( (! GameManager.userOffense) && hasBall) userControl = true; // change false to gamemanager on defense, make sure to have ids for different defenders to switch through them
+        else if (forceUserControl && ! GameManager.userOffense) userControl = true;
         else userControl = false;
 
         // Moves Player using various WASD directions using vectors.
@@ -148,6 +148,11 @@ public class DefensiveLineman extends Entity {
 
         if (! (canPlay || playStart)) {
             useAnimation(ANIM_PRESNAP);
+        }
+
+        if (userControl) {
+            PlayerMarker.setLocation.x = this.transform.pos.x;
+            PlayerMarker.setLocation.y = this.transform.pos.y;
         }
 
     }

@@ -161,5 +161,10 @@ public class RunningBack extends Entity {
             useAnimation(ANIM_IDLE);
         }
 
+        if (userControl) {
+            PlayerMarker.setLocation.x = this.transform.pos.x;
+            PlayerMarker.setLocation.y = this.transform.pos.y;
+        }
+
     }
 }

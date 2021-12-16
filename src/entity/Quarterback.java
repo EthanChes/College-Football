@@ -285,6 +285,10 @@ public class Quarterback extends Entity {
              }
         } // Handoff Route Support
 
+        if (userControl) {
+            PlayerMarker.setLocation.x = this.transform.pos.x;
+            PlayerMarker.setLocation.y = this.transform.pos.y;
+        }
 
 
 

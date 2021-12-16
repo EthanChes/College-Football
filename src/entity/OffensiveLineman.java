@@ -332,5 +332,10 @@ public class OffensiveLineman extends Entity {
             world.getFootballEntity().transform.pos.set(this.transform.pos);
         }
 
+        if (userControl) {
+            PlayerMarker.setLocation.x = this.transform.pos.x;
+            PlayerMarker.setLocation.y = this.transform.pos.y;
+        }
+
     }
 }

@@ -27,6 +27,7 @@ public class World {
     private byte[] tiles;
     private AABB[] bounding_boxes;
     private List<Entity> entities;
+    private List<Entity> misc = new ArrayList<Entity>();
     private int width;
     private int height;
     private int scale;
@@ -153,6 +154,10 @@ public class World {
             entity.render(shader,camera,window,this);
         }
 
+        for (Entity entity : misc) {
+            entity.render(shader, camera, window, this);
+        }
+
         for (int count = 0; count < entities.size(); count++) {
             entities.get(count).collideWithTiles(this);
         }
@@ -168,6 +173,10 @@ public class World {
     public void update(float delta, Window window, Camera camera) {
         for (Entity entity : entities) {
             entity.update(delta,window,camera,this);
+        }
+
+        for (Entity e : misc) {
+            e.update(delta, window, camera, this);
         }
 
         for (int i = 0; i < 22; i++) {
@@ -313,7 +322,13 @@ public class World {
         WideReceiver.totalReceivers = 0;
         DefensiveBack.guardedReceivers = 0;
         GameManager.offenseBall = true;
+
         enterEntities();
+
+        misc.clear();
+
+        misc.add(new PlayerMarker(new Transform(0,0,1.5f)));
+
         GameManager.printDownInfo();
     }
 
@@ -326,6 +341,8 @@ public class World {
         entities.addAll(O_play.getEntities());
         setBallCarrier(this.getFootballEntity());
     }
+
+    public Entity getPlayerMarker() { return misc.get(0); }
 
 
 

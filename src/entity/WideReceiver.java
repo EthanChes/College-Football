@@ -256,6 +256,11 @@ public class WideReceiver extends Entity {
             useAnimation(ANIM_PRESNAP);
         }
 
+        if (userControl) {
+            PlayerMarker.setLocation.x = this.transform.pos.x;
+            PlayerMarker.setLocation.y = this.transform.pos.y;
+        }
+
 
 
     }

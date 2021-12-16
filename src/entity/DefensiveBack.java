@@ -90,6 +90,10 @@ public class DefensiveBack extends Entity {
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
 
+        if ( (! GameManager.userOffense) && hasBall) userControl = true; // change false to gamemanager on defense, make sure to have ids for different defenders to switch through them
+        else if (forceUserControl && ! GameManager.userOffense) userControl = true;
+        else userControl = false;
+
         if (world.getBallCarrier().transform.pos.x > GameManager.ballPosX + .7f) {
             uniqueEvents = true;
         }
@@ -435,6 +439,11 @@ public class DefensiveBack extends Entity {
         if (! canPlay && this.hasBall) {
             useAnimation(ANIM_FALL);
             world.getFootballEntity().transform.pos.set(this.transform.pos);
+        }
+
+        if (userControl) {
+            PlayerMarker.setLocation.x = this.transform.pos.x;
+            PlayerMarker.setLocation.y = this.transform.pos.y;
         }
 
     }
