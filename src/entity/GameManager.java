@@ -4,12 +4,12 @@ import entity.Entity;
 import world.World;
 
 public class GameManager {
-    float yMax;
-    float yMin;
-    float xMax;
-    float xMin;
-    float xEndzoneLeft;
-    float xEndzoneRight;
+    public static float yMax;
+    public static float yMin;
+    public static float xMax;
+    public static float xMin;
+    public static float xEndzoneLeft;
+    public static float xEndzoneRight;
     public static float ballPosX = 192f;
     public static float ballPosY = -250f;
     public static int down = 0;

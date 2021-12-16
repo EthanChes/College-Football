@@ -524,10 +524,12 @@ public abstract class Entity {
 
         int addY;
 
-        if (this.transform.pos.y > world.getBallCarrier().transform.pos.y) {
+        if (this.transform.pos.y > world.getBallCarrier().transform.pos.y && this.transform.pos.y + 3 < GameManager.yMax) {
             addY = 3;
-        } else {
+        } else if (this.transform.pos.y - 3 > GameManager.yMin){
             addY = -3;
+        } else {
+            addY = 3;
         }
 
         move.add(moveToward(world.getBallCarrier().transform.pos.x + 3, world.getBallCarrier().transform.pos.y + addY,delta));
@@ -539,7 +541,7 @@ public abstract class Entity {
                 if (this.transform.pos.y > world.getBallCarrier().transform.pos.y) {
                     move.x = speed*delta;
                 } else {
-                    move.y = -speed*delta;
+                    move.y = -speed*delta*addY/3;
                 }
             }
         }
@@ -552,10 +554,12 @@ public abstract class Entity {
 
         int addY;
 
-        if (this.transform.pos.y > world.getBallCarrier().transform.pos.y) {
+        if (this.transform.pos.y > world.getBallCarrier().transform.pos.y && this.transform.pos.y + 3 < GameManager.yMax) {
             addY = 3;
-        } else {
+        } else if (this.transform.pos.y - 3 > GameManager.yMin){
             addY = -3;
+        } else {
+            addY = 3;
         }
 
         move.add(moveToward(world.getBallCarrier().transform.pos.x - 3, world.getBallCarrier().transform.pos.y + addY,delta));
@@ -567,7 +571,7 @@ public abstract class Entity {
                 if (this.transform.pos.y > world.getBallCarrier().transform.pos.y) {
                     move.x = speed*delta;
                 } else {
-                    move.y = -speed*delta;
+                    move.y = -speed*delta*addY/3;
                 }
             }
         }
