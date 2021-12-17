@@ -313,7 +313,7 @@ public class OffensiveLineman extends Entity {
         else if (canPlay || isBlocking || (movement.x != 0 || movement.y != 0)) {
             useAnimation(ANIM_BLOCK_MOVING);
         }
-        else if (! canPlay && hasBall == true) {
+        else if (! canPlay && hasBall) {
             useAnimation(ANIM_FALL);
             if (hasBall || world.getBallCarrier() == this) {
                 world.getFootballEntity().transform.pos.set(this.transform.pos.x, this.transform.pos.y, 0);

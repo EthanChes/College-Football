@@ -135,10 +135,10 @@ public class WideReceiver extends Entity {
                         break;
 
                     case 1:
-                        if (routeMovement <= 10) { // In Route
+                        if (routeMovement <= 20) { // In Route From Left
                             movement.add(speed * delta, 0);
                             routeMovement += speed * delta;
-                        } else if (routeMovement <= 25) {
+                        } else if (routeMovement <= 35) {
                             movement.add(0, -speed * delta);
                             routeMovement += speed * delta;
                         } else {
@@ -166,6 +166,16 @@ public class WideReceiver extends Entity {
                             reachedEndOfRoute = true;
                         }
                         break;
+                    case 4 : // In Route From Right
+                        if (routeMovement <= 20) {
+                            movement.add(speed*delta, 0);
+                            routeMovement += speed *delta;
+                        } else if (routeMovement <= 35) {
+                            movement.add(0, speed*delta);
+                            routeMovement += speed * delta;
+                        } else {
+                            reachedEndOfRoute = true;
+                        }
 
                 }
             } else if (world.getFootballEntity().pass && !uniqueEvents) {

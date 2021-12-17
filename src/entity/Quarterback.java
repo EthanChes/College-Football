@@ -198,6 +198,11 @@ public class Quarterback extends Entity {
             }
         }
         else if (route == 1) {
+            if (uniqueEvents) {
+                canCollide = true;
+            } else {
+                canCollide = false;
+            }
              if (timeFumble > 0) {
                  movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
              }

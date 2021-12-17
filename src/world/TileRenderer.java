@@ -54,6 +54,7 @@ public class TileRenderer {
 
     public void renderTile(Tile tile, int x, int y, Shader shader, Matrix4f world, Camera camera) { // puts tiles in correct spot
         shader.bind();
+
         if (tile_textures.containsKey (tile.getTexture())) { // Tests if tile exists and if yes, then texture will bind
             tile_textures.get(tile.getTexture()).bind(0); // Sampler sets starting id value for texture. 0 is green, 1 is red endzone etc.
         }

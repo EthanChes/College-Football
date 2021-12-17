@@ -96,7 +96,7 @@ public abstract class Entity {
     public boolean collidingWithFootball(Entity entity, World world) {
         Collision collision = world.getFootballEntity().bounding_box.getCollision(entity.bounding_box);
 
-        if (collision.isIntersecting && throw_height > 0 && throw_height < 6) { // 6 Will Be Starting Receiver Height
+        if (collision.isIntersecting && throw_height > 0 && throw_height < 4) { // 4 Will Be Starting Receiver Height
             return true;
         }
         else if (collision.isIntersecting && ! entity.hasBall) { // Remove ! entity.hasBall for final version, this just helps with print message
@@ -289,11 +289,11 @@ public abstract class Entity {
                     break;
 
                 case 1:
-                    if (projRouteMovement <= 10) { // In Route
+                    if (projRouteMovement <= 20) { // In Route From Left
                         location.add(entity.speed*delta,0);
                         projRouteMovement += entity.speed * delta;
                         projBallMovement.add(throw_power*delta,0);
-                    } else if (projRouteMovement <= 25) {
+                    } else if (projRouteMovement <= 35) {
                         location.add(0, -entity.speed*delta);
                         projRouteMovement += entity.speed * delta;
                         projBallMovement.add(throw_power*delta,0);
@@ -319,6 +319,19 @@ public abstract class Entity {
                     projRouteMovement += entity.speed * delta;
                     projBallMovement.add(throw_power*delta,0);
                 } else { reachedEndOfRoute = true; }
+                    break;
+
+                case 4 :  // In Route From Right
+                    if (projRouteMovement <= 20) { // In Route
+                    location.add(entity.speed*delta,0);
+                    projRouteMovement += entity.speed * delta;
+                    projBallMovement.add(throw_power*delta,0);
+                } else if (projRouteMovement <= 35) {
+                    location.add(0, entity.speed*delta);
+                    projRouteMovement += entity.speed * delta;
+                    projBallMovement.add(throw_power*delta,0);
+                }
+                else { reachedEndOfRoute = true; }
                     break;
 
             }

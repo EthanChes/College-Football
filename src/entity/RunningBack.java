@@ -31,12 +31,14 @@ public class RunningBack extends Entity {
     }
 
     public void receiveHandoff(World world) {
-        Collision collision = this.bounding_box.getCollision(world.getBallCarrier().bounding_box);
-        if (collision.isIntersecting) {
-            Quarterback.hasHandedOff = true;
-            world.getBallCarrier().hasBall = false;
-            hasBall = true;
-            world.setBallCarrier(this);
+        if (route == 1) {
+            Collision collision = this.bounding_box.getCollision(world.getBallCarrier().bounding_box);
+            if (collision.isIntersecting) {
+                Quarterback.hasHandedOff = true;
+                world.getBallCarrier().hasBall = false;
+                hasBall = true;
+                world.setBallCarrier(this);
+            }
         }
     }
     public Vector2f handoff(float delta, World world) {
@@ -90,18 +92,49 @@ public class RunningBack extends Entity {
         }
 
         if (! userControl) {
-            if (route == 0 && canPlay && !uniqueEvents) {
-                movement.add(speed * delta, 0);
-            } else if (route == 1 && canPlay && !uniqueEvents) { // Carry Out Handoff
-                movement.add(handoff(delta, world));
-            } else if (timeFumble > 0 && getAnimationIndex() != 3) {
+            if (canPlay && !uniqueEvents) {
+                switch (route) {
+                    case 0:
+                        movement.add(speed * delta, 0);
+                        break;
+                    case 1:
+                        movement.add(handoff(delta, world));
+                        break;
+                    case 2:
+                        if (routeMovement < 8) {
+                            movement.add(0, speed * delta);
+                            routeMovement += speed * delta;
+                        } else {
+                            uniqueEvents = true;
+                        }
+                        break;
+                    case 3:
+                        if (routeMovement < 8) {
+                            movement.add(0, -speed * delta);
+                            routeMovement += speed * delta;
+                        } else {
+                            uniqueEvents = true;
+                        }
+                        break;
+                    case 4:
+                        if (routeMovement < 8) {
+                            movement.add(speed * delta, 0);
+                            routeMovement += speed * delta;
+                        } else {
+                            uniqueEvents = true;
+                        }
+                        break;
+                }
+            }
+        }
+        else if (timeFumble > 0 && getAnimationIndex() != 3) {
                 movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
             } else if (uniqueEvents && !(isBeingMovedExternally || pancaked)) {
                 if (GameManager.offenseBall) {
                     if (hasBall) {
                         movement.add(offenseHasBallMove(world, delta));
                     } else {
-                        movement.add(offenseBlockUnique(world,delta));
+                        movement.add(offenseBlockUnique(world, delta));
                     }
                 } else {
                     movement.add(defensive_movement(world.getBallCarrier(), delta));
@@ -120,9 +153,9 @@ public class RunningBack extends Entity {
                     }
                 }
             }
-        }
 
-        if (canPlay && ! pancaked || isBeingMovedExternally) {
+
+        if (canPlay && ! (pancaked || isBeingMovedExternally)) {
             move(movement);
             receiveHandoff(world);
         } else {

@@ -1,6 +1,7 @@
 package gui;
 
 import assets.Assets;
+import entity.GameManager;
 import graphics.Camera;
 import graphics.Shader;
 import graphics.TileSheet;
@@ -15,13 +16,20 @@ public class SelectPlay {
 
     private float x;
     private int tileID;
+    private static int playID;
 
     private static int lastTileID = -1;
 
     public SelectPlay(Window window, float x, int tileID) {
         shader = new Shader("gui");
         camera = new Camera(window.getWidth(), window.getHeight());
-        sheet = new TileSheet("PLAYS.png", 3);
+
+        // Select Correct Sheet
+        if (GameManager.userOffense) {
+            sheet = new TileSheet("PLAYS.png", 3);
+        } else {
+            sheet = new TileSheet("PLAYS.png",3);
+        }
 
         this.x = x;
         this.tileID = tileID;
@@ -57,4 +65,8 @@ public class SelectPlay {
     public static void incrementNextTileID() { if (lastTileID < 0) { lastTileID += 36; } lastTileID += 3; }
 
     public static void decrementNextTileID() { if (lastTileID < 0) { lastTileID += 36; } lastTileID -= 3; }
+
+    public static void calculatePlayID(int input) { playID = (lastTileID + input + 1) % 9; } // Only 9 plays
+
+    public static int getPlayID() { return playID; }
 }

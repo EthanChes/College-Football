@@ -9,10 +9,7 @@ import gui.SelectPlay;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import plays.Four_Verticals;
-import plays.Line_Blitz;
-import plays.RB_Dive;
-import plays.Zone;
+import plays.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -153,7 +150,7 @@ public class World {
             middle.resizeCamera(window);
             right.resizeCamera(window);
         }
-        else {
+        else if (GameManager.hasEntities) {
             int posX = ((int) camera.getPosition().x / (scale * 2));
             int posY = ((int) camera.getPosition().y / (scale * 2));
 
@@ -197,8 +194,24 @@ public class World {
         }
 
         if (! GameManager.selectedPlay) {
-            if (window.getInput().isKeyPressed(GLFW_KEY_1) || window.getInput().isKeyPressed(GLFW_KEY_2) || window.getInput().isKeyPressed(GLFW_KEY_3)) {
+            if (window.getInput().isKeyPressed(GLFW_KEY_1)) {
                 GameManager.selectedPlay = true;
+                SelectPlay.calculatePlayID(1);
+                enterEntities();
+            }
+            else if (window.getInput().isKeyPressed(GLFW_KEY_2)) {
+                GameManager.selectedPlay = true;
+                SelectPlay.calculatePlayID(2);
+                enterEntities();
+            }
+            else if (window.getInput().isKeyPressed(GLFW_KEY_3)) {
+                GameManager.selectedPlay = true;
+                SelectPlay.calculatePlayID(3);
+                enterEntities();
+            }
+
+            if (GameManager.selectedPlay) {
+                System.out.println(SelectPlay.getPlayID());
             }
 
             if (window.getInput().isKeyPressed(GLFW_KEY_DOWN)) {
@@ -210,29 +223,31 @@ public class World {
             }
         }
 
-        for (int i = 0; i < 22; i++) {
-            if (getCountingUpEntity(i).hasBall && getBallCarrier() != getCountingUpEntity(i)) {
-                getCountingUpEntity(i).hasBall = false;
-            } else if (! Entity.canPlay && getCountingUpEntity(i) == getBallCarrier()) {
-                getCountingUpEntity(i).preventBallGlitchAfterPlay(getFootballEntity());
+        if (GameManager.hasEntities) {
+            for (int i = 0; i < 22; i++) {
+                if (getCountingUpEntity(i).hasBall && getBallCarrier() != getCountingUpEntity(i)) {
+                    getCountingUpEntity(i).hasBall = false;
+                } else if (!Entity.canPlay && getCountingUpEntity(i) == getBallCarrier()) {
+                    getCountingUpEntity(i).preventBallGlitchAfterPlay(getFootballEntity());
+                }
             }
-        }
 
-        for (int count = 0; count < entities.size(); count++) {
-            entities.get(count).collideWithTiles(this);
-            for (int counter = count+1; counter < entities.size(); counter++) {
-                 entities.get(count).collideWithEntity(entities.get(counter), this, count, counter);
+            for (int count = 0; count < entities.size(); count++) {
+                entities.get(count).collideWithTiles(this);
+                for (int counter = count + 1; counter < entities.size(); counter++) {
+                    entities.get(count).collideWithEntity(entities.get(counter), this, count, counter);
+                }
+                entities.get(count).collideWithTiles(this);
             }
-            entities.get(count).collideWithTiles(this);
-        }
 
-        if (gameManager.ballCarrierOutOfBounds(this)) {
-            System.out.println("Out Of Bounds");
-            Entity.canPlay = false;
-        }
+            if (gameManager.ballCarrierOutOfBounds(this)) {
+                System.out.println("Out Of Bounds");
+                Entity.canPlay = false;
+            }
 
-        if (gameManager.touchDown(this)) {
-            System.out.println("Touchdown Offense");
+            if (gameManager.touchDown(this)) {
+                System.out.println("Touchdown Offense");
+            }
         }
 
     }
@@ -341,6 +356,7 @@ public class World {
 
     public void initReset() {
         GameManager.selectedPlay = false;
+        GameManager.hasEntities = false;
         Entity.timeFumble = -1f;
         Quarterback.hasHandedOff = false;
         Football.fumbleMovements = new Vector2f();
@@ -355,7 +371,7 @@ public class World {
         DefensiveBack.guardedReceivers = 0;
         GameManager.offenseBall = true;
 
-        enterEntities();
+        entities.clear();
 
         misc.clear();
 
@@ -365,12 +381,25 @@ public class World {
     }
 
     public void enterEntities() {
-        Four_Verticals O_play = new Four_Verticals(GameManager.ballPosX,GameManager.ballPosY);
-        //RB_Dive O_play = new RB_Dive(GameManager.ballPosX,GameManager.ballPosY);
+        GameManager.hasEntities = true;
+
         Zone D_play = new Zone(GameManager.ballPosX,GameManager.ballPosY);
-        //Line_Blitz D_play = new Line_Blitz(GameManager.ballPosX,GameManager.ballPosY);
         entities.addAll(D_play.getEntities());
-        entities.addAll(O_play.getEntities());
+
+        switch (SelectPlay.getPlayID()) {
+            case 1 :
+                T_Form_FB_Dive TFBDive = new T_Form_FB_Dive(GameManager.ballPosX, GameManager.ballPosY);
+                entities.addAll(TFBDive.getEntities());
+                break;
+            case 2 :
+                Spread_Inside_Cut_Deep cutDeep = new Spread_Inside_Cut_Deep(GameManager.ballPosX, GameManager.ballPosY);
+                entities.addAll(cutDeep.getEntities());
+                break;
+            case 3 :
+                T_Form_HB_Stretch THBStretch = new T_Form_HB_Stretch(GameManager.ballPosX, GameManager.ballPosY);
+                entities.addAll(THBStretch.getEntities());
+                break;
+        }
         setBallCarrier(this.getFootballEntity());
     }
 

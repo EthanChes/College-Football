@@ -201,6 +201,10 @@ public class DefensiveBack extends Entity {
                     }
                     averageZonePos.x /= receiversInZone.size();
                     averageZonePos.y /= receiversInZone.size();
+
+                    averageZonePos.x += 2;
+
+
                     if (receiversInZone.size() == 0) {
                         movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
                     } else {
@@ -224,6 +228,9 @@ public class DefensiveBack extends Entity {
                     }
                     averageZonePos.x /= receiversInZone.size();
                     averageZonePos.y /= receiversInZone.size();
+
+                    averageZonePos.x += 2;
+
                     if (receiversInZone.size() == 0) {
                         movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
                     } else {
@@ -253,6 +260,10 @@ public class DefensiveBack extends Entity {
                     }
                     averageZonePos.x /= receiversInZone.size();
                     averageZonePos.y /= receiversInZone.size();
+
+                    averageZonePos.x += 2;
+
+
                     if (playerBeyondSafety) {
                         movement.add(speed*delta,0);
                     }
@@ -286,6 +297,9 @@ public class DefensiveBack extends Entity {
                     }
                     averageZonePos.x /= receiversInZone.size();
                     averageZonePos.y /= receiversInZone.size();
+
+                    averageZonePos.x += 2;
+
                     if (playerBeyondSafety) {
                         movement.add(speed*delta,0);
                     }
@@ -313,6 +327,9 @@ public class DefensiveBack extends Entity {
                     }
                     averageZonePos.x /= receiversInZone.size();
                     averageZonePos.y /= receiversInZone.size();
+
+                    averageZonePos.x += 2;
+
                     if (receiversInZone.size() == 0) {
                         movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
                     } else {
