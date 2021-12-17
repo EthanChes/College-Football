@@ -91,8 +91,8 @@ public class RunningBack extends Entity {
             movement.add(speed*delta,0);
         }
 
-        if (! userControl) {
-            if (canPlay && !uniqueEvents) {
+        if (! userControl && ! uniqueEvents) {
+            if (canPlay) {
                 switch (route) {
                     case 0:
                         movement.add(speed * delta, 0);
@@ -127,7 +127,8 @@ public class RunningBack extends Entity {
                 }
             }
         }
-        else if (timeFumble > 0 && getAnimationIndex() != 3) {
+        if (uniqueEvents && ! userControl) {
+            if (timeFumble > 0 && getAnimationIndex() != 3) {
                 movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
             } else if (uniqueEvents && !(isBeingMovedExternally || pancaked)) {
                 if (GameManager.offenseBall) {
@@ -153,9 +154,10 @@ public class RunningBack extends Entity {
                     }
                 }
             }
+        }
 
 
-        if (canPlay && ! (pancaked || isBeingMovedExternally)) {
+        if (canPlay && !(pancaked || isBeingMovedExternally)) {
             move(movement);
             receiveHandoff(world);
         } else {
