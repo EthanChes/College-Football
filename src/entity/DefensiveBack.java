@@ -392,7 +392,7 @@ public class DefensiveBack extends Entity {
                     Random rand = new Random();
                     if (closestDefender.transform.pos.distance(this.transform.pos) <= 2.75f && catchAttempt) {
                         int rand_output = rand.nextInt((int) (this.catching * 100 + (closestDefender.catching * 100) * (3 - closestDefender.transform.pos.distance(this.transform.pos))));
-                        if (rand_output <= this.catching * 100) {
+                        if (rand_output <= this.catching * 50) {
                             forceSelectOffensivePlayer(window, world);
                             this.inCatch = true;
                             for (int i = 0; i < 22; i++) {

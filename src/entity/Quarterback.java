@@ -125,6 +125,7 @@ public class Quarterback extends Entity {
 
             if (time_current - timePass < .35) {
                 pass = true;
+                world.setBallCarrier(world.getFootballEntity());
 
                 if (time_current - timePass > .25) { // Waits until frame of qb animation throw to move football
                     football.useAnimation(1);
@@ -134,7 +135,6 @@ public class Quarterback extends Entity {
                 }
             } else if (time_current - timePass > .35 && time_current - timePass < .37 && canPlay) {
                 football.startPass();
-                world.setBallCarrier(world.getFootballEntity());
                 pass = false;
             } else {
                 pass = false; // Prevents Bad Error if timing doesnt match up

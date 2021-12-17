@@ -63,7 +63,7 @@ public class Football extends Entity {
                 // Calculate Slope to get to receiver
                 this.ball_slope = (this.transform.pos.y - wideReceiverY)/(this.transform.pos.x - wideReceiverX);
 
-                throw_height = projLoc.distance(this.transform.pos.x,this.transform.pos.y);
+                throw_height = projLoc.distance(this.transform.pos.x,this.transform.pos.y) + 2;
 
                 if (Float.isInfinite(ball_slope)) { // Recalculate ball slope in case of infinite slope
                     System.out.println("Infinite Slope");

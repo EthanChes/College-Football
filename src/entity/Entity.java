@@ -96,10 +96,11 @@ public abstract class Entity {
     public boolean collidingWithFootball(Entity entity, World world) {
         Collision collision = world.getFootballEntity().bounding_box.getCollision(entity.bounding_box);
 
-        if (collision.isIntersecting && throw_height > 0 && throw_height < 4) { // 4 Will Be Starting Receiver Height
+        if (collision.isIntersecting && throw_height > 0 && throw_height < 6) { // 6 Will Be Starting Receiver Height
             return true;
         }
         else if (collision.isIntersecting && ! entity.hasBall) { // Remove ! entity.hasBall for final version, this just helps with print message
+            entity.catchAttempt = false;
             //System.out.println("Throw too high for catch.");
         }
         return false;
