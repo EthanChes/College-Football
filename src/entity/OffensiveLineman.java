@@ -198,9 +198,9 @@ public class OffensiveLineman extends Entity {
         }
 
         if (blockOutcome == 1) {
-            player.move(new Vector2f((this.strength * delta)/2, defenderPush*3));
+            player.move(new Vector2f((this.strength * delta)/1.5f, defenderPush*3));
             player.routeMovement += defenderPush;
-            movement.add(this.strength * delta/2, yPush);
+            movement.add(this.strength * delta/1.5f, yPush);
             player.isBeingMovedExternally = true;
         }
         else if (blockOutcome == 2) { // OL Pancakes DL
