@@ -75,7 +75,7 @@ public class Football extends Entity {
                 gotWideReceiverPos = false;
             }
 
-                movement.add(throw_power*delta*distance_multiplier,throw_power*delta*ball_slope*distance_multiplier); // Ball Movements
+            movement.add(throw_power*delta*distance_multiplier,throw_power*delta*ball_slope*distance_multiplier); // Ball Movements
 
 
 
@@ -187,7 +187,8 @@ public class Football extends Entity {
             useAnimation(ANIM_QB_THROW_START);
         }
 
-
-        camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), .07f); // Camera adjusts to center football
+        if (camera.getProjMultiplierX() == 1 && camera.getProjMultiplierY() == 1) {
+            camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), .07f); // Camera adjusts to center football
+        }
     }
 }

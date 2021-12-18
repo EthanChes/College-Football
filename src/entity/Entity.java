@@ -238,26 +238,48 @@ public abstract class Entity {
         }
     }
 
-    public void zoomOutWhenNotVisible(Entity entity, Camera cam) { // 640 width OG, 480 height OG
+    public void zoomOutWhenNotVisible(Entity entity, Camera cam, World world) { // 640 width OG, 480 height OG
         float range = 25;
         float entityX = (16.1141f*entity.bounding_box.getCenter().x)-8.518391f;
         float entityY = 16f*(-entity.bounding_box.getCenter().y);
         float camX = (-cam.getPosition().x);
         float camY = (cam.getPosition().y);
-        float camWidth = 640 * cam.getProjMultiplier();
-        float camHeight = 480 * cam.getProjMultiplier();
+        float camWidth = 640 * cam.getProjMultiplierX();
+        float camHeight = 480 * cam.getProjMultiplierY();
+
+        Entity currentFurthest = entity;
+
+        // Get Furthest Offensive Entity
+        for (int i = 11; i < 22; i++) {
+            if (world.getCountingUpEntity(i).transform.pos.distance(world.getFootballEntity().transform.pos) > currentFurthest.transform.pos.distance(world.getFootballEntity().transform.pos)) {
+                currentFurthest = world.getCountingUpEntity(i);
+            }
+        }
+
+        Vector3f setCameraPos = new Vector3f();
+
+        // Set Proper Camera position
+        setCameraPos.set((currentFurthest.transform.pos.x + world.getFootballEntity().transform.pos.x)*-8, (currentFurthest.transform.pos.y + world.getFootballEntity().transform.pos.y)*-8, 0);
+
+        cam.getPosition().lerp(setCameraPos.mul(1, new Vector3f()), .07f); // Camera adjusts to center football
 
         if (entityX + range > camX + camWidth/2) {  // Checks if entity is near end of window on right and adjusts projection to prevent them from leaving sight. This algorithm may need tweaking
-            cam.setProjMultiplier(cam.getProjMultiplier() * 1.007f);
-            cam.setProjection(camWidth, camHeight);
+            cam.setProjMultiplierX(cam.getProjMultiplierX()*1.5f);
+
+            cam.setProjMultiplierY(cam.getProjMultiplierY()*1.5f);
+
+            cam.setProjection(cam.getWidth()*cam.getProjMultiplierX(), cam.getHeight()*cam.getProjMultiplierY());
+
+            System.out.println("Right");
         }
-        else if (entityY + range > camY + camHeight/2) {
-            cam.setProjMultiplier(cam.getProjMultiplier()*1.007f);
-            cam.setProjection(640*cam.getProjMultiplier(),480*cam.getProjMultiplier());
-        }
-        else if (entityY - range < camY - camHeight/2) {
-            cam.setProjMultiplier(cam.getProjMultiplier()*1.007f);
-            cam.setProjection(640*cam.getProjMultiplier(),480*cam.getProjMultiplier());
+        else if (entityX - range < camX - camWidth/2) {  // Checks if entity is near end of window on right and adjusts projection to prevent them from leaving sight. This algorithm may need tweaking
+            cam.setProjMultiplierX(cam.getProjMultiplierX()*1.5f);
+
+            cam.setProjMultiplierY(cam.getProjMultiplierY()*1.5f);
+
+            cam.setProjection(cam.getWidth()*cam.getProjMultiplierX(), cam.getHeight()*cam.getProjMultiplierY());
+
+            System.out.println("LEFT");
         }
 
     }

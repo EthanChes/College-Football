@@ -89,7 +89,8 @@ public class main {
 
                         world.initReset();
                         camera.setProjection(640,480);
-                        camera.setProjMultiplier(1);
+                        camera.setProjMultiplierX(1);
+                        camera.setProjMultiplierY(1);
                     }
 
                     world.update((float) frame_cap, window, camera);

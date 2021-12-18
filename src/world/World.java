@@ -334,8 +334,8 @@ public class World {
     }
 
     public void calculateView(Window window, Camera cam) {
-        viewX = (int) ((window.getWidth()*cam.getProjMultiplier())/(scale*2)) + 4;
-        viewY = (int) (((window.getHeight()*cam.getProjMultiplier())/(scale*2)) + 4);
+        viewX = (int) ((window.getWidth() * cam.getProjMultiplierX())/(scale*2)) + 4;
+        viewY = (int) (((window.getHeight() * cam.getProjMultiplierY())/(scale*2)) + 4);
     }
 
     public Entity getFootballEntity() {

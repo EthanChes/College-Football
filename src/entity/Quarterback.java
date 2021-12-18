@@ -4,6 +4,7 @@ import graphics.Animation;
 import graphics.Camera;
 import graphics.Window;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import world.World;
 
 import static gameplay.Timer.getTime;
@@ -135,6 +136,10 @@ public class Quarterback extends Entity {
                 }
             } else if (time_current - timePass > .35 && time_current - timePass < .37 && canPlay) {
                 football.startPass();
+                camera.setProjection(640,480);
+                camera.setProjMultiplierX(1);
+                camera.setProjMultiplierY(1);
+                camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), 1f);
                 pass = false;
             } else {
                 pass = false; // Prevents Bad Error if timing doesnt match up

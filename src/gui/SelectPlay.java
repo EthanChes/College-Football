@@ -10,9 +10,9 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 public class SelectPlay {
-    private Shader shader;
-    private Camera camera;
-    private TileSheet sheet;
+    private static Shader shader;
+    private static Camera camera;
+    private static TileSheet sheet;
 
     private float x;
     private int tileID;

@@ -5,11 +5,17 @@ import org.joml.Vector3f;
 public class Camera {
     private Vector3f position;
     private Matrix4f projection;
-    private float projMultiplier = 1;
+    private float projMultiplierX = 1;
+    private float projMultiplierY = 1;
+    private float width;
+    private float height;
 
     public Camera(int width, int height) {
             position = new Vector3f(-200*16,250*16,0); // multiply actual position on screen for entities by 16.
             setProjection(640,480);
+
+            this.width = width;
+            this.height = height;
     }
     public void setPosition(Vector3f position) {
         this.position = position;
@@ -33,11 +39,17 @@ public class Camera {
         return projection.translate(position, new Matrix4f());
     }
 
-    public float getProjMultiplier() { return projMultiplier; }
+    public float getProjMultiplierX() { return projMultiplierX; }
 
-    public void setProjMultiplier(float projMultiplier) {
-        this.projMultiplier = projMultiplier;
-    }
+    public float getProjMultiplierY() { return projMultiplierY; }
+
+    public void setProjMultiplierY(float setter) { projMultiplierY = setter; }
+
+    public void setProjMultiplierX(float setter) { projMultiplierX = setter; }
+
+    public float getWidth() { return width; }
+
+    public float getHeight() { return height; }
 
 
 
