@@ -69,8 +69,6 @@ public class RunningBack extends Entity {
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
 
-        selectOffensivePlayer(window, world);
-
         if ((hasBall && GameManager.offenseBall) || forceUserControl) {
             userControl = true;
         } else {

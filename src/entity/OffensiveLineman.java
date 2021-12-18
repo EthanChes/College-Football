@@ -226,8 +226,6 @@ public class OffensiveLineman extends Entity {
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
 
-        selectOffensivePlayer(window, world);
-
         if ((hasBall && GameManager.userOffense) || forceUserControl) userControl = true; // change && true to gamemanager user controls offensive team
         else userControl = false;
 

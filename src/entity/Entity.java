@@ -45,6 +45,7 @@ public abstract class Entity {
     public static boolean incompletePass = false;
     public static double timeFumble = -1;
     public double timeFumbled = -1;
+    public static double selectPlayerCooldown = -1;
 
     // Player Info
     public byte route = 0;
@@ -166,15 +167,22 @@ public abstract class Entity {
 
     public void selectOffensivePlayer(Window win, World world) {
         // Upon Key Press, Switch Player
-        if (win.getInput().isKeyPressed(GLFW_KEY_Z) && GameManager.userOffense && ! GameManager.offenseBall) {
+        if (win.getInput().isKeyPressed(GLFW_KEY_Z) && GameManager.userOffense && ! GameManager.offenseBall && selectPlayerCooldown + .3f < Timer.getTime()) {
+            selectPlayerCooldown = Timer.getTime();
 
             // Sort To Find New Closest Player
             Entity closestPlayer = world.getCountingUpEntity(11);
             for (int i = 11; i < 22; i++) {
                 world.getCountingUpEntity(i).forceUserControl = false;
-                if (closestPlayer.timeUserControl + .5 < Timer.getTime()) {
-                    if (world.getCountingUpEntity(i).transform.pos.distance(world.getBallCarrier().transform.pos) < closestPlayer.transform.pos.distance(world.getBallCarrier().transform.pos)) {
-                        closestPlayer = world.getCountingUpEntity(i);
+                if (! world.getCountingUpEntity(i).userControl) {
+                    if (closestPlayer.timeUserControl + .5 < Timer.getTime()) {
+                        if (world.getCountingUpEntity(i).transform.pos.distance(world.getBallCarrier().transform.pos) < closestPlayer.transform.pos.distance(world.getBallCarrier().transform.pos)) {
+                            closestPlayer = world.getCountingUpEntity(i);
+                        }
+                    }
+                } else {
+                    if (closestPlayer == world.getCountingUpEntity(11)) {
+                        closestPlayer = world.getCountingUpEntity(12);
                     }
                 }
             }

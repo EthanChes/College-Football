@@ -50,8 +50,6 @@ public class WideReceiver extends Entity {
         Vector2f movement = new Vector2f();
         Entity football = world.getFootballEntity();
 
-        selectOffensivePlayer(window, world);
-
 
         if (this.uniqueEvents) {
             this.canCollide = true;
