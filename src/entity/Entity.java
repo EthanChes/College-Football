@@ -551,9 +551,9 @@ public abstract class Entity {
 
         int addY;
 
-        if (this.transform.pos.y > world.getBallCarrier().transform.pos.y && this.transform.pos.y + 3 < GameManager.yMax) {
+        if (this.transform.pos.y > world.getBallCarrier().transform.pos.y && world.getBallCarrier().transform.pos.y + 3 < GameManager.yMax) {
             addY = 3;
-        } else if (this.transform.pos.y - 3 > GameManager.yMin){
+        } else if (world.getBallCarrier().transform.pos.y - 3 > GameManager.yMin){
             addY = -3;
         } else {
             addY = 3;
