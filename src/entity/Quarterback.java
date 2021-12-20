@@ -148,7 +148,7 @@ public class Quarterback extends Entity {
                 } else {
                     football.transform.pos.set(transform.pos.x + .125f, transform.pos.y + .125f, 0);
                 }
-            } else if (time_current - timePass > .35 && time_current - timePass < .37 && canPlay) {
+            } else if (time_current - timePass > .35 && time_current - timePass < .40 && canPlay) {
                 football.startPass();
                 camera.setProjection(640,480);
                 camera.setProjMultiplierX(1);
