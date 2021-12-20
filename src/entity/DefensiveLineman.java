@@ -118,6 +118,9 @@ public class DefensiveLineman extends Entity {
         else if (movement.x != 0 || movement.y != 0 || (canPlay && true)) { // This may be where a potential error could occur because a user controlled player will always show run anim.
             useAnimation(ANIM_MOVE);
         }
+        else if (isBeingMovedExternally) {
+            useAnimation(ANIM_MOVE);
+        }
         else {
             useAnimation(ANIM_IDLE);
         }

@@ -463,6 +463,10 @@ public class DefensiveBack extends Entity {
             PlayerMarker.setLocation.y = this.transform.pos.y;
         }
 
+        if (isBeingMovedExternally) {
+            useAnimation(ANIM_MOVE);
+        }
+
     }
 
 
