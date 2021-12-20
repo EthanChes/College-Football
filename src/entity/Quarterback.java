@@ -91,12 +91,12 @@ public class Quarterback extends Entity {
         // Prevents issues with QB running behind the play
         if (! hasRanTooFarBack) {
             if (this.transform.pos.x + 30 < GameManager.ballPosX) {
-                this.speed /= 3f;
+                this.speed /= 10f;
                 hasRanTooFarBack = true;
             }
         } else {
             if (this.transform.pos.x + 30 > GameManager.ballPosX) {
-                this.speed *= 3f;
+                this.speed *= 10f;
                 hasRanTooFarBack = false;
             }
         }

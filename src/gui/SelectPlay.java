@@ -50,17 +50,25 @@ public class SelectPlay {
         shader.bind();
 
         shader.setUniform("projection", mat);
-
         sheet.bindTile(shader, tileID);
+        Assets.getModel().render();
+
+        mat.translate(2,0,0);
+        shader.setUniform("projection", mat);
+        sheet.bindTile(shader, tileID + 1);
+        Assets.getModel().render();
+
+        mat.translate(2,0,0);
+        shader.setUniform("projection", mat);
+        sheet.bindTile(shader, tileID + 2);
+        Assets.getModel().render();
 
         //shader.setUniform("color", new Vector4f(0,0,0,.4f));
-
-        Assets.getModel().render();
     }
 
     public static int getNextTileID() { return lastTileID + 1; }
 
-    public static void prepNextTileID() { lastTileID -= 3; }
+    public static void prepNextTileID() { lastTileID -= 1; }
 
     public static void incrementNextTileID() { if (lastTileID < 0) { lastTileID += 36; } lastTileID += 3; }
 

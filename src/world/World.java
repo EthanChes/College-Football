@@ -137,18 +137,18 @@ public class World {
     public void render(TileRenderer render, Shader shader, Camera camera, Window window) {
         if (! GameManager.selectedPlay) {
             SelectPlay left = new SelectPlay(window,-2,  SelectPlay.getNextTileID());
-            SelectPlay middle = new SelectPlay(window, 0, SelectPlay.getNextTileID());
-            SelectPlay right = new SelectPlay(window, 2, SelectPlay.getNextTileID());
+            //SelectPlay middle = new SelectPlay(window, 0, SelectPlay.getNextTileID());
+            //SelectPlay right = new SelectPlay(window, 2, SelectPlay.getNextTileID());
 
             SelectPlay.prepNextTileID();
 
             left.Render();
-            middle.Render();
-            right.Render();
+            //middle.Render();
+            //right.Render();
 
             left.resizeCamera(window);
-            middle.resizeCamera(window);
-            right.resizeCamera(window);
+            //middle.resizeCamera(window);
+            //right.resizeCamera(window);
         }
         else if (GameManager.hasEntities) {
             int posX = ((int) camera.getPosition().x / (scale * 2));
