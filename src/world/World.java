@@ -221,6 +221,7 @@ public class World {
             if (window.getInput().isKeyPressed(GLFW_KEY_UP)) {
                 SelectPlay.decrementNextTileID();
             }
+
         }
 
         if (GameManager.hasEntities) {
@@ -370,6 +371,7 @@ public class World {
         WideReceiver.totalReceivers = 0;
         DefensiveBack.guardedReceivers = 0;
         GameManager.offenseBall = true;
+        Quarterback.hasRanTooFarBack = false;
 
         entities.clear();
 

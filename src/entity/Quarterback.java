@@ -24,6 +24,7 @@ public class Quarterback extends Entity {
     public static double timePass = 0; // time of pass
     public static boolean hasHandedOff = false;
     public static byte receiverPass;
+    public static boolean hasRanTooFarBack = false;
 
     public Quarterback(Transform transform) {
         super(ANIM_SIZE,transform);
@@ -86,6 +87,19 @@ public class Quarterback extends Entity {
         Entity football = world.getFootballEntity();
 
         selectOffensivePlayer(window, world);
+
+        // Prevents issues with QB running behind the play
+        if (! hasRanTooFarBack) {
+            if (this.transform.pos.x + 30 < GameManager.ballPosX) {
+                this.speed /= 3f;
+                hasRanTooFarBack = true;
+            }
+        } else {
+            if (this.transform.pos.x + 30 > GameManager.ballPosX) {
+                this.speed *= 3f;
+                hasRanTooFarBack = false;
+            }
+        }
 
          if (route != 1) {
             if (timeFumble > 0) {

@@ -174,17 +174,17 @@ public abstract class Entity {
             Entity closestPlayer = world.getCountingUpEntity(11);
             for (int i = 11; i < 22; i++) {
                 world.getCountingUpEntity(i).forceUserControl = false;
-                if (! world.getCountingUpEntity(i).userControl) {
+                if (!world.getCountingUpEntity(i).userControl) {
                     if (closestPlayer.timeUserControl + .5 < Timer.getTime()) {
                         if (world.getCountingUpEntity(i).transform.pos.distance(world.getBallCarrier().transform.pos) < closestPlayer.transform.pos.distance(world.getBallCarrier().transform.pos)) {
                             closestPlayer = world.getCountingUpEntity(i);
                         }
                     }
-                } else {
-                    if (closestPlayer == world.getCountingUpEntity(11)) {
-                        closestPlayer = world.getCountingUpEntity(12);
-                    }
                 }
+            }
+
+            if (closestPlayer == world.getCountingUpEntity(11) && world.getCountingUpEntity(11).userControl) {
+                closestPlayer = world.getCountingUpEntity(12);
             }
 
             // Force User Control to closestPlayer
@@ -269,7 +269,7 @@ public abstract class Entity {
         // Set Proper Camera position
         setCameraPos.set((currentFurthest.transform.pos.x + world.getFootballEntity().transform.pos.x)*-8, (currentFurthest.transform.pos.y + world.getFootballEntity().transform.pos.y)*-8, 0);
 
-        cam.getPosition().lerp(setCameraPos.mul(1, new Vector3f()), .07f); // Camera adjusts to center football
+        cam.getPosition().lerp(setCameraPos.mul(1, new Vector3f()), .001f); // Camera adjusts to center football
 
         if (entityX + range > camX + camWidth/2) {  // Checks if entity is near end of window on right and adjusts projection to prevent them from leaving sight. This algorithm may need tweaking
             cam.setProjMultiplierX(cam.getProjMultiplierX()*1.5f);
