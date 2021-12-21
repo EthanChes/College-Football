@@ -27,7 +27,7 @@ public class Tile {
     public static final Tile midtopZero = new Tile("fieldinfo/midtopzero"); // id 19
     public static final Tile midbottomZero = new Tile("fieldinfo/midbottomzero"); // id 20
     public static final Tile midTopFive = new Tile("fieldinfo/midtopfive"); // id 21
-    public static final Tile alabamaLogo = new Tile("fieldinfo/alabamatopleft"); // id 22
+    public static final Tile alabamatopleft = new Tile("fieldinfo/alabamatopleft"); // id 22
     public static final Tile alabamatop = new Tile("fieldinfo/alabamatop"); // id 23
     public static final Tile alabamatopright = new Tile("fieldinfo/alabamatopright"); // id 24
     public static final Tile alabamamiddleleft = new Tile("fieldinfo/alabamamiddleleft"); // id 25
@@ -36,12 +36,19 @@ public class Tile {
     public static final Tile alabamabottomleft = new Tile("fieldinfo/alabamabottomleft"); // id 28
     public static final Tile alabamabottommiddle = new Tile("fieldinfo/alabamabottommiddle"); // id 29
     public static final Tile alabamabottomright = new Tile("fieldinfo/alabamabottomright"); // id 30
+    public static final Tile boyfan = new Tile("fieldinfo/boyfan"); // id 31
+    public static final Tile girlfan = new Tile("fieldinfo/girlfan"); // id 32
+    public static final Tile black = new Tile("fieldinfo/black"); // id 33
+    public static final Tile railing = new Tile("fieldinfo/railing"); // id 34
+    public static final Tile stands = new Tile("fieldinfo/stands"); // id 35
+    public static final Tile red = new Tile("fieldinfo/red"); // id 36
+    public static final Tile white = new Tile("fieldinfo/white"); // id 37
 
     private byte id; // Represents constant textures above
     private boolean solid; // represents if tile should collide with entities.
     private String texture; // Texture location
 
-    Tile(String texture) {
+    public Tile(String texture) {
         this.id = not;
         not++;
         this.solid = false;

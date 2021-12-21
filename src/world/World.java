@@ -10,7 +10,6 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import plays.*;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -24,7 +23,7 @@ public class World {
     GameManager gameManager = new GameManager(-234.3f, -265.9f, 366.6f, 141.8f, 153f, 354.5f);
     private int viewX;
     private int viewY;
-    private byte[] tiles;
+    private int[] tiles;
     private AABB[] bounding_boxes;
     private List<Entity> entities;
     private List<Entity> misc = new ArrayList<Entity>();
@@ -55,7 +54,7 @@ public class World {
             this.world = new Matrix4f().setTranslation(new Vector3f(0));
             this.world.scale(scale);// Tiles are 32x32, since scale = 16 * 2 due to renderTile using 2*length
 
-            tiles = new byte[width*height];
+            tiles = new int[width*height];
             bounding_boxes = new AABB[width * height];
             entities = new ArrayList<Entity>();
 
@@ -122,7 +121,7 @@ public class World {
         height = 64; // height of world
         scale = 16;
 
-        tiles = new byte[width*height];
+        tiles = new int[width*height];
         bounding_boxes = new AABB[width*height];
 
         world = new Matrix4f().setTranslation(new Vector3f(0));
@@ -158,7 +157,7 @@ public class World {
                 for (int counter = 0; counter < viewY; counter++) {
                     Tile t = getTile(count - posX - (viewX / 2) + 1, counter + posY - (viewY / 2));
                     if (t != null) {
-                        render.renderTile(t, count - posX - (viewX / 2) + 1, -counter - posY + (viewY / 2), shader, world, camera);
+                        render.renderTile(t, count - posX - (viewX / 2) + 1, -counter - posY + (viewY / 2), shader, world, camera, Tile.stands, this);
                     }
                 }
             }
@@ -371,7 +370,6 @@ public class World {
         WideReceiver.totalReceivers = 0;
         DefensiveBack.guardedReceivers = 0;
         GameManager.offenseBall = true;
-        Quarterback.hasRanTooFarBack = false;
 
         entities.clear();
 

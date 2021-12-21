@@ -24,7 +24,6 @@ public class Quarterback extends Entity {
     public static double timePass = 0; // time of pass
     public static boolean hasHandedOff = false;
     public static byte receiverPass;
-    public static boolean hasRanTooFarBack = false;
 
     public Quarterback(Transform transform) {
         super(ANIM_SIZE,transform);
@@ -89,17 +88,15 @@ public class Quarterback extends Entity {
         selectOffensivePlayer(window, world);
 
         // Prevents issues with QB running behind the play
-        if (! hasRanTooFarBack) {
-            if (this.transform.pos.x + 30 < GameManager.ballPosX) {
-                this.speed /= 10f;
-                hasRanTooFarBack = true;
-            }
-        } else {
-            if (this.transform.pos.x + 30 > GameManager.ballPosX) {
-                this.speed *= 10f;
-                hasRanTooFarBack = false;
-            }
+        if (this.transform.pos.x + 30 < GameManager.ballPosX) {
+            movement.add(speed*delta,0);
         }
+
+        if (this.transform.pos.x + 33 < GameManager.ballPosX) {
+            canPlay = false;
+            useAnimation(ANIM_FALL);
+        }
+
 
          if (route != 1) {
             if (timeFumble > 0) {
@@ -135,7 +132,7 @@ public class Quarterback extends Entity {
 
             }
 
-            if ((hasBall && GameManager.offenseBall) || forceUserControl) userControl = true; // change && true to gamemanger user is on team on offense
+            if ((hasBall && GameManager.userOffense) || forceUserControl) userControl = true; // change && true to gamemanger user is on team on offense
             else userControl = false;
 
             if (time_current - timePass < .35) {

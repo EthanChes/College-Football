@@ -52,12 +52,37 @@ public class TileRenderer {
 
 
 
-    public void renderTile(Tile tile, int x, int y, Shader shader, Matrix4f world, Camera camera) { // puts tiles in correct spot
+    public void renderTile(Tile tile, int x, int y, Shader shader, Matrix4f world, Camera camera, Tile auto, World w) { // puts tiles in correct spot
         shader.bind();
+
+        if (tile.getTexture() == Tile.boyfan.getTexture() || tile.getTexture()== Tile.girlfan.getTexture()) {
+
+            byte total = 0;
+            if (w.getTile(x, -y + 1).getTexture() == Tile.red.getTexture()) {
+                total++;
+            }
+            if (w.getTile(x, -y - 1).getTexture() == Tile.red.getTexture()) {
+                total++;
+            }
+            if (w.getTile(x + 1, -y).getTexture() == Tile.red.getTexture()) {
+                total++;
+            }
+            if (w.getTile(x - 1, -y).getTexture() == Tile.red.getTexture()) {
+                total++;
+            }
+
+            if (total >= 2) {
+                auto = Tile.red;
+            }
+            
+            renderTile(auto,x,y,shader,world,camera,null, w);
+        }
 
         if (tile_textures.containsKey (tile.getTexture())) { // Tests if tile exists and if yes, then texture will bind
             tile_textures.get(tile.getTexture()).bind(0); // Sampler sets starting id value for texture. 0 is green, 1 is red endzone etc.
         }
+
+
 
         Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(2*x, 2*y, 0)); // position is posx or posy * scale of Tile (2) in Matrix
         Matrix4f target = new Matrix4f();
@@ -69,6 +94,8 @@ public class TileRenderer {
 
         shader.setUniform("sampler",samplerMatrix);
         shader.setUniform("projection", target);
+
+
 
         model.render(); // Render a square in the tile position that the texture is put on.
     }
