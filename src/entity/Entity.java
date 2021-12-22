@@ -573,7 +573,11 @@ public abstract class Entity {
 
         if (rand_output <= this.strength*2) { // set to 2
             timeFumble = Timer.getTime();
-            forceSelectOffensivePlayer(win, world);
+
+            if (GameManager.userOffense && GameManager.offenseBall) {
+                forceSelectOffensivePlayer(win, world);
+            }
+
             ballCarrier.pancaked = true;
             ballCarrier.timePancaked = Timer.getTime();
             ballCarrier.timeFumbled = Timer.getTime();

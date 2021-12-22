@@ -407,7 +407,11 @@ public class DefensiveBack extends Entity {
                     if (closestDefender.transform.pos.distance(this.transform.pos) <= 2.75f && catchAttempt) {
                         int rand_output = rand.nextInt((int) (this.catching * 100 + (closestDefender.catching * 100) * (3 - closestDefender.transform.pos.distance(this.transform.pos))));
                         if (rand_output <= this.catching * 50) {
-                            forceSelectOffensivePlayer(window, world);
+
+                            if (GameManager.userOffense) {
+                                forceSelectOffensivePlayer(window, world);
+                            }
+
                             this.inCatch = true;
                             for (int i = 0; i < 22; i++) {
                                 world.getCountingUpEntity(i).timeSinceLastTackleAttempt = Timer.getTime() - 1;
@@ -423,7 +427,11 @@ public class DefensiveBack extends Entity {
                         }
                     } else if (catchAttempt) {
                         this.inCatch = true;
-                        forceSelectOffensivePlayer(window, world);
+
+                        if (GameManager.userOffense) {
+                            forceSelectOffensivePlayer(window, world);
+                        }
+
                         incompletePass = false;
                         for (int i = 0; i < 22; i++) {
                             world.getCountingUpEntity(i).timeSinceLastTackleAttempt = Timer.getTime() - 1;
