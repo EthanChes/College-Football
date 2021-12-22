@@ -139,7 +139,7 @@ public class Quarterback extends Entity {
                          for (int i = 22 - WideReceiver.totalReceivers; i < 22; i++) {
                              boolean open = true;
                              for (int k = 0; k < 11; k++) {
-                                 if (world.getCountingUpEntity(i).transform.pos.distance(world.getCountingUpEntity(k).transform.pos) < throw_decisions/2) {
+                                 if (world.getCountingUpEntity(i).transform.pos.distance(world.getCountingUpEntity(k).transform.pos) < throw_decisions/2 - world.getQuarterbackEntity().transform.pos.distance(world.getCountingUpEntity(i).transform.pos)/10) {
                                      open = false;
                                      k = 11;
                                  }
