@@ -164,8 +164,8 @@ public class RunningBack extends Entity {
         if (hasBall && ! userControl && ! uniqueEvents) {
             switch (runnerRoute) {
                 case 0 : if (runnerRouteMovement <= 6) { movement.add(speed*delta/2,0); runnerRouteMovement += speed*delta/2; } else { uniqueEvents = true; }  break; // right
-                case 1 : if (runnerRouteMovement <= 6) { movement.add(0,speed*delta/2); runnerRouteMovement += speed*delta/2; } else { uniqueEvents = true; } break; // up
-                case 2 : if (runnerRouteMovement <= 6) { movement.add(0,-speed*delta/2); runnerRouteMovement += speed*delta/2; } else { uniqueEvents = true; } break; // down
+                case 1 : if (runnerRouteMovement <= 6) { movement.add(0,speed*delta); runnerRouteMovement += speed*delta; } else { uniqueEvents = true; } break; // up
+                case 2 : if (runnerRouteMovement <= 6) { movement.add(0,-speed*delta); runnerRouteMovement += speed*delta; } else { uniqueEvents = true; } break; // down
             }
         }
 

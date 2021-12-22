@@ -99,6 +99,14 @@ public class Quarterback extends Entity {
 
 
          if (route != 1) {
+             if (! userControl) {
+                // AI Capabilities Pass
+
+                // Moves Away from intruding offenders
+
+                // Passes to Open Receivers
+             }
+
             if (timeFumble > 0) {
                 movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
             }
