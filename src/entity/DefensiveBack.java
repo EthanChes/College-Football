@@ -95,16 +95,16 @@ public class DefensiveBack extends Entity {
         else userControl = false;
 
         // Moves Player using various WASD directions using vectors.
-        if (window.getInput().isKeyDown(GLFW_KEY_S) && userControl) { // When S is pressed, player moves 5 down
+        if (window.getInput().isKeyDown(GLFW_KEY_S) && userControl && ! pancaked && ! isBeingMovedExternally) { // When S is pressed, player moves 5 down
             movement.add(0, -speed * delta); // multiply by delta (framecap) to move 10 frames in a second.
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_A) && userControl) { // When A is pressed, camera shifts left 5
+        if (window.getInput().isKeyDown(GLFW_KEY_A) && userControl && ! pancaked && ! isBeingMovedExternally) { // When A is pressed, camera shifts left 5
             movement.add(-speed * delta, 0);
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_W) && userControl) { // When W is pressed, camera shifts up 5
+        if (window.getInput().isKeyDown(GLFW_KEY_W) && userControl && ! pancaked && ! isBeingMovedExternally) { // When W is pressed, camera shifts up 5
             movement.add(0, speed * delta);
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_D) && userControl) { // When D is pressed, camera shifts right 5
+        if (window.getInput().isKeyDown(GLFW_KEY_D) && userControl && ! pancaked && ! isBeingMovedExternally) { // When D is pressed, camera shifts right 5
             movement.add(speed * delta, 0);
         }
 
@@ -119,245 +119,241 @@ public class DefensiveBack extends Entity {
         }
 
 
-        // Cornerback Plays Off Ball Defense in Man-Man or Blitzes
-        if (timeFumble > 0) {
-            movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
-        }
-        else if (uniqueEvents && canPlay && world.getBallCarrier() != world.getFootballEntity() && ! (pancaked || isBeingMovedExternally)) {
-            canCollide = true;
-            if (GameManager.offenseBall) {
-                movement.add(defensive_movement(world.getBallCarrier(), delta));
-            } else if (hasBall) {
-                // Search For Nearby Players Too
-                movement.add(defenseHasBallMove(world,delta));
-            }
-            else {
-                movement.add(defenseBlockUnique(world,delta));
-            }
-        }
-        else if (world.getFootballEntity().pass) {
-            movement.add(moveToward(Football.wideReceiverX - 1, Football.wideReceiverY,delta));
-        }
-        else if (canPlay) {
-            switch (route) {
-                case -3:
-                    // Blitz Left
-                case -2:
-                    // Blitz Right
-                case -1:
-                    uniqueEvents = true;
-                    break; // Blitz Middle
-                case 0: // Man-Man
-                    if (guardedReceiver != 0) {
-                        Vector2f newReceiverPos = new Vector2f();
-                        Entity receiver = world.getCountingUpEntity(22 - guardedReceiver);
-                        boolean canDefend = true;
-                        int rand_check = rand.nextInt(((int) manCoverage * 100) + 2500);
-                        if (rand_check <= manCoverage * 100 && receiverKnownPos.x != 0) {
-                            timeSinceLastCoverageAttempt = Timer.getTime();
-
-                            // Find Out Which Side DB should be on Receiver
-
-                            if (this.transform.pos.y > receiver.transform.pos.y) {
-                                newReceiverPos.set(receiver.transform.pos.x + 2, receiver.transform.pos.y + 2);
-                            } else {
-                                newReceiverPos.set(receiver.transform.pos.x + 2, receiver.transform.pos.y - 2);
-                            }
-
-                            // Project Player Location
-                            Vector2f changes = new Vector2f(newReceiverPos.x - receiverKnownPos.x, newReceiverPos.y - receiverKnownPos.y);
-                            float expectedX = (newReceiverPos.x + changes.x);
-                            float expectedY = (newReceiverPos.y + changes.y);
-
-                            coverageMovement.set(expectedX, expectedY);
-
-
-                            receiverKnownPos.set(newReceiverPos.x, newReceiverPos.y);
-                        } else if (receiverKnownPos.x == 0) {
-                            receiverKnownPos.x = receiver.transform.pos.x;
-                            receiverKnownPos.y = receiver.transform.pos.y;
-
-                            canDefend = false;
-                        }
-
-                        if (canDefend) {
-                            if (this.transform.pos.x - speed * delta > coverageMovement.x) {
-                                movement.add(-speed * delta, 0);
-                            } else if (this.transform.pos.x + speed * delta < coverageMovement.x) {
-                                movement.add(speed * delta, 0);
-                            }
-
-                            if (this.transform.pos.y - speed * delta > coverageMovement.y) {
-                                movement.add(0, -speed * delta);
-                            } else if (this.transform.pos.y + speed * delta < coverageMovement.y) {
-                                movement.add(0, speed * delta);
-                            }
-                        }
-
-                    } else {
+        if (! userControl) {
+            // Cornerback Plays Off Ball Defense in Man-Man or Blitzes
+            if (timeFumble > 0) {
+                movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
+            } else if (uniqueEvents && canPlay && world.getBallCarrier() != world.getFootballEntity() && !(pancaked || isBeingMovedExternally)) {
+                canCollide = true;
+                if (GameManager.offenseBall) {
+                    movement.add(defensive_movement(world.getBallCarrier(), delta));
+                } else if (hasBall) {
+                    // Search For Nearby Players Too
+                    movement.add(defenseHasBallMove(world, delta));
+                } else {
+                    movement.add(defenseBlockUnique(world, delta));
+                }
+            } else if (world.getFootballEntity().pass) {
+                movement.add(moveToward(Football.wideReceiverX - 1, Football.wideReceiverY, delta));
+            } else if (canPlay) {
+                switch (route) {
+                    case -3:
+                        // Blitz Left
+                    case -2:
+                        // Blitz Right
+                    case -1:
                         uniqueEvents = true;
-                    }
+                        break; // Blitz Middle
+                    case 0: // Man-Man
+                        if (guardedReceiver != 0) {
+                            Vector2f newReceiverPos = new Vector2f();
+                            Entity receiver = world.getCountingUpEntity(22 - guardedReceiver);
+                            boolean canDefend = true;
+                            int rand_check = rand.nextInt(((int) manCoverage * 100) + 2500);
+                            if (rand_check <= manCoverage * 100 && receiverKnownPos.x != 0) {
+                                timeSinceLastCoverageAttempt = Timer.getTime();
 
-                    break;
-                case 1: { // Low Zone Top
-                    int zoneRadius = 8;
-                    Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 5, -240);
-                    List<Entity> receiversInZone = new ArrayList<Entity>();
-                    for (int i = 16; i < 22; i++) {
-                        if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x,zoneLoc.y,0) < zoneRadius) {
-                            receiversInZone.add(world.getCountingUpEntity(i));
+                                // Find Out Which Side DB should be on Receiver
+
+                                if (this.transform.pos.y > receiver.transform.pos.y) {
+                                    newReceiverPos.set(receiver.transform.pos.x + 2, receiver.transform.pos.y + 2);
+                                } else {
+                                    newReceiverPos.set(receiver.transform.pos.x + 2, receiver.transform.pos.y - 2);
+                                }
+
+                                // Project Player Location
+                                Vector2f changes = new Vector2f(newReceiverPos.x - receiverKnownPos.x, newReceiverPos.y - receiverKnownPos.y);
+                                float expectedX = (newReceiverPos.x + changes.x);
+                                float expectedY = (newReceiverPos.y + changes.y);
+
+                                coverageMovement.set(expectedX, expectedY);
+
+
+                                receiverKnownPos.set(newReceiverPos.x, newReceiverPos.y);
+                            } else if (receiverKnownPos.x == 0) {
+                                receiverKnownPos.x = receiver.transform.pos.x;
+                                receiverKnownPos.y = receiver.transform.pos.y;
+
+                                canDefend = false;
+                            }
+
+                            if (canDefend) {
+                                if (this.transform.pos.x - speed * delta > coverageMovement.x) {
+                                    movement.add(-speed * delta, 0);
+                                } else if (this.transform.pos.x + speed * delta < coverageMovement.x) {
+                                    movement.add(speed * delta, 0);
+                                }
+
+                                if (this.transform.pos.y - speed * delta > coverageMovement.y) {
+                                    movement.add(0, -speed * delta);
+                                } else if (this.transform.pos.y + speed * delta < coverageMovement.y) {
+                                    movement.add(0, speed * delta);
+                                }
+                            }
+
+                        } else {
+                            uniqueEvents = true;
                         }
-                    }
-                    Vector2f averageZonePos = new Vector2f(0,0);
-                    for (int i = 0; i < receiversInZone.size(); i++) {
-                        averageZonePos.x += receiversInZone.get(i).transform.pos.x;
-                        averageZonePos.y += receiversInZone.get(i).transform.pos.y;
-                    }
-                    averageZonePos.x /= receiversInZone.size();
-                    averageZonePos.y /= receiversInZone.size();
 
-                    averageZonePos.x += 2;
-
-
-                    if (receiversInZone.size() == 0) {
-                        movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
-                    } else {
-                        movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError,delta));
-                    }
-                    break; // Zones
-                }
-                case 2 : { // Low Zone Bottom
-                    int zoneRadius = 8;
-                    Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 5, -260);
-                    List<Entity> receiversInZone = new ArrayList<Entity>();
-                    for (int i = 16; i < 22; i++) {
-                        if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x,zoneLoc.y,0) < zoneRadius) {
-                            receiversInZone.add(world.getCountingUpEntity(i));
+                        break;
+                    case 1: { // Low Zone Top
+                        int zoneRadius = 8;
+                        Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 5, -240);
+                        List<Entity> receiversInZone = new ArrayList<Entity>();
+                        for (int i = 16; i < 22; i++) {
+                            if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x, zoneLoc.y, 0) < zoneRadius) {
+                                receiversInZone.add(world.getCountingUpEntity(i));
+                            }
                         }
-                    }
-                    Vector2f averageZonePos = new Vector2f(0,0);
-                    for (int i = 0; i < receiversInZone.size(); i++) {
-                        averageZonePos.x += receiversInZone.get(i).transform.pos.x;
-                        averageZonePos.y += receiversInZone.get(i).transform.pos.y;
-                    }
-                    averageZonePos.x /= receiversInZone.size();
-                    averageZonePos.y /= receiversInZone.size();
-
-                    averageZonePos.x += 2;
-
-                    if (receiversInZone.size() == 0) {
-                        movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
-                    } else {
-                        movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError,delta));
-                    }
-                    break;
-                }
-
-                case 3 : { // High Zone Bottom
-                    int zoneRadius = 15;
-                    boolean playerBeyondSafety = false;
-                    Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 20, -260);
-                    List<Entity> receiversInZone = new ArrayList<Entity>();
-                    for (int i = 16; i < 22; i++) {
-                        if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x,zoneLoc.y,0) < zoneRadius) {
-                            receiversInZone.add(world.getCountingUpEntity(i));
+                        Vector2f averageZonePos = new Vector2f(0, 0);
+                        for (int i = 0; i < receiversInZone.size(); i++) {
+                            averageZonePos.x += receiversInZone.get(i).transform.pos.x;
+                            averageZonePos.y += receiversInZone.get(i).transform.pos.y;
                         }
-                        if (world.getCountingUpEntity(i).transform.pos.x + 10 > this.transform.pos.x) {
-                            playerBeyondSafety = true;
-                            i = 22;
+                        averageZonePos.x /= receiversInZone.size();
+                        averageZonePos.y /= receiversInZone.size();
+
+                        averageZonePos.x += 2;
+
+
+                        if (receiversInZone.size() == 0) {
+                            movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
+                        } else {
+                            movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError, delta));
                         }
+                        break; // Zones
                     }
-                    Vector2f averageZonePos = new Vector2f(0,0);
-                    for (int i = 0; i < receiversInZone.size(); i++) {
-                        averageZonePos.x += receiversInZone.get(i).transform.pos.x;
-                        averageZonePos.y += receiversInZone.get(i).transform.pos.y;
-                    }
-                    averageZonePos.x /= receiversInZone.size();
-                    averageZonePos.y /= receiversInZone.size();
-
-                    averageZonePos.x += 2;
-
-
-                    if (playerBeyondSafety) {
-                        movement.add(speed*delta,0);
-                    }
-                    else if (receiversInZone.size() == 0) {
-                        movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
-                    } else {
-                        movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError,delta));
-                    }
-                    break;
-                }
-
-
-                case 4 : { // High Zone Top
-                    int zoneRadius = 15;
-                    Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 20, -240);
-                    List<Entity> receiversInZone = new ArrayList<Entity>();
-                    boolean playerBeyondSafety = false;
-                    for (int i = 16; i < 22; i++) {
-                        if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x,zoneLoc.y,0) < zoneRadius) {
-                            receiversInZone.add(world.getCountingUpEntity(i));
+                    case 2: { // Low Zone Bottom
+                        int zoneRadius = 8;
+                        Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 5, -260);
+                        List<Entity> receiversInZone = new ArrayList<Entity>();
+                        for (int i = 16; i < 22; i++) {
+                            if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x, zoneLoc.y, 0) < zoneRadius) {
+                                receiversInZone.add(world.getCountingUpEntity(i));
+                            }
                         }
-                        if (world.getCountingUpEntity(i).transform.pos.x + 10 > this.transform.pos.x) {
-                            playerBeyondSafety = true;
-                            i = 22;
+                        Vector2f averageZonePos = new Vector2f(0, 0);
+                        for (int i = 0; i < receiversInZone.size(); i++) {
+                            averageZonePos.x += receiversInZone.get(i).transform.pos.x;
+                            averageZonePos.y += receiversInZone.get(i).transform.pos.y;
                         }
-                    }
-                    Vector2f averageZonePos = new Vector2f(0,0);
-                    for (int i = 0; i < receiversInZone.size(); i++) {
-                        averageZonePos.x += receiversInZone.get(i).transform.pos.x;
-                        averageZonePos.y += receiversInZone.get(i).transform.pos.y;
-                    }
-                    averageZonePos.x /= receiversInZone.size();
-                    averageZonePos.y /= receiversInZone.size();
+                        averageZonePos.x /= receiversInZone.size();
+                        averageZonePos.y /= receiversInZone.size();
 
-                    averageZonePos.x += 2;
+                        averageZonePos.x += 2;
 
-                    if (playerBeyondSafety) {
-                        movement.add(speed*delta,0);
-                    }
-                    else if (receiversInZone.size() == 0) {
-                        movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
-                    } else {
-                        movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError,delta));
-                    }
-                    break;
-                }
-
-                case 5 : { // Mid Zone Mid
-                    int zoneRadius = 8;
-                    Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 12, -250);
-                    List<Entity> receiversInZone = new ArrayList<Entity>();
-                    for (int i = 16; i < 22; i++) {
-                        if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x,zoneLoc.y,0) < zoneRadius) {
-                            receiversInZone.add(world.getCountingUpEntity(i));
+                        if (receiversInZone.size() == 0) {
+                            movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
+                        } else {
+                            movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError, delta));
                         }
+                        break;
                     }
-                    Vector2f averageZonePos = new Vector2f(0,0);
-                    for (int i = 0; i < receiversInZone.size(); i++) {
-                        averageZonePos.x += receiversInZone.get(i).transform.pos.x;
-                        averageZonePos.y += receiversInZone.get(i).transform.pos.y;
+
+                    case 3: { // High Zone Bottom
+                        int zoneRadius = 15;
+                        boolean playerBeyondSafety = false;
+                        Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 20, -260);
+                        List<Entity> receiversInZone = new ArrayList<Entity>();
+                        for (int i = 16; i < 22; i++) {
+                            if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x, zoneLoc.y, 0) < zoneRadius) {
+                                receiversInZone.add(world.getCountingUpEntity(i));
+                            }
+                            if (world.getCountingUpEntity(i).transform.pos.x + 10 > this.transform.pos.x) {
+                                playerBeyondSafety = true;
+                                i = 22;
+                            }
+                        }
+                        Vector2f averageZonePos = new Vector2f(0, 0);
+                        for (int i = 0; i < receiversInZone.size(); i++) {
+                            averageZonePos.x += receiversInZone.get(i).transform.pos.x;
+                            averageZonePos.y += receiversInZone.get(i).transform.pos.y;
+                        }
+                        averageZonePos.x /= receiversInZone.size();
+                        averageZonePos.y /= receiversInZone.size();
+
+                        averageZonePos.x += 2;
+
+
+                        if (playerBeyondSafety) {
+                            movement.add(speed * delta, 0);
+                        } else if (receiversInZone.size() == 0) {
+                            movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
+                        } else {
+                            movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError, delta));
+                        }
+                        break;
                     }
-                    averageZonePos.x /= receiversInZone.size();
-                    averageZonePos.y /= receiversInZone.size();
 
-                    averageZonePos.x += 2;
 
-                    if (receiversInZone.size() == 0) {
-                        movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
-                    } else {
-                        movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError,delta));
+                    case 4: { // High Zone Top
+                        int zoneRadius = 15;
+                        Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 20, -240);
+                        List<Entity> receiversInZone = new ArrayList<Entity>();
+                        boolean playerBeyondSafety = false;
+                        for (int i = 16; i < 22; i++) {
+                            if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x, zoneLoc.y, 0) < zoneRadius) {
+                                receiversInZone.add(world.getCountingUpEntity(i));
+                            }
+                            if (world.getCountingUpEntity(i).transform.pos.x + 10 > this.transform.pos.x) {
+                                playerBeyondSafety = true;
+                                i = 22;
+                            }
+                        }
+                        Vector2f averageZonePos = new Vector2f(0, 0);
+                        for (int i = 0; i < receiversInZone.size(); i++) {
+                            averageZonePos.x += receiversInZone.get(i).transform.pos.x;
+                            averageZonePos.y += receiversInZone.get(i).transform.pos.y;
+                        }
+                        averageZonePos.x /= receiversInZone.size();
+                        averageZonePos.y /= receiversInZone.size();
+
+                        averageZonePos.x += 2;
+
+                        if (playerBeyondSafety) {
+                            movement.add(speed * delta, 0);
+                        } else if (receiversInZone.size() == 0) {
+                            movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
+                        } else {
+                            movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError, delta));
+                        }
+                        break;
                     }
-                    break;
-                }
 
-            } // End of Switch - Route
+                    case 5: { // Mid Zone Mid
+                        int zoneRadius = 8;
+                        Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 12, -250);
+                        List<Entity> receiversInZone = new ArrayList<Entity>();
+                        for (int i = 16; i < 22; i++) {
+                            if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x, zoneLoc.y, 0) < zoneRadius) {
+                                receiversInZone.add(world.getCountingUpEntity(i));
+                            }
+                        }
+                        Vector2f averageZonePos = new Vector2f(0, 0);
+                        for (int i = 0; i < receiversInZone.size(); i++) {
+                            averageZonePos.x += receiversInZone.get(i).transform.pos.x;
+                            averageZonePos.y += receiversInZone.get(i).transform.pos.y;
+                        }
+                        averageZonePos.x /= receiversInZone.size();
+                        averageZonePos.y /= receiversInZone.size();
+
+                        averageZonePos.x += 2;
+
+                        if (receiversInZone.size() == 0) {
+                            movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
+                        } else {
+                            movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError, delta));
+                        }
+                        break;
+                    }
+
+                } // End of Switch - Route
 
 
+            }
         }
 
-        if (userControl && !playStart || ! (pancaked || isBeingMovedExternally)) {
+        if (userControl && !playStart || (! (pancaked || isBeingMovedExternally) && canPlay)) {
             move(movement);
         } else {
             isBeingMovedExternally = false;

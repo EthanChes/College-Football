@@ -58,16 +58,16 @@ public class DefensiveLineman extends Entity {
         else userControl = false;
 
         // Moves Player using various WASD directions using vectors.
-        if (window.getInput().isKeyDown(GLFW_KEY_S) && userControl) { // When S is pressed, player moves 5 down
+        if (window.getInput().isKeyDown(GLFW_KEY_S) && userControl && ! pancaked && ! isBeingMovedExternally) { // When S is pressed, player moves 5 down
             movement.add(0, -speed * delta); // multiply by delta (framecap) to move 10 frames in a second.
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_A) && userControl) { // When A is pressed, camera shifts left 5
+        if (window.getInput().isKeyDown(GLFW_KEY_A) && userControl && ! pancaked && ! isBeingMovedExternally) { // When A is pressed, camera shifts left 5
             movement.add(-speed * delta, 0);
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_W) && userControl) { // When W is pressed, camera shifts up 5
+        if (window.getInput().isKeyDown(GLFW_KEY_W) && userControl && ! pancaked && ! isBeingMovedExternally) { // When W is pressed, camera shifts up 5
             movement.add(0, speed * delta);
         }
-        if (window.getInput().isKeyDown(GLFW_KEY_D) && userControl) { // When D is pressed, camera shifts right 5
+        if (window.getInput().isKeyDown(GLFW_KEY_D) && userControl && ! pancaked && ! isBeingMovedExternally) { // When D is pressed, camera shifts right 5
             movement.add(speed * delta, 0);
         }
 
@@ -83,22 +83,22 @@ public class DefensiveLineman extends Entity {
 
 
 
-        if (canPlay && (! uniqueEvents) && (! pancaked) && ! isBeingMovedExternally) {
-            movement.add(pursuit(world.getBallCarrier(), delta,world));
-        }
-        else if (timeFumble > 0 && getAnimationIndex() != 3) {
-            movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
-        }
-        else if (uniqueEvents && canPlay && world.getBallCarrier() != world.getFootballEntity() && ! (pancaked || isBeingMovedExternally)) {
-            canCollide = true;
-            if (GameManager.offenseBall) {
-                movement.add(defensive_movement(world.getBallCarrier(), delta));
-            } else {
-                if (hasBall) {
-                    // Search For Nearby Players Too
-                    movement.add(defenseHasBallMove(world,delta));
+        if (! userControl) {
+            if (canPlay && (!uniqueEvents) && (!pancaked) && !isBeingMovedExternally) {
+                movement.add(pursuit(world.getBallCarrier(), delta, world));
+            } else if (timeFumble > 0 && getAnimationIndex() != 3) {
+                movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
+            } else if (uniqueEvents && canPlay && world.getBallCarrier() != world.getFootballEntity() && !(pancaked || isBeingMovedExternally)) {
+                canCollide = true;
+                if (GameManager.offenseBall) {
+                    movement.add(defensive_movement(world.getBallCarrier(), delta));
                 } else {
-                    movement.add(defenseBlockUnique(world,delta));
+                    if (hasBall) {
+                        // Search For Nearby Players Too
+                        movement.add(defenseHasBallMove(world, delta));
+                    } else {
+                        movement.add(defenseBlockUnique(world, delta));
+                    }
                 }
             }
         }
@@ -117,7 +117,7 @@ public class DefensiveLineman extends Entity {
                 canCollide = true;
             }
         }
-        else if (movement.x != 0 || movement.y != 0 || (canPlay && GameManager.offenseBall)) { // This may be where a potential error could occur because a user controlled player will always show run anim.
+        else if (movement.x != 0 || movement.y != 0 || (canPlay && GameManager.offenseBall && !userControl)) { // This may be where a potential error could occur because a user controlled player will always show run anim.
             useAnimation(ANIM_MOVE);
         }
         else if (isBeingMovedExternally) {
