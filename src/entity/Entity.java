@@ -171,6 +171,12 @@ public abstract class Entity {
         world.getCountingUpEntity(0).timeUserControl = Timer.getTime();
     }
 
+    public void deselectAllDefenders(World world) {
+        for (int i = 0; i < 11; i++) {
+            world.getCountingUpEntity(i).forceUserControl = false;
+        }
+    }
+
     public void selectDefensivePlayer(Window win, World world) {
         if (!GameManager.userOffense && GameManager.offenseBall && win.getInput().isKeyPressed(GLFW_KEY_Z) && selectPlayerCooldown + .3f < Timer.getTime()) {
             // Enabled to select new player

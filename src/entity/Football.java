@@ -154,6 +154,9 @@ public class Football extends Entity {
                 if (collide.isIntersecting && world.getCountingUpEntity(i).timeFumbled + 3 < Timer.getTime() && ! (world.getCountingUpEntity(i).pancaked || world.getCountingUpEntity(i).isBeingMovedExternally)) {
                     if (i < 11) {
                         GameManager.offenseBall = false;
+                        if (GameManager.userOffense) {
+                            deselectAllDefenders(world);
+                        }
                     } else {
                         GameManager.offenseBall = true;
                         if (GameManager.userOffense) {

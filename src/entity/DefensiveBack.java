@@ -408,6 +408,8 @@ public class DefensiveBack extends Entity {
                                 forceSelectOffensivePlayer(window, world);
                             }
 
+                            deselectAllDefenders(world);
+
                             this.inCatch = true;
                             for (int i = 0; i < 22; i++) {
                                 world.getCountingUpEntity(i).timeSinceLastTackleAttempt = Timer.getTime() - 1;
@@ -427,6 +429,9 @@ public class DefensiveBack extends Entity {
                         if (GameManager.userOffense) {
                             forceSelectOffensivePlayer(window, world);
                         }
+
+                        deselectAllDefenders(world);
+
 
                         incompletePass = false;
                         for (int i = 0; i < 22; i++) {
