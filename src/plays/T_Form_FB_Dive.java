@@ -7,13 +7,16 @@ import java.util.List;
 
 public class T_Form_FB_Dive {
     private List<Entity> entities;
+    private RunningBack runner;
 
     public T_Form_FB_Dive(float ballX, float ballY) {
         entities = new ArrayList<Entity>();
         entities.add(new Quarterback(new Transform(ballX - 3, ballY)));
         entities.get(0).setRoute(1);
 
-        entities.add(new RunningBack(new Transform(ballX - 6, ballY)));
+        runner = new RunningBack(new Transform(ballX - 6, ballY));
+        runner.setRunnerRoute(0);
+        entities.add(runner);
         entities.get(1).setRoute(1);
 
         // Add Offensive Line

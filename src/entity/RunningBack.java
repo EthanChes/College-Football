@@ -19,6 +19,9 @@ public class RunningBack extends Entity {
     public static final int ANIM_RUN_WITHOUT_BALL = 1;
     public static final int ANIM_IDLE = 0;
 
+    public int runnerRoute = 0;
+    public float runnerRouteMovement = 0;
+
     public RunningBack(Transform transform) {
         super(ANIM_SIZE, transform);
         setAnimation(ANIM_IDLE, new Animation(1,1,"runningbackidle"));
@@ -28,6 +31,10 @@ public class RunningBack extends Entity {
         setAnimation(ANIM_FALL, new Animation(1,1, "offensivefall"));
         setRoute(1);
         strength = 8f;
+    }
+
+    public void setRunnerRoute(int x) {
+        runnerRoute = x;
     }
 
     public void receiveHandoff(World world) {
@@ -151,6 +158,14 @@ public class RunningBack extends Entity {
                         }
                     }
                 }
+            }
+        }
+
+        if (hasBall && ! userControl && ! uniqueEvents) {
+            switch (runnerRoute) {
+                case 0 : if (runnerRouteMovement <= 6) { movement.add(speed*delta/2,0); runnerRouteMovement += speed*delta/2; } else { uniqueEvents = true; }  break; // right
+                case 1 : if (runnerRouteMovement <= 6) { movement.add(0,speed*delta/2); runnerRouteMovement += speed*delta/2; } else { uniqueEvents = true; } break; // up
+                case 2 : if (runnerRouteMovement <= 6) { movement.add(0,-speed*delta/2); runnerRouteMovement += speed*delta/2; } else { uniqueEvents = true; } break; // down
             }
         }
 

@@ -7,6 +7,7 @@ import java.util.List;
 
 public class T_Form_HB_Stretch {
     private List<Entity> entities;
+    private RunningBack runner;
 
     public T_Form_HB_Stretch(float ballX, float ballY) {
         entities = new ArrayList<Entity>();
@@ -35,7 +36,9 @@ public class T_Form_HB_Stretch {
 
         entities.add(new RunningBack(new Transform(ballX - 6, ballY + 3)));
         entities.get(9).setRoute(2);
-        entities.add(new RunningBack(new Transform(ballX - 6, ballY - 3)));
+        runner = new RunningBack(new Transform(ballX - 6, ballY - 3));
+        runner.setRunnerRoute(2);
+        entities.add(runner);
         entities.get(10).setRoute(1);
 
         // Add football
