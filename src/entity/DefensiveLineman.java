@@ -51,6 +51,8 @@ public class DefensiveLineman extends Entity {
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
 
+        selectDefensivePlayer(window, world);
+
         if ( (! GameManager.userOffense) && hasBall) userControl = true; // change false to gamemanager on defense, make sure to have ids for different defenders to switch through them
         else if (forceUserControl && ! GameManager.userOffense) userControl = true;
         else userControl = false;
@@ -115,7 +117,7 @@ public class DefensiveLineman extends Entity {
                 canCollide = true;
             }
         }
-        else if (movement.x != 0 || movement.y != 0 || (canPlay && true)) { // This may be where a potential error could occur because a user controlled player will always show run anim.
+        else if (movement.x != 0 || movement.y != 0 || (canPlay && GameManager.offenseBall)) { // This may be where a potential error could occur because a user controlled player will always show run anim.
             useAnimation(ANIM_MOVE);
         }
         else if (isBeingMovedExternally) {

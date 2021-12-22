@@ -247,6 +247,7 @@ public class World {
 
             if (gameManager.touchDown(this)) {
                 System.out.println("Touchdown Offense");
+                Entity.canPlay = false;
             }
         }
 

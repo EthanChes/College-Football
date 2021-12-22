@@ -15,7 +15,7 @@ public class GameManager {
     public static int down = 0;
     public static float firstDownLine = ballPosX + 20;
     public static boolean offenseBall = true;
-    public static boolean userOffense = true;
+    public static boolean userOffense = false;
     public static boolean selectedPlay = false;
     public static boolean hasEntities = false;
 
@@ -59,7 +59,7 @@ public class GameManager {
     }
 
     public boolean touchDown(World world) { // Check If TD (Offense)
-        if (world.getBallCarrier().transform.pos.x > xEndzoneRight && world.getBallCarrier().transform.pos.x < xMax) {
+        if (world.getBallCarrier().transform.pos.x > xEndzoneRight && world.getBallCarrier().transform.pos.x < xMax && world.getBallCarrier() != world.getFootballEntity()) {
             return true;
         }
         return false;

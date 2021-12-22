@@ -165,6 +165,51 @@ public abstract class Entity {
         }
     }
 
+    public void selectDefensivePlayer(Window win, World world) {
+        if (!GameManager.userOffense && GameManager.offenseBall && win.getInput().isKeyPressed(GLFW_KEY_Z) && selectPlayerCooldown + .3f < Timer.getTime()) {
+            // Enabled to select new player
+
+            selectPlayerCooldown = Timer.getTime();
+
+            if (playStart) {
+                // Sort To Find New Closest Player
+                Entity closestPlayer = world.getCountingUpEntity(0);
+                for (int i = 0; i < 11; i++) {
+                    world.getCountingUpEntity(i).forceUserControl = false;
+                    if (!world.getCountingUpEntity(i).userControl) {
+                        if (closestPlayer.timeUserControl + .5 < Timer.getTime()) {
+                            if (world.getCountingUpEntity(i).transform.pos.distance(world.getBallCarrier().transform.pos) < closestPlayer.transform.pos.distance(world.getBallCarrier().transform.pos)) {
+                                closestPlayer = world.getCountingUpEntity(i);
+                            }
+                        }
+                    }
+                }
+
+                if (closestPlayer == world.getCountingUpEntity(0) && world.getCountingUpEntity(0).userControl) {
+                    closestPlayer = world.getCountingUpEntity(1);
+                }
+
+                // Force User Control to closestPlayer
+                closestPlayer.forceUserControl = true;
+                closestPlayer.timeUserControl = Timer.getTime();
+                System.out.println(closestPlayer);
+            } else {
+                for (int i = 0; i < 11; i++) {
+                    world.getCountingUpEntity(i).forceUserControl = false;
+
+                    if (world.getCountingUpEntity(i).userControl && i + 1 <= 10) {
+                        world.getCountingUpEntity(i + 1).forceUserControl = true;
+                        world.getCountingUpEntity(i + 1).timeUserControl = Timer.getTime();
+                        i = 10;
+                    } else if (i == 10) {
+                        world.getCountingUpEntity(0).forceUserControl = true;
+                        world.getCountingUpEntity(0).timeUserControl = Timer.getTime();
+                    }
+                }
+            }
+        }
+    }
+
     public void selectOffensivePlayer(Window win, World world) {
         // Upon Key Press, Switch Player
         if (win.getInput().isKeyPressed(GLFW_KEY_Z) && GameManager.userOffense && ! GameManager.offenseBall && selectPlayerCooldown + .3f < Timer.getTime()) {
