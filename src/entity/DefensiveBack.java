@@ -94,6 +94,20 @@ public class DefensiveBack extends Entity {
         else if (forceUserControl && ! GameManager.userOffense) userControl = true;
         else userControl = false;
 
+        // Moves Player using various WASD directions using vectors.
+        if (window.getInput().isKeyDown(GLFW_KEY_S) && userControl) { // When S is pressed, player moves 5 down
+            movement.add(0, -speed * delta); // multiply by delta (framecap) to move 10 frames in a second.
+        }
+        if (window.getInput().isKeyDown(GLFW_KEY_A) && userControl) { // When A is pressed, camera shifts left 5
+            movement.add(-speed * delta, 0);
+        }
+        if (window.getInput().isKeyDown(GLFW_KEY_W) && userControl) { // When W is pressed, camera shifts up 5
+            movement.add(0, speed * delta);
+        }
+        if (window.getInput().isKeyDown(GLFW_KEY_D) && userControl) { // When D is pressed, camera shifts right 5
+            movement.add(speed * delta, 0);
+        }
+
         if (world.getBallCarrier().transform.pos.x > GameManager.ballPosX + .7f) {
             uniqueEvents = true;
         }
@@ -343,7 +357,7 @@ public class DefensiveBack extends Entity {
 
         }
 
-        if (! (pancaked || isBeingMovedExternally)) {
+        if (userControl && !playStart || ! (pancaked || isBeingMovedExternally)) {
             move(movement);
         } else {
             isBeingMovedExternally = false;

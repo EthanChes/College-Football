@@ -103,7 +103,7 @@ public class DefensiveLineman extends Entity {
             }
         }
 
-        if (canPlay && ! isBeingMovedExternally) {
+        if ((userControl && ! playStart) || (canPlay && ! pancaked && ! isBeingMovedExternally)) {
             move(movement);
         }
         else
