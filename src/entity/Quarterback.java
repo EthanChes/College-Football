@@ -5,7 +5,10 @@ import graphics.Camera;
 import graphics.Window;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.system.CallbackI;
 import world.World;
+
+import java.util.Vector;
 
 import static gameplay.Timer.getTime;
 import static org.lwjgl.glfw.GLFW.*;
@@ -79,6 +82,24 @@ public class Quarterback extends Entity {
 
     }
 
+    public Vector2f moveAwayFrom(Entity entity, float delta) {
+        Vector2f movement = new Vector2f();
+
+        if (this.transform.pos.x - speed*delta > entity.transform.pos.x) {
+            movement.add(speed*delta,0);
+        } else if (this.transform.pos.x + speed*delta < entity.transform.pos.x) {
+            movement.add(-speed*delta,0);
+        }
+
+        if (this.transform.pos.y - speed*delta > entity.transform.pos.y) {
+            movement.add(0,speed*delta);
+        } else if (this.transform.pos.y + speed*delta < entity.transform.pos.y) {
+            movement.add(0,-speed*delta);
+        }
+
+        return movement;
+    }
+
     @Override
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
@@ -104,7 +125,15 @@ public class Quarterback extends Entity {
 
                 // Moves Away from intruding offenders
 
+                for (int i = 0; i < 11; i++) {
+                    if (world.getCountingUpEntity(i).transform.pos.distance(this.transform.pos) <= 3) {
+                        movement.add(moveAwayFrom(world.getCountingUpEntity(i), delta));
+                        i = 11;
+                    }
+                }
+
                 // Passes to Open Receivers
+
              }
 
             if (timeFumble > 0) {
