@@ -197,16 +197,25 @@ public class World {
                 GameManager.selectedPlay = true;
                 SelectPlay.calculatePlayID(1);
                 enterEntities();
+                if (! GameManager.userOffense) {
+                    Entity.forceInitiateDefensivePlayer(this);
+                }
             }
             else if (window.getInput().isKeyPressed(GLFW_KEY_2)) {
                 GameManager.selectedPlay = true;
                 SelectPlay.calculatePlayID(2);
                 enterEntities();
+                if (! GameManager.userOffense) {
+                    Entity.forceInitiateDefensivePlayer(this);
+                }
             }
             else if (window.getInput().isKeyPressed(GLFW_KEY_3)) {
                 GameManager.selectedPlay = true;
                 SelectPlay.calculatePlayID(3);
                 enterEntities();
+                if (! GameManager.userOffense) {
+                    Entity.forceInitiateDefensivePlayer(this);
+                }
             }
 
             if (GameManager.selectedPlay) {
