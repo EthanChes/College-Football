@@ -49,6 +49,7 @@ public abstract class Entity {
 
     // Player Info
     public byte route = 0;
+    public float throw_decisions = 10f;
     public float manCoverage = 10f;
     public float routeMovement = 0f;
     public float speed = 10f;

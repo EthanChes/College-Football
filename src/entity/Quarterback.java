@@ -27,6 +27,7 @@ public class Quarterback extends Entity {
     public static double timePass = 0; // time of pass
     public static boolean hasHandedOff = false;
     public static byte receiverPass;
+    public float routeMovement = 0;
 
     public Quarterback(Transform transform) {
         super(ANIM_SIZE,transform);
@@ -120,20 +121,43 @@ public class Quarterback extends Entity {
 
 
          if (route != 1) {
-             if (! userControl) {
-                // AI Capabilities Pass
+             if (! userControl && playStart && hasBall && this.transform.pos.x < GameManager.ballPosX) {
+                 // AI Capabilities Pass
 
-                // Moves Away from intruding offenders
+                 // Moves Away from intruding offenders
 
-                for (int i = 0; i < 11; i++) {
-                    if (world.getCountingUpEntity(i).transform.pos.distance(this.transform.pos) <= 3) {
-                        movement.add(moveAwayFrom(world.getCountingUpEntity(i), delta));
-                        i = 11;
-                    }
-                }
+                 for (int i = 0; i < 11; i++) {
+                     if (world.getCountingUpEntity(i).transform.pos.distance(this.transform.pos) <= 3) {
+                         movement.add(moveAwayFrom(world.getCountingUpEntity(i), delta));
+                         i = 11;
+                     }
+                 }
 
-                // Passes to Open Receivers
-
+                 // Passes to Open Receivers
+                 if (routeMovement > 3) {
+                     if (!pass) {
+                         for (int i = 22 - WideReceiver.totalReceivers; i < 22; i++) {
+                             boolean open = true;
+                             for (int k = 0; k < 11; k++) {
+                                 if (world.getCountingUpEntity(i).transform.pos.distance(world.getCountingUpEntity(k).transform.pos) < throw_decisions/2) {
+                                     open = false;
+                                     k = 11;
+                                 }
+                             }
+                             if (open) {
+                                 receiverPass = (byte) (21-i);
+                                 pass = true;
+                                 timePass = getTime();
+                                 hasBall = false;
+                                 System.out.println(receiverPass);
+                                 i = 22;
+                             }
+                         }
+                     }
+                 } else {
+                     movement.add(-speed*delta,0);
+                     routeMovement += speed*delta;
+                 }
              }
 
             if (timeFumble > 0) {
