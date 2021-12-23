@@ -497,6 +497,10 @@ public class DefensiveBack extends Entity {
             useAnimation(ANIM_MOVE);
         }
 
+        if (pancaked) {
+            useAnimation(ANIM_FALL);
+        }
+
     }
 
 
