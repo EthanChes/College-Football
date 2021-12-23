@@ -131,8 +131,9 @@ public class DefensiveLineman extends Entity {
         else if (isBeingMovedExternally) {
             useAnimation(ANIM_MOVE);
         }
-        else {
+        else if (lastAnimationChange + .5f < Timer.getTime()){
             useAnimation(ANIM_IDLE);
+            lastAnimationChange = Timer.getTime();
         }
 
         if (hasBall) {
@@ -164,6 +165,8 @@ public class DefensiveLineman extends Entity {
         }
         else if (! (canPlay || playStart)) {
             useAnimation(ANIM_PRESNAP);
+        } else if (getAnimationIndex() == ANIM_PRESNAP) {
+            useAnimation(ANIM_IDLE);
         }
 
         if (userControl) {

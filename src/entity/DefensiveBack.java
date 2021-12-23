@@ -384,7 +384,9 @@ public class DefensiveBack extends Entity {
             }
         }
         else {
+            if (lastAnimationChange + .5f <= Timer.getTime())
             useAnimation(ANIM_IDLE);
+            lastAnimationChange = Timer.getTime();
             if (hasBall) {
                 world.getFootballEntity().transform.pos.set(this.transform.pos.x, this.transform.pos.y,0);
             }
