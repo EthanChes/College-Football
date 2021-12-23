@@ -128,7 +128,7 @@ public class Quarterback extends Entity {
                  // Moves Away from intruding offenders
 
                  for (int i = 0; i < 11; i++) {
-                     if (world.getCountingUpEntity(i).transform.pos.distance(this.transform.pos) <= 3) {
+                     if (world.getCountingUpEntity(i).transform.pos.distance(this.transform.pos) <= 5) {
                          movement.add(moveAwayFrom(world.getCountingUpEntity(i), delta));
                          i = 11;
                      }
@@ -141,7 +141,7 @@ public class Quarterback extends Entity {
                              boolean open = true;
                              for (int k = 0; k < 11; k++) {
                                  Vector2f wrLocation = world.getCountingUpEntity(i).getProjectedLocation(world.getCountingUpEntity(i), world.getFootballEntity(), delta, world);
-                                 if (wrLocation.distance(chaseProjectedLocation(world.getCountingUpEntity(k), wrLocation.x, wrLocation.y, world.getFootballEntity(), delta, world.getQuarterbackEntity())) < throw_decisions) {
+                                 if (wrLocation.distance(chaseProjectedLocation(world.getCountingUpEntity(k), wrLocation.x, wrLocation.y, world.getFootballEntity(), delta, world.getQuarterbackEntity())) < throw_decisions/2) {
                                      open = false;
                                      k = 11;
                                  }

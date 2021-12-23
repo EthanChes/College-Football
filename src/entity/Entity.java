@@ -362,7 +362,7 @@ public abstract class Entity {
         Vector2f projBallMovement = new Vector2f(ball.transform.pos.x, ball.transform.pos.y);
 
         for (; projBallMovement.distance(quarterback.transform.pos.x, quarterback.transform.pos.y) <= quarterback.transform.pos.distance(x,y,0);) {
-            projBallMovement.add(ball.throw_power*delta,0);
+            projBallMovement.add(quarterback.throw_power*delta*5,0);
             location.add(defender.moveToward(x,y,delta));
         }
 
