@@ -51,6 +51,14 @@ public class DefensiveLineman extends Entity {
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
 
+        if (! (canPlay || playStart) && this.transform.pos.x - 2f < GameManager.ballPosX) {
+            movement.add(speed*delta,0);
+        } else if (! (canPlay || playStart) && forceUserControl) {
+            canCollide = false;
+        } else if (Football.timeSnapped + .3f > Timer.getTime()) {
+            canCollide = true;
+        }
+
         selectDefensivePlayer(window, world);
 
         if ( (! GameManager.userOffense) && hasBall) userControl = true; // change false to gamemanager on defense, make sure to have ids for different defenders to switch through them
@@ -151,7 +159,10 @@ public class DefensiveLineman extends Entity {
             }
         }
 
-        if (! (canPlay || playStart)) {
+        if (movement.x != 0 || movement.y != 0 && ! (canPlay || playStart)) {
+            useAnimation(ANIM_MOVE);
+        }
+        else if (! (canPlay || playStart)) {
             useAnimation(ANIM_PRESNAP);
         }
 

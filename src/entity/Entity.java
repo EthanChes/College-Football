@@ -46,6 +46,7 @@ public abstract class Entity {
     public static double timeFumble = -1;
     public double timeFumbled = -1;
     public static double selectPlayerCooldown = -1;
+    public double lastAnimationChange = -1;
 
     // Player Info
     public byte route = 0;
