@@ -4,6 +4,7 @@ import graphics.Animation;
 import graphics.Camera;
 import graphics.Window;
 import org.joml.Vector2f;
+import org.joml.Vector2fc;
 import org.joml.Vector3f;
 import org.lwjgl.system.CallbackI;
 import world.World;
@@ -139,7 +140,8 @@ public class Quarterback extends Entity {
                          for (int i = 22 - WideReceiver.totalReceivers; i < 22; i++) {
                              boolean open = true;
                              for (int k = 0; k < 11; k++) {
-                                 if (world.getCountingUpEntity(i).transform.pos.distance(world.getCountingUpEntity(k).transform.pos) < throw_decisions - world.getQuarterbackEntity().transform.pos.distance(world.getCountingUpEntity(i).transform.pos)/5) {
+                                 Vector2f wrLocation = world.getCountingUpEntity(i).getProjectedLocation(world.getCountingUpEntity(i), world.getFootballEntity(), delta, world);
+                                 if (wrLocation.distance(chaseProjectedLocation(world.getCountingUpEntity(k), wrLocation.x, wrLocation.y, world.getFootballEntity(), delta, world.getQuarterbackEntity())) < throw_decisions) {
                                      open = false;
                                      k = 11;
                                  }

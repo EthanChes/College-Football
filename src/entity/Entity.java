@@ -357,6 +357,18 @@ public abstract class Entity {
         this.pass = true;
     }
 
+    public Vector2f chaseProjectedLocation(Entity defender, float x, float y, Entity ball, float delta, Entity quarterback) {
+        Vector2f location = new Vector2f(defender.transform.pos.x, defender.transform.pos.y);
+        Vector2f projBallMovement = new Vector2f(ball.transform.pos.x, ball.transform.pos.y);
+
+        for (; projBallMovement.distance(quarterback.transform.pos.x, quarterback.transform.pos.y) <= quarterback.transform.pos.distance(x,y,0);) {
+            projBallMovement.add(ball.throw_power*delta,0);
+            location.add(defender.moveToward(x,y,delta));
+        }
+
+        return location;
+    }
+
     public Vector2f getProjectedLocation(Entity entity, Entity ball, float delta, World world) {
         Vector2f location = new Vector2f(entity.transform.pos.x,entity.transform.pos.y);
         float projRouteMovement = entity.routeMovement;
