@@ -67,14 +67,39 @@ public class GameManager {
 
     public void setBallPosX(World world) {
         down++;
-        if (world.getBallCarrier() != null && ! Entity.incompletePass) {
-            this.ballPosX = world.getFootballEntity().transform.pos.x - .6f;
-        }
 
-        if (ballPosX > firstDownLine) {
+        if (down > 4)
+            Entity.turnover = true;
+
+        if (! Entity.turnover) {
+            if (world.getBallCarrier() != null && !Entity.incompletePass) {
+                this.ballPosX = world.getFootballEntity().transform.pos.x - .6f;
+            }
+
+            if (ballPosX > firstDownLine) {
+                down = 1;
+                firstDownLine = ballPosX + 20;
+                System.out.println("FIRST DOWN");
+            }
+        } else {
+            // Set Ball Pos
+            System.out.println(world.getFootballEntity().transform.pos.x);
+            this.ballPosX = (507 - world.getFootballEntity().transform.pos.x);
+            System.out.println(ballPosX);
+
+            // Set Vars
+            Entity.turnover = false;
             down = 1;
+
             firstDownLine = ballPosX + 20;
-            System.out.println("FIRST DOWN");
+
+            if (userOffense) {
+                userOffense = false;
+            } else {
+                userOffense = true;
+            }
+
+
         }
 
     }

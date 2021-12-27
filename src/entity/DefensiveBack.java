@@ -414,6 +414,8 @@ public class DefensiveBack extends Entity {
                                 forceSelectOffensivePlayer(window, world);
                             }
 
+                            turnover = true;
+
                             deselectAllDefenders(world);
 
                             this.inCatch = true;
@@ -435,6 +437,8 @@ public class DefensiveBack extends Entity {
                         if (GameManager.userOffense) {
                             forceSelectOffensivePlayer(window, world);
                         }
+
+                        turnover = true;
 
                         deselectAllDefenders(world);
 

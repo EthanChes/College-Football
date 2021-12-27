@@ -157,11 +157,14 @@ public class Football extends Entity {
                         if (GameManager.userOffense) {
                             deselectAllDefenders(world);
                         }
+                        turnover = true;
                     } else {
                         GameManager.offenseBall = true;
                         if (GameManager.userOffense) {
                             setAllOffenseForceUserControlFalse(world);
                         }
+
+                        turnover = false;
                     }
 
                     useAnimation(ANIM_QB_THROW_START);

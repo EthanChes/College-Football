@@ -22,6 +22,7 @@ public abstract class Entity {
     protected Transform transform;
 
     // Game booleans
+    public static boolean turnover = false;
     public static float throw_height;
     public static int totalReceivers = 0;
     public static boolean canPlay = false;
@@ -512,12 +513,14 @@ public abstract class Entity {
                 move.add(speed*delta,0);
             } else {
                 move.add(speed*delta, -speed*delta);
+                canCollide = false;
             }
         } else {
             if (this.transform.pos.y + speed*delta > -234.3) {
                 move.add(speed*delta,0);
             } else {
                 move.add(speed * delta, speed * delta);
+                canCollide = false;
             }
         }
 
