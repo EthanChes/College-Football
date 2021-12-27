@@ -98,6 +98,10 @@ public class DefensiveBack extends Entity {
         else if (forceUserControl && ! GameManager.userOffense) userControl = true;
         else userControl = false;
 
+        if (forceUserControl) {
+            userTackle(window, this, world.getBallCarrier(), world);
+        }
+
         // Moves Player using various WASD directions using vectors.
         if (window.getInput().isKeyDown(GLFW_KEY_S) && userControl && ! pancaked && ! isBeingMovedExternally) { // When S is pressed, player moves 5 down
             movement.add(0, -speed * delta); // multiply by delta (framecap) to move 10 frames in a second.

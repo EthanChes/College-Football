@@ -198,6 +198,10 @@ public class Quarterback extends Entity {
             if ((hasBall && GameManager.userOffense) || forceUserControl) userControl = true; // change && true to gamemanger user is on team on offense
             else userControl = false;
 
+             if (forceUserControl) {
+                 userTackle(window, this, world.getBallCarrier(), world);
+             }
+
             if (time_current - timePass < .35) {
                 pass = true;
                 world.setBallCarrier(world.getFootballEntity());

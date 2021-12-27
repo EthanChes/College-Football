@@ -58,6 +58,10 @@ public class WideReceiver extends Entity {
         if ((hasBall && GameManager.userOffense) || forceUserControl) userControl = true; // change && true to gamemanager user controls offensive team
         else userControl = false;
 
+        if (forceUserControl) {
+            userTackle(window, this, world.getBallCarrier(), world);
+        }
+
         if (! (inCatch || hasBall) && collidingWithFootball(this,world)) { // Put Random Catch Element here
             Entity closestDefender = world.getCountingUpEntity(0);
             for (int i = 0; i < 11; i++) {

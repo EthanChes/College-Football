@@ -229,6 +229,10 @@ public class OffensiveLineman extends Entity {
         if ((hasBall && GameManager.userOffense) || forceUserControl) userControl = true; // change && true to gamemanager user controls offensive team
         else userControl = false;
 
+        if (forceUserControl) {
+            userTackle(window, this, world.getBallCarrier(), world);
+        }
+
         if (window.getInput().isKeyDown(GLFW_KEY_S) && userControl) { // When S is pressed, player moves 5 down
             movement.add(0,-speed*delta); // multiply by delta (framecap) to move 10 frames in a second.
         }

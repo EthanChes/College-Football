@@ -12,8 +12,7 @@ import world.World;
 import java.util.Random;
 import java.util.Vector;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
+import static org.lwjgl.glfw.GLFW.*;
 
 public abstract class Entity {
     protected Animation[] animations;
@@ -699,5 +698,22 @@ public abstract class Entity {
         }
 
         return move;
+    }
+
+    public void userTackle(Window window, Entity user, Entity ballCarrier, World world) {
+        if (window.getInput().isKeyPressed(GLFW_KEY_T)) {
+            if (user.transform.pos.distance(ballCarrier.transform.pos) < 3) {
+                if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime()) {
+                    timeSinceLastTackleAttempt = Timer.getTime();
+                    if (user.tackle(ballCarrier, window, world)) {
+                        world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
+                        canPlay = false;
+                    } else {
+                        this.pancaked = true;
+                        timePancaked = Timer.getTime();
+                    }
+                }
+            }
+        }
     }
 }
