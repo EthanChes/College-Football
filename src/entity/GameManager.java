@@ -1,6 +1,8 @@
 package entity;
 
 import entity.Entity;
+import gameplay.Timer;
+import org.joml.Vector2f;
 import world.World;
 
 public class GameManager {
@@ -15,9 +17,10 @@ public class GameManager {
     public static int down = 0;
     public static float firstDownLine = ballPosX + 20;
     public static boolean offenseBall = true;
-    public static boolean userOffense = false;
+    public static boolean userOffense = true;
     public static boolean selectedPlay = false;
     public static boolean hasEntities = false;
+    public static double timePlayEnd = 0;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
         this.yMax = yMax;
@@ -32,15 +35,54 @@ public class GameManager {
         if (world.getBallCarrier() != world.getFootballEntity()) {
             if (world.getBallCarrier().transform.pos.x > xMax) {
                 Entity.canPlay = false;
+
+                if (timePlayEnd == 0) {
+                    timePlayEnd = Timer.getTime();
+                }
+
+                if (timePlayEnd + .5f > Timer.getTime()) {
+                    world.getBallCarrier().useAnimation(1);
+                    world.getBallCarrier().move(new Vector2f(world.getBallCarrier().speed/60, 0));
+                }
+
                 return true;
             } else if (world.getBallCarrier().transform.pos.x < xMin) {
                 Entity.canPlay = false;
+
+                if (timePlayEnd == 0) {
+                    timePlayEnd = Timer.getTime();
+                }
+
+                if (timePlayEnd + .5f > Timer.getTime()) {
+                    world.getBallCarrier().useAnimation(1);
+                    world.getBallCarrier().move(new Vector2f(-world.getBallCarrier().speed/60, 0));
+                }
+
                 return true;
             } else if (world.getBallCarrier().transform.pos.y < yMin) {
                 Entity.canPlay = false;
+
+                if (timePlayEnd == 0) {
+                    timePlayEnd = Timer.getTime();
+                }
+
+                if (timePlayEnd + .5f > Timer.getTime()) {
+                    world.getBallCarrier().useAnimation(1);
+                    world.getBallCarrier().move(new Vector2f(0, -world.getBallCarrier().speed / 60));
+                }
                 return true;
             } else if (world.getBallCarrier().transform.pos.y > yMax) {
                 Entity.canPlay = false;
+
+                if (timePlayEnd == 0) {
+                    timePlayEnd = Timer.getTime();
+                }
+
+                if (timePlayEnd + .5f > Timer.getTime()) {
+                    world.getBallCarrier().useAnimation(1);
+                    world.getBallCarrier().move(new Vector2f(0, world.getBallCarrier().speed / 60));
+                }
+
                 return true;
             }
         }

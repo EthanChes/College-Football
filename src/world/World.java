@@ -379,6 +379,7 @@ public class World {
         WideReceiver.totalReceivers = 0;
         DefensiveBack.guardedReceivers = 0;
         GameManager.offenseBall = true;
+        GameManager.timePlayEnd = 0;
 
         entities.clear();
 
