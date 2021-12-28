@@ -110,7 +110,7 @@ public class GameManager {
     public void setBallPosX(World world) {
         down++;
 
-        if (down > 4)
+        if (down > 4 && (firstDownLine + .6f > world.getFootballEntity().transform.pos.x || Entity.incompletePass))
             Entity.turnover = true;
 
         if (! Entity.turnover) {
