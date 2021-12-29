@@ -21,6 +21,12 @@ public class Transform {
         this.scale = new Vector3f(scale,scale,1);
     }
 
+    // For Extending Images in X or Y
+    public Transform(float x, float y, float scaleX, float scaleY) {
+        pos = new Vector3f(x,y,0);
+        this.scale = new Vector3f(scaleX, scaleY, 1);
+    }
+
     public Matrix4f getProjection(Matrix4f target) {
         target.translate(pos);
         target.scale(scale);

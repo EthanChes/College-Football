@@ -387,6 +387,7 @@ public class World {
         misc.clear();
 
         misc.add(new PlayerMarker(new Transform(0,0,1.5f)));
+        misc.add(new FirstDownLine(new Transform(GameManager.firstDownLine + 1, -251f,1,16f)));
 
         GameManager.printDownInfo();
     }
