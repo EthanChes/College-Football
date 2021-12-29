@@ -167,6 +167,40 @@ public class World {
                 entity.render(shader, camera, window, this);
             }
 
+            // Show Routes Here
+            if (! Entity.playStart && ! Entity.canPlay && GameManager.hasEntities) { // Make Sure it is legal
+                if (window.getInput().isKeyDown(GLFW_KEY_RIGHT)) { // Right Arrow Pressed
+                    List<Entity> routes = new ArrayList<Entity>();
+
+                    if (GameManager.userOffense) {
+                        if (getQuarterbackEntity().route == 0) {
+                            for (int i = 22 - WideReceiver.totalReceivers; i < 22; i++) { // Pass Routes
+                                switch (getCountingUpEntity(i).route) {
+                                    case 0 : routes.add(new Route(new Vector3f(getCountingUpEntity(i).getPosition()),30,2, new Transform())); break;
+                                    case 1 : routes.add(new Route(new Vector3f(getCountingUpEntity(i).getPosition()), 20, 2, new Transform())); routes.add(new Route(new Vector3f(getCountingUpEntity(i).getPosition().x + 20, getCountingUpEntity(i).getPosition().y, 0), -15, 3, new Transform())); break;
+                                    case 4 : routes.add(new Route(new Vector3f(getCountingUpEntity(i).getPosition()), 20, 2, new Transform())); routes.add(new Route(new Vector3f(getCountingUpEntity(i).getPosition().x + 20, getCountingUpEntity(i).getPosition().y, 0), 15, 3, new Transform())); break;
+                                }
+                            }
+                        } else if (getQuarterbackEntity().route == 1) { // Run Routes
+                            switch (RunningBack.runnerRoute) {
+                                case 0 : routes.add(new Route(new Vector3f(getCountingUpEntity(21).getPosition()), 6, 2, new Transform())); break;
+                                case 1 : routes.add(new Route(new Vector3f(getCountingUpEntity(21).getPosition()), 6, 3, new Transform())); break;
+                                case 2 : routes.add(new Route(new Vector3f(getCountingUpEntity(21).getPosition()), -6, 3, new Transform())); break;
+                            }
+                        }
+
+
+                    } else {
+
+                    }
+
+                    for (Entity entity : routes) {
+                        entity.render(shader, camera, window, this);
+                    }
+
+                }
+            }
+
             for (Entity entity : entities) {
                 entity.render(shader, camera, window, this);
             }

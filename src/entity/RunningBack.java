@@ -19,7 +19,7 @@ public class RunningBack extends Entity {
     public static final int ANIM_RUN_WITHOUT_BALL = 1;
     public static final int ANIM_IDLE = 0;
 
-    public int runnerRoute = 0;
+    public static int runnerRoute = 0;
     public float runnerRouteMovement = 0;
 
     public RunningBack(Transform transform) {

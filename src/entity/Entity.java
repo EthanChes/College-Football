@@ -698,6 +698,10 @@ public abstract class Entity {
         return move;
     }
 
+    public Vector3f getPosition() {
+        return transform.pos;
+    }
+
     public void userTackle(Window window, Entity user, Entity ballCarrier, World world) {
         if (window.getInput().isKeyPressed(GLFW_KEY_T)) {
             if (user.transform.pos.distance(ballCarrier.transform.pos) < 3) {

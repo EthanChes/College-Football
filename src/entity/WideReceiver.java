@@ -180,6 +180,13 @@ public class WideReceiver extends Entity {
                         }
 
                 }
+
+                if (this.transform.pos.x + movement.x > 366.5f) {
+                    routeMovement = 1000;
+                    movement.set(0,0);
+                    reachedEndOfRoute = true;
+                }
+
             } else if (world.getFootballEntity().pass && !uniqueEvents) {
                 movement.add(moveToward(Football.wideReceiverX, Football.wideReceiverY, delta));
             } else if (timeFumble > 0) {
