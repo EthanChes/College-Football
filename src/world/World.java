@@ -395,7 +395,7 @@ public class World {
         GameManager.hasEntities = true;
         List<Entity> offense = new ArrayList<Entity>();
 
-        if (GameManager.offenseBall) {
+        if (GameManager.userOffense) {
             switch (SelectPlay.getPlayID()) {
                 case 1:
                     T_Form_FB_Dive TFBDive = new T_Form_FB_Dive(GameManager.ballPosX, GameManager.ballPosY);
@@ -413,14 +413,16 @@ public class World {
 
             // Random Defensive Play
             Random rand = new Random(); // Replace With Versatile Play Function
-            int random = rand.nextInt(3);
-            random = 1;
+            int random = rand.nextInt(2) + 1;
 
             switch (random) {
                 case 1 : Cover1 cover1 = new Cover1(GameManager.ballPosX, GameManager.ballPosY);
                     entities.addAll(cover1.getEntities());
                     break;
-                case 2 : break;
+                case 2 :
+                    FS_Blitz fs_blitz = new FS_Blitz(GameManager.ballPosX, GameManager.ballPosY);
+                    entities.addAll(fs_blitz.getEntities());
+                    break;
                 case 3 : break;
             }
 
@@ -431,7 +433,7 @@ public class World {
 
             // Random Offensive Play
             Random rand = new Random(); // Replace With Versatile Play Function
-            int random = rand.nextInt(3);
+            int random = rand.nextInt(3) + 1;
 
             switch (random) {
                 case 1:
@@ -452,7 +454,10 @@ public class World {
                 case 1 : Cover1 cover1 = new Cover1(GameManager.ballPosX, GameManager.ballPosY);
                     entities.addAll(cover1.getEntities());
                     break;
-                case 2 : break;
+                case 2 :
+                    FS_Blitz fs_blitz = new FS_Blitz(GameManager.ballPosX, GameManager.ballPosY);
+                    entities.addAll(fs_blitz.getEntities());
+                    break;
                 case 3 : break;
             }
 
