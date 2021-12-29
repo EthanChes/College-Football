@@ -42,8 +42,8 @@ public class DefensiveBack extends Entity {
         setAnimation(ANIM_FALL, new Animation(1,1, "defensivefall"));
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/defensiveback"));
 
-        speed = 10f;
-        manCoverage = 10f;
+        speed = 8f;
+        manCoverage = 8f;
         strength = 10f;
         catching = 10f;
         zoneCoverage = 10f;

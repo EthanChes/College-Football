@@ -90,7 +90,7 @@ public class Quarterback extends Entity {
         if (this.transform.pos.x - speed*delta > entity.transform.pos.x) {
             movement.add(speed*delta,0);
         } else if (this.transform.pos.x + speed*delta < entity.transform.pos.x) {
-            movement.add(-speed*delta/2,0);
+            movement.add(-speed*delta/3,0);
         }
 
         if (this.transform.pos.y - speed*delta > entity.transform.pos.y) {
@@ -231,7 +231,7 @@ public class Quarterback extends Entity {
                     movement.add(0, -speed * delta); // multiply by delta (framecap) to move 10 frames in a second.
                 }
                 if (window.getInput().isKeyDown(GLFW_KEY_A) && userControl) { // When A is pressed, camera shifts left 5
-                    movement.add(-speed * delta, 0);
+                    movement.add(-speed * delta/3, 0);
                 }
                 if (window.getInput().isKeyDown(GLFW_KEY_W) && userControl) { // When W is pressed, camera shifts up 5
                     movement.add(0, speed * delta);
