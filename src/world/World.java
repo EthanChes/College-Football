@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -392,23 +393,71 @@ public class World {
 
     public void enterEntities() {
         GameManager.hasEntities = true;
+        List<Entity> offense = new ArrayList<Entity>();
 
-        Zone D_play = new Zone(GameManager.ballPosX,GameManager.ballPosY);
-        entities.addAll(D_play.getEntities());
+        if (GameManager.offenseBall) {
+            switch (SelectPlay.getPlayID()) {
+                case 1:
+                    T_Form_FB_Dive TFBDive = new T_Form_FB_Dive(GameManager.ballPosX, GameManager.ballPosY);
+                    offense.addAll(TFBDive.getEntities());
+                    break;
+                case 2:
+                    Spread_Inside_Cut_Deep cutDeep = new Spread_Inside_Cut_Deep(GameManager.ballPosX, GameManager.ballPosY);
+                    offense.addAll(cutDeep.getEntities());
+                    break;
+                case 3:
+                    T_Form_HB_Stretch THBStretch = new T_Form_HB_Stretch(GameManager.ballPosX, GameManager.ballPosY);
+                    offense.addAll(THBStretch.getEntities());
+                    break;
+            }
 
-        switch (SelectPlay.getPlayID()) {
-            case 1 :
-                T_Form_FB_Dive TFBDive = new T_Form_FB_Dive(GameManager.ballPosX, GameManager.ballPosY);
-                entities.addAll(TFBDive.getEntities());
-                break;
-            case 2 :
-                Spread_Inside_Cut_Deep cutDeep = new Spread_Inside_Cut_Deep(GameManager.ballPosX, GameManager.ballPosY);
-                entities.addAll(cutDeep.getEntities());
-                break;
-            case 3 :
-                T_Form_HB_Stretch THBStretch = new T_Form_HB_Stretch(GameManager.ballPosX, GameManager.ballPosY);
-                entities.addAll(THBStretch.getEntities());
-                break;
+            // Random Defensive Play
+            Random rand = new Random(); // Replace With Versatile Play Function
+            int random = rand.nextInt(3);
+            random = 1;
+
+            switch (random) {
+                case 1 : Cover1 cover1 = new Cover1(GameManager.ballPosX, GameManager.ballPosY);
+                    entities.addAll(cover1.getEntities());
+                    break;
+                case 2 : break;
+                case 3 : break;
+            }
+
+            entities.addAll(offense);
+
+        } else {
+            List<Entity> offensive = new ArrayList<Entity>();
+
+            // Random Offensive Play
+            Random rand = new Random(); // Replace With Versatile Play Function
+            int random = rand.nextInt(3);
+
+            switch (random) {
+                case 1:
+                    T_Form_FB_Dive TFBDive = new T_Form_FB_Dive(GameManager.ballPosX, GameManager.ballPosY);
+                    offensive.addAll(TFBDive.getEntities());
+                    break;
+                case 2:
+                    Spread_Inside_Cut_Deep cutDeep = new Spread_Inside_Cut_Deep(GameManager.ballPosX, GameManager.ballPosY);
+                    offensive.addAll(cutDeep.getEntities());
+                    break;
+                case 3:
+                    T_Form_HB_Stretch THBStretch = new T_Form_HB_Stretch(GameManager.ballPosX, GameManager.ballPosY);
+                    offensive.addAll(THBStretch.getEntities());
+                    break;
+            }
+
+            switch (SelectPlay.getPlayID()) {
+                case 1 : Cover1 cover1 = new Cover1(GameManager.ballPosX, GameManager.ballPosY);
+                    entities.addAll(cover1.getEntities());
+                    break;
+                case 2 : break;
+                case 3 : break;
+            }
+
+            entities.addAll(offensive);
+
         }
         setBallCarrier(this.getFootballEntity());
     }

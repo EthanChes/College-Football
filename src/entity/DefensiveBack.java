@@ -41,11 +41,17 @@ public class DefensiveBack extends Entity {
         setAnimation(ANIM_UNKNOWN, new Animation(0,0, "defensivelinemovement"));
         setAnimation(ANIM_FALL, new Animation(1,1, "defensivefall"));
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/defensiveback"));
+
         speed = 10f;
         manCoverage = 10f;
         strength = 10f;
         catching = 10f;
         zoneCoverage = 10f;
+
+        if (route >= 0) {
+            canCollide = false;
+        }
+
     }
 
     public void catching() {
@@ -69,19 +75,25 @@ public class DefensiveBack extends Entity {
                 case -3 : break; // Blitz on Left Side (Acts as LDE)
                 case -2 : break; // Blitz on Right Side (Acts as RDE)
                 case 0 : // In case There are less receivers than Backs, Blitz instead of man-man. Set Locs Here
-                case -1 : // Regular Blitz Down Middle
-                    this.transform.pos.x = GameManager.ballPosX + 4.5f;
-                    switch (defenderID) {
-                        case 0 : this.transform.pos.y = GameManager.ballPosY + 4f; break; // Left
-                        case 1 : this.transform.pos.y = GameManager.ballPosY; break; // Central
-                        case 2 : this.transform.pos.y = GameManager.ballPosY - 4f; break; // Right
+                default : // Default Position Setters
+                    this.transform.pos.x = GameManager.ballPosX + 8; // Initializer For LBs
+                    switch (defenderID) { // For LBs
+                        case 0 : this.transform.pos.y = GameManager.ballPosY + 4f; break; // Left Normal
+                        case 1 : this.transform.pos.y = GameManager.ballPosY; break; // Central Normal
+                        case 2 : this.transform.pos.y = GameManager.ballPosY - 4f; break; // Right Normal
+                        case 3 : this.transform.pos.x = GameManager.ballPosX + 2.5f; this.transform.pos.y = GameManager.ballPosY + 4.5f; break; // Left Low
+                        case 4 : this.transform.pos.x = GameManager.ballPosX + 2.5f; this.transform.pos.y = GameManager.ballPosY - 5.5f; break; // Right Low
+                        case 12 : this.transform.pos.x = GameManager.ballPosX + 2.5f; this.transform.pos.y = GameManager.ballPosY + 9; break; // DB Left Low
+                        case 13 : this.transform.pos.x = GameManager.ballPosX + 2.5f; this.transform.pos.y = GameManager.ballPosY - 10f; break; // DB Right Low
+                        case 14 : this.transform.pos.x = GameManager.ballPosX + 15f; this.transform.pos.y = GameManager.ballPosY; break; // DB Deep Mid
                     }
                     break;
-                case 1 : this.transform.pos.set(GameManager.ballPosX + 5, -240,0); break; // Zones
-                case 2 : this.transform.pos.set(GameManager.ballPosX + 5, -260,0); break;
-                case 3 : this.transform.pos.set(GameManager.ballPosX + 20, -260,0); break;
-                case 4 : this.transform.pos.set(GameManager.ballPosX + 20, -240,0); break;
-                case 5 : this.transform.pos.set(GameManager.ballPosX + 12, -250,0); break;
+                /*case 1 : this.transform.pos.set(GameManager.ballPosX + 5, -240,0); break; // low top (ZONES)
+                case 2 : this.transform.pos.set(GameManager.ballPosX + 5, -260,0); break; // low bottom
+                case 3 : this.transform.pos.set(GameManager.ballPosX + 20, -260,0); break; // high bottom
+                case 4 : this.transform.pos.set(GameManager.ballPosX + 20, -240,0); break; // high top
+                case 5 : this.transform.pos.set(GameManager.ballPosX + 12, -250,0); break; // center
+                case 6 : this.transform.pos.set(GameManager.ballPosX + 20, -250,0); break; // high mid*/
             }
         }
     }
@@ -348,6 +360,40 @@ public class DefensiveBack extends Entity {
                         averageZonePos.x += 2;
 
                         if (receiversInZone.size() == 0) {
+                            movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
+                        } else {
+                            movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError, delta));
+                        }
+                        break;
+                    }
+
+                    case 6: { // Deep Zone Mid
+                        int zoneRadius = 15;
+                        Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 20, -250);
+                        List<Entity> receiversInZone = new ArrayList<Entity>();
+                        boolean playerBeyondSafety = false;
+                        for (int i = 16; i < 22; i++) {
+                            if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x, zoneLoc.y, 0) < zoneRadius) {
+                                receiversInZone.add(world.getCountingUpEntity(i));
+                            }
+                            if (world.getCountingUpEntity(i).transform.pos.x + 10 > this.transform.pos.x) {
+                                playerBeyondSafety = true;
+                                i = 22;
+                            }
+                        }
+                        Vector2f averageZonePos = new Vector2f(0, 0);
+                        for (int i = 0; i < receiversInZone.size(); i++) {
+                            averageZonePos.x += receiversInZone.get(i).transform.pos.x;
+                            averageZonePos.y += receiversInZone.get(i).transform.pos.y;
+                        }
+                        averageZonePos.x /= receiversInZone.size();
+                        averageZonePos.y /= receiversInZone.size();
+
+                        averageZonePos.x += 2;
+
+                        if (playerBeyondSafety) {
+                            movement.add(speed * delta, 0);
+                        } else if (receiversInZone.size() == 0) {
                             movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
                         } else {
                             movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError, delta));
