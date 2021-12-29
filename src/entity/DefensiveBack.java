@@ -402,6 +402,60 @@ public class DefensiveBack extends Entity {
                         break;
                     }
 
+                    case 7: { // Left Zone Mid
+                        int zoneRadius = 8;
+                        Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 12, -240);
+                        List<Entity> receiversInZone = new ArrayList<Entity>();
+                        for (int i = 16; i < 22; i++) {
+                            if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x, zoneLoc.y, 0) < zoneRadius) {
+                                receiversInZone.add(world.getCountingUpEntity(i));
+                            }
+                        }
+                        Vector2f averageZonePos = new Vector2f(0, 0);
+                        for (int i = 0; i < receiversInZone.size(); i++) {
+                            averageZonePos.x += receiversInZone.get(i).transform.pos.x;
+                            averageZonePos.y += receiversInZone.get(i).transform.pos.y;
+                        }
+                        averageZonePos.x /= receiversInZone.size();
+                        averageZonePos.y /= receiversInZone.size();
+
+                        averageZonePos.x += 2;
+
+                        if (receiversInZone.size() == 0) {
+                            movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
+                        } else {
+                            movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError, delta));
+                        }
+                        break;
+                    }
+
+                    case 8: { // Right Zone Mid
+                        int zoneRadius = 8;
+                        Vector2f zoneLoc = new Vector2f(GameManager.ballPosX + 12, -260);
+                        List<Entity> receiversInZone = new ArrayList<Entity>();
+                        for (int i = 16; i < 22; i++) {
+                            if (world.getCountingUpEntity(i).transform.pos.distance(zoneLoc.x, zoneLoc.y, 0) < zoneRadius) {
+                                receiversInZone.add(world.getCountingUpEntity(i));
+                            }
+                        }
+                        Vector2f averageZonePos = new Vector2f(0, 0);
+                        for (int i = 0; i < receiversInZone.size(); i++) {
+                            averageZonePos.x += receiversInZone.get(i).transform.pos.x;
+                            averageZonePos.y += receiversInZone.get(i).transform.pos.y;
+                        }
+                        averageZonePos.x /= receiversInZone.size();
+                        averageZonePos.y /= receiversInZone.size();
+
+                        averageZonePos.x += 2;
+
+                        if (receiversInZone.size() == 0) {
+                            movement.add(moveToward(zoneLoc.x + xZoneError, zoneLoc.y + yZoneError, delta));
+                        } else {
+                            movement.add(moveToward(averageZonePos.x + xZoneError, averageZonePos.y + yZoneError, delta));
+                        }
+                        break;
+                    }
+
                 } // End of Switch - Route
 
 

@@ -413,7 +413,7 @@ public class World {
 
             // Random Defensive Play
             Random rand = new Random(); // Replace With Versatile Play Function
-            int random = rand.nextInt(2) + 1;
+            int random = rand.nextInt(3) + 1;
 
             switch (random) {
                 case 1 : Cover1 cover1 = new Cover1(GameManager.ballPosX, GameManager.ballPosY);
@@ -423,7 +423,10 @@ public class World {
                     FS_Blitz fs_blitz = new FS_Blitz(GameManager.ballPosX, GameManager.ballPosY);
                     entities.addAll(fs_blitz.getEntities());
                     break;
-                case 3 : break;
+                case 3 :
+                    Cover3 cover3 = new Cover3(GameManager.ballPosX, GameManager.ballPosY);
+                    entities.addAll(cover3.getEntities());
+                    break;
             }
 
             entities.addAll(offense);
@@ -458,7 +461,10 @@ public class World {
                     FS_Blitz fs_blitz = new FS_Blitz(GameManager.ballPosX, GameManager.ballPosY);
                     entities.addAll(fs_blitz.getEntities());
                     break;
-                case 3 : break;
+                case 3 :
+                    Cover3 cover3 = new Cover3(GameManager.ballPosX, GameManager.ballPosY);
+                    entities.addAll(cover3.getEntities());
+                    break;
             }
 
             entities.addAll(offensive);
