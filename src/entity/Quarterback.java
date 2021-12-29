@@ -90,7 +90,7 @@ public class Quarterback extends Entity {
         if (this.transform.pos.x - speed*delta > entity.transform.pos.x) {
             movement.add(speed*delta,0);
         } else if (this.transform.pos.x + speed*delta < entity.transform.pos.x) {
-            movement.add(-speed*delta,0);
+            movement.add(-speed*delta/2,0);
         }
 
         if (this.transform.pos.y - speed*delta > entity.transform.pos.y) {

@@ -47,11 +47,6 @@ public class DefensiveBack extends Entity {
         strength = 10f;
         catching = 10f;
         zoneCoverage = 10f;
-
-        if (route >= 0) {
-            canCollide = false;
-        }
-
     }
 
     public void catching() {
@@ -69,6 +64,8 @@ public class DefensiveBack extends Entity {
             Entity guardedEntity = world.getCountingUpEntity(22-guardedReceiver);
             this.transform.pos.x = GameManager.ballPosX + 7;
             this.transform.pos.y = guardedEntity.transform.pos.y;
+
+            noCollision();
         }
 
         if (defenderID >= 0) {

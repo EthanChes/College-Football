@@ -163,11 +163,11 @@ public class World {
                 }
             }
 
-            for (Entity entity : entities) {
+            for (Entity entity : misc) {
                 entity.render(shader, camera, window, this);
             }
 
-            for (Entity entity : misc) {
+            for (Entity entity : entities) {
                 entity.render(shader, camera, window, this);
             }
 
@@ -187,6 +187,10 @@ public class World {
     public void update(float delta, Window window, Camera camera) {
         for (Entity entity : entities) {
             entity.update(delta,window,camera,this);
+
+            // Player With Ball Cannot Collide
+            if (entity.hasBall)
+                entity.noCollision();
         }
 
         for (Entity e : misc) {

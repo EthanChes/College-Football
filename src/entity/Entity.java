@@ -179,7 +179,7 @@ public abstract class Entity {
     }
 
     public void selectDefensivePlayer(Window win, World world) {
-        if (!GameManager.userOffense && GameManager.offenseBall && win.getInput().isKeyPressed(GLFW_KEY_Z) && selectPlayerCooldown + .3f < Timer.getTime()) {
+        if (!GameManager.userOffense && GameManager.offenseBall && win.getInput().isKeyPressed(GLFW_KEY_Z) && selectPlayerCooldown + .05f < Timer.getTime()) {
             // Enabled to select new player
 
             selectPlayerCooldown = Timer.getTime();
@@ -512,14 +512,12 @@ public abstract class Entity {
                 move.add(speed*delta,0);
             } else {
                 move.add(speed*delta, -speed*delta);
-                canCollide = false;
             }
         } else {
             if (this.transform.pos.y + speed*delta > -234.3) {
                 move.add(speed*delta,0);
             } else {
                 move.add(speed * delta, speed * delta);
-                canCollide = false;
             }
         }
 
