@@ -31,7 +31,7 @@ public class RunningBack extends Entity {
         setAnimation(ANIM_FALL, new Animation(1,1, "offensivefall"));
         setRoute(1);
         strength = 8f;
-        speed = 12f;
+        speed = 10f;
     }
 
     public void setRunnerRoute(int x) {
