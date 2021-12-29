@@ -70,7 +70,8 @@ public class DefensiveBack extends Entity {
             this.transform.pos.x = GameManager.ballPosX + 7;
             this.transform.pos.y = guardedEntity.transform.pos.y;
         }
-        else {
+
+        if (defenderID >= 0) {
             switch (route) {
                 case -3 : break; // Blitz on Left Side (Acts as LDE)
                 case -2 : break; // Blitz on Right Side (Acts as RDE)
