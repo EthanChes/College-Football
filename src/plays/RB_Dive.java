@@ -14,15 +14,16 @@ public class RB_Dive {
         entities.add(new Quarterback(new Transform(ballX - 3, ballY)));
         entities.get(0).setRoute(1);
 
-        entities.add(new RunningBack(new Transform(ballX - 3, ballY + 5)));
+        entities.add(new RunningBack(new Transform(ballX - 3, ballY + 3.5f)));
         entities.get(1).setRoute(1);
 
         // Add Offensive Line
         entities.add(new OffensiveLineman(new Transform(ballX,ballY + 2)));
         entities.get(2).setRoute(1);
-        entities.add(new OffensiveLineman(new Transform(ballX,ballY + 4)));
-        entities.get(3).setRoute(1);
         entities.add(new OffensiveLineman(new Transform(ballX,ballY)));
+        entities.get(3).setRoute(1);
+        entities.get(3).center = true;
+        entities.add(new OffensiveLineman(new Transform(ballX,ballY + 4)));
         entities.get(4).setRoute(2);
         entities.add(new OffensiveLineman(new Transform(ballX,ballY - 2)));
         entities.get(5).setRoute(2);
@@ -30,7 +31,7 @@ public class RB_Dive {
         entities.get(6).setRoute(2);
 
         // Add WRs
-        entities.add(new WideReceiver(new Transform(ballX, ballY+5)));
+        entities.add(new WideReceiver(new Transform(ballX, ballY+12)));
         entities.get(7).setRoute(0);
         entities.add(new WideReceiver(new Transform(ballX, ballY+10)));
         entities.get(8).setRoute(0);

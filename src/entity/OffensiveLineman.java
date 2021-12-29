@@ -8,13 +8,18 @@ import org.joml.Vector2f;
 import world.World;
 import java.util.Random;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
+
 public class OffensiveLineman extends Entity {
-    public static final int ANIM_SIZE = 5;
+    public static final int ANIM_SIZE = 7;
     public static final int ANIM_IDLE = 0;
     public static final int ANIM_MOVE = 1;
     public static final int ANIM_BLOCK = 2;
     public static final int ANIM_FALL = 3;
     public static final int ANIM_BLOCK_MOVING = 4;
+    public static final int ANIM_PRESNAP = 5;
+    public static final int ANIM_CENTER = 6;
 
     public boolean isBlocking = false;
     public byte blockOutcome = 0;
@@ -27,6 +32,8 @@ public class OffensiveLineman extends Entity {
         setAnimation(ANIM_BLOCK, new Animation(1,1, "offensivelineblock"));
         setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall"));
         setAnimation(ANIM_BLOCK_MOVING, new Animation(4, 16, "offensivelineblockmoving"));
+        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/offensiveline"));
+        setAnimation(ANIM_CENTER, new Animation(2, 4, "presnap/center"));
         speed = 3f;
         strength = 10f;
     }
@@ -88,7 +95,7 @@ public class OffensiveLineman extends Entity {
 
         if (rand_output <= this.strength * 10 && timeSinceBlock + 1 < Timer.getTime()) { blockOutcome = 2; timeSinceBlock = Timer.getTime(); }
         else if (rand_output <= this.strength*100 && timeSinceBlock + 1 < Timer.getTime()) { blockOutcome = 1; timeSinceBlock = Timer.getTime(); }
-        else if (rand_output <= this.strength*100 + player.strength * 10 && timeSinceBlock + 1 < Timer.getTime()) { blockOutcome = 4; timeSinceBlock = Timer.getTime(); }
+        else if (rand_output <= this.strength*100 + player.strength * 20 && timeSinceBlock + 1 < Timer.getTime()) { blockOutcome = 4; timeSinceBlock = Timer.getTime(); }
         else if (timeSinceBlock + 1 < Timer.getTime()) { blockOutcome = 3; timeSinceBlock = Timer.getTime(); }
 
         float yPush;
@@ -191,9 +198,9 @@ public class OffensiveLineman extends Entity {
         }
 
         if (blockOutcome == 1) {
-            player.move(new Vector2f((this.strength * delta)/5, defenderPush));
+            player.move(new Vector2f((this.strength * delta)/1.5f, defenderPush*3));
             player.routeMovement += defenderPush;
-            movement.add(this.strength * delta/5, yPush);
+            movement.add(this.strength * delta/1.5f, yPush);
             player.isBeingMovedExternally = true;
         }
         else if (blockOutcome == 2) { // OL Pancakes DL
@@ -202,8 +209,8 @@ public class OffensiveLineman extends Entity {
             timeSinceBlock -= 3;
         }
         else if (blockOutcome == 3) {
-            player.move(new Vector2f(-player.strength*delta/5,defenderPush));
-            movement.add(-player.strength*delta/4,defenderPush);
+            player.move(new Vector2f(-player.strength*delta/6,defenderPush));
+            movement.add(-player.strength*delta/5,defenderPush);
             player.isBeingMovedExternally = true;
         }
         else if (blockOutcome == 4) { // Defender Pancakes OL
@@ -219,11 +226,62 @@ public class OffensiveLineman extends Entity {
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
 
-        if ((route == 0 || route == -1) && canPlay) {
-            movement.add(passBlockMovement(delta,world));
-        } else if (canPlay) { movement.add(runBlockMovement(delta,world)); }
+        if ((hasBall && GameManager.userOffense) || forceUserControl) userControl = true; // change && true to gamemanager user controls offensive team
+        else userControl = false;
 
-        if (canPlay)
+        if (forceUserControl) {
+            userTackle(window, this, world.getBallCarrier(), world);
+        }
+
+        if (window.getInput().isKeyDown(GLFW_KEY_S) && userControl) { // When S is pressed, player moves 5 down
+            movement.add(0,-speed*delta); // multiply by delta (framecap) to move 10 frames in a second.
+        }
+        if (window.getInput().isKeyDown(GLFW_KEY_A) && userControl) { // When A is pressed, camera shifts left 5
+            movement.add(-speed*delta,0);
+        }
+        if (window.getInput().isKeyDown(GLFW_KEY_W) && userControl) { // When W is pressed, camera shifts up 5
+            movement.add(0,speed*delta);
+        }
+        if (window.getInput().isKeyDown(GLFW_KEY_D) && userControl) { // When D is pressed, camera shifts right 5
+            movement.add(speed*delta,0);
+        }
+
+
+
+        if (! userControl) {
+            if (canPlay && !(pancaked || isBeingMovedExternally)) {
+                if ((route == 0 || route == -1) && !uniqueEvents) {
+                    movement.add(passBlockMovement(delta, world));
+                } else if (!uniqueEvents) {
+                    movement.add(runBlockMovement(delta, world));
+                } else if (timeFumble > 0 && getAnimationIndex() != 3) {
+                    movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
+                } else if (uniqueEvents && GameManager.offenseBall) {
+                    if (hasBall) {
+                        movement.add(speed * delta, 0);
+                    } else if (!hasBall) {
+                        movement.add(offenseBlockUnique(world, delta));
+                    }
+                } else if (uniqueEvents) {
+                    movement.add(defensive_movement(world.getBallCarrier(), delta));
+
+                    if (collidingWithBallCarrier(this, world)) {
+                        if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && !GameManager.offenseBall) {
+                            boolean tackResult = tackle(world.getBallCarrier(), window, world);
+                            if (tackResult) {
+                                world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
+                                canPlay = false;
+                            } else {
+                                this.pancaked = true;
+                                timePancaked = Timer.getTime();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (canPlay && ! pancaked)
             move(movement);
 
         if (collidingWithBallCarrier(this,world) && world.getBallCarrier() != world.getFootballEntity() && route == 0) { // If offensivelineman hits ballcarrier, they can fall
@@ -235,7 +293,18 @@ public class OffensiveLineman extends Entity {
             }
         }
 
-        if (pancaked) {
+        if (! (playStart || center)) {
+            useAnimation(ANIM_PRESNAP);
+        }
+        else if (! (playStart || getAnimationIndex() == 6)) {
+            useAnimation(ANIM_PRESNAP);
+            world.getFootballEntity().transform.pos.set(this.transform.pos.x + .6f, this.transform.pos.y - .3f,0);
+            world.getFootballEntity().useAnimation(1);
+        }
+        else if (getAnimationIndex() == 6 && timeSnapped + .4 > Timer.getTime()) {
+            useAnimation(ANIM_CENTER);
+        }
+        else if (pancaked) {
             useAnimation(ANIM_FALL);
             canCollide = false;
             if (Timer.getTime() > timePancaked + 3) {
@@ -246,8 +315,29 @@ public class OffensiveLineman extends Entity {
         else if (canPlay || isBlocking || (movement.x != 0 || movement.y != 0)) {
             useAnimation(ANIM_BLOCK_MOVING);
         }
+        else if (! canPlay && hasBall) {
+            useAnimation(ANIM_FALL);
+            if (hasBall || world.getBallCarrier() == this) {
+                world.getFootballEntity().transform.pos.set(this.transform.pos.x, this.transform.pos.y, 0);
+            }
+        }
         else {
             useAnimation(ANIM_BLOCK);
         }
+
+        if (! canPlay && world.getBallCarrier() == this) {
+            useAnimation(ANIM_FALL);
+            world.getFootballEntity().transform.pos.set(this.transform.pos);
+        }
+
+        if (hasBall) {
+            world.getFootballEntity().transform.pos.set(this.transform.pos);
+        }
+
+        if (userControl) {
+            PlayerMarker.setLocation.x = this.transform.pos.x;
+            PlayerMarker.setLocation.y = this.transform.pos.y;
+        }
+
     }
 }

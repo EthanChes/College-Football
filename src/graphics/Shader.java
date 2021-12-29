@@ -1,5 +1,6 @@
 package graphics;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import java.io.BufferedReader;
 import java.io.File;
@@ -55,11 +56,18 @@ public class Shader {
     }
 
     protected void finalize() {
-        glDetachShader(program, vertex_shader);
+        /*glDetachShader(program, vertex_shader);
         glDetachShader(program,fragment_shader);
         glDeleteShader(vertex_shader);
         glDeleteShader(fragment_shader);
-        glDeleteProgram(program);
+        glDeleteProgram(program);*/
+    }
+
+    public void setUniform(String uniformName, Vector4f value) {
+        int location = glGetUniformLocation(program, uniformName);
+        if (location != -1) {
+            glUniform4f(location, value.x, value.y, value.z, value.w);
+        }
     }
 
     public void setUniform(String name, Matrix4f value) {
