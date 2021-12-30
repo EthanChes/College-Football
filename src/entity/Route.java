@@ -45,8 +45,8 @@ public class Route extends Entity {
 
         switch (zone) {
             case 0 : useAnimation(ANIM_ZONE_LOW); this.transform.pos.set(position); this.transform.scale.set(2,4,1); break;
-            case 1 : useAnimation(ANIM_ZONE_MID); this.transform.pos.set(position); this.transform.scale.set(4,6,1); break;
-            case 2 : useAnimation(ANIM_ZONE_HIGH); this.transform.pos.set(position); this.transform.scale.set(6,6,1); break;
+            case 1 : useAnimation(ANIM_ZONE_MID); this.transform.pos.set(position); this.transform.scale.set(4,7,1); break;
+            case 2 : useAnimation(ANIM_ZONE_HIGH); this.transform.pos.set(position); this.transform.scale.set(6,7,1); break;
         }
     }
 
