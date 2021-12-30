@@ -62,7 +62,7 @@ public class Route extends Entity {
         this.degrees = degrees;
 
 
-        transform.scale.set(distanceX*2,.25f,1);
+        transform.scale.set(distanceX*2.3f,.25f,1);
 
         useAnimation(ANIM_DOWN);
 

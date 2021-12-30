@@ -194,14 +194,15 @@ public class World {
                             }
                         }
                     } else {
+                        List<Entity> man = new ArrayList<Entity>();
                         for (int i = 0; i < 11; i++) {
                             // Renders man-man
                             if (getCountingUpEntity(i).guardedReceiver != 0) {
                                 float dX = (getCountingUpEntity(22-getCountingUpEntity(i).guardedReceiver).getPosition().x) - getCountingUpEntity(i).getPosition().x;
                                 float dY = (getCountingUpEntity(22-getCountingUpEntity(i).guardedReceiver).getPosition().y) - getCountingUpEntity(i).getPosition().y;
-                                routes.add(new Route(new Vector3f(getCountingUpEntity(i).getPosition()), dX, dY, (float) (Math.atan(dY/dX) * 180/Math.PI), new Transform(), false));
+                                man.add(new Route(new Vector3f(getCountingUpEntity(i).getPosition()), dX, dY, (float) (Math.atan(dY/dX) * 180/Math.PI), new Transform(), false));
                             }
-                            if (getCountingUpEntity(i).defensiveBack) {
+                            else if (getCountingUpEntity(i).defensiveBack) {
                                 switch (getCountingUpEntity(i).route) {
                                     case 1 : routes.add(new Route(new Transform(), 0, new Vector3f(GameManager.ballPosX + 5, -240,0))); break;
                                     case 2 : routes.add(new Route(new Transform(), 0, new Vector3f(GameManager.ballPosX + 5, -260,0))); break;
@@ -214,6 +215,7 @@ public class World {
                                 }
                             }
                         }
+                        routes.addAll(man);
                     }
 
                     for (Entity entity : routes) {
