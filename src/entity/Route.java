@@ -33,6 +33,30 @@ public class Route extends Entity {
         noCollision();
     }
 
+    public Route(Vector3f position, float distanceX, float distanceY, float degrees, Transform transform, boolean normalAssetUsage) {
+        super(ANIM_SIZE, transform);
+        transform.pos.set(position);
+
+        setAnimation(ANIM_DIAGONAL_DOWN, new Animation(1,1, "routebases/diagonaldown"));
+        setAnimation(ANIM_DIAGONAL_UP, new Animation(1,1, "routebases/diagonalup"));
+        setAnimation(ANIM_RIGHT, new Animation(1,1, "routebases/right"));
+        setAnimation(ANIM_DOWN, new Animation(1,1, "routebases/down"));
+
+        this.degrees = degrees;
+
+
+        transform.scale.set(distanceX*2,.25f,1);
+
+        useAnimation(ANIM_DOWN);
+
+        transform.pos.y += distanceY/2;
+        transform.pos.x += distanceX/2;
+
+        normalAssets = normalAssetUsage;
+
+        noCollision();
+    }
+
     @Override
     public void update(float delta, Window window, Camera camera, World world) {
     }

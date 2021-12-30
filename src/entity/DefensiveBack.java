@@ -22,8 +22,8 @@ public class DefensiveBack extends Entity {
     public static final int ANIM_IDLE = 0;
 
     public double timeSinceLastCoverageAttempt = -12f;
+    public static int addX = 10; // To Prevent Player Stacking in man-man
     public static int guardedReceivers = 0;
-    public int guardedReceiver = 0;
     public boolean setLoc = true;
     public int defenderID = 0; // For Linebackers (Consistent Placement)
     public Vector2f coverageMovement = new Vector2f(0,0);
@@ -62,13 +62,15 @@ public class DefensiveBack extends Entity {
             guardedReceiver = guardedReceivers;
 
             Entity guardedEntity = world.getCountingUpEntity(22-guardedReceiver);
-            this.transform.pos.x = GameManager.ballPosX + 7;
+
+            this.transform.pos.x = GameManager.ballPosX + addX;
+            addX -= 2;
+
             this.transform.pos.y = guardedEntity.transform.pos.y;
 
             noCollision();
         }
-
-        if (defenderID >= 0) {
+        else {
             switch (route) {
                 case -3 : break; // Blitz on Left Side (Acts as LDE)
                 case -2 : break; // Blitz on Right Side (Acts as RDE)

@@ -67,6 +67,7 @@ public class main {
             // While loop for frame to stay open while it should not close.
             world.initReset();
             while (!window.shouldClose()) {
+
                 // Add Loop Code Here
                 boolean can_render = false; // Initially, images cannot render
                 double time_2 = Timer.getTime(); // Sets most recent time

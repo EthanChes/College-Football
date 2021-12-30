@@ -17,7 +17,7 @@ public class GameManager {
     public static int down = 0;
     public static float firstDownLine = ballPosX + 20;
     public static boolean offenseBall = true;
-    public static boolean userOffense = true;
+    public static boolean userOffense = false;
     public static boolean selectedPlay = false;
     public static boolean hasEntities = false;
     public static double timePlayEnd = 0;

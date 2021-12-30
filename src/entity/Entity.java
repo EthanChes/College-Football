@@ -1,5 +1,6 @@
 package entity;
 import assets.Assets;
+import assets.Degrees;
 import collision.AABB;
 import collision.Collision;
 import gameplay.Timer;
@@ -22,6 +23,7 @@ public abstract class Entity {
 
     // Game booleans
     public static boolean turnover = false;
+    public boolean normalAssets = true;
     public static float throw_height;
     public static int totalReceivers = 0;
     public static boolean canPlay = false;
@@ -47,6 +49,8 @@ public abstract class Entity {
     public double timeFumbled = -1;
     public static double selectPlayerCooldown = -1;
     public double lastAnimationChange = -1;
+    public int guardedReceiver = 0;
+    public float degrees = 0;
 
     // Player Info
     public byte route = 0;
@@ -93,7 +97,13 @@ public abstract class Entity {
         shader.setUniform("sampler", sampler_0);
         shader.setUniform("projection",transform.getProjection(target));
         animations[use_animation].bind(0);
-        Assets.getModel().render();
+        if (normalAssets) {
+            Assets.getModel().render();
+        } else {
+            // Put Degree Assets Here
+            Degrees.initAsset(degrees);
+            Degrees.getModel().render();
+        }
     }
 
     public boolean collidingWithFootball(Entity entity, World world) {

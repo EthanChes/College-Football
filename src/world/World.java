@@ -1,4 +1,5 @@
 package world;
+import assets.Assets;
 import collision.AABB;
 import entity.*;
 import entity.GameManager;
@@ -9,6 +10,7 @@ import gui.SelectPlay;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.opengl.GL11;
 import plays.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -17,8 +19,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Vector;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11C.GL_LINE;
 
 public class World {
     GameManager gameManager = new GameManager(-234.3f, -265.9f, 366.6f, 141.8f, 153f, 354.5f);
@@ -188,10 +193,15 @@ public class World {
                                 case 2 : routes.add(new Route(new Vector3f(getCountingUpEntity(21).getPosition()), -6, 3, new Transform())); break;
                             }
                         }
-
-
                     } else {
-
+                        for (int i = 0; i < 11; i++) {
+                            if (getCountingUpEntity(i).guardedReceiver != 0) {
+                                float dX = (getCountingUpEntity(22-getCountingUpEntity(i).guardedReceiver).getPosition().x) - getCountingUpEntity(i).getPosition().x;
+                                float dY = (getCountingUpEntity(22-getCountingUpEntity(i).guardedReceiver).getPosition().y) - getCountingUpEntity(i).getPosition().y;
+                                System.out.println(getCountingUpEntity(i).guardedReceiver + " " + getCountingUpEntity(i) + " " + dX + " " + dY);
+                                routes.add(new Route(new Vector3f(getCountingUpEntity(i).getPosition()), dX, dY, (float) (Math.atan(dY/dX) * 180/Math.PI), new Transform(), false));
+                            }
+                        }
                     }
 
                     for (Entity entity : routes) {
@@ -419,6 +429,7 @@ public class World {
         DefensiveBack.guardedReceivers = 0;
         GameManager.offenseBall = true;
         GameManager.timePlayEnd = 0;
+        DefensiveBack.addX = 10;
 
         entities.clear();
 
