@@ -8,7 +8,10 @@ import world.World;
 
 public class Route extends Entity {
 
-    public static int ANIM_SIZE = 4;
+    public static int ANIM_SIZE = 7;
+    public static int ANIM_ZONE_LOW = 6;
+    public static int ANIM_ZONE_MID = 5;
+    public static int ANIM_ZONE_HIGH = 4;
     public static int ANIM_DIAGONAL_DOWN = 3;
     public static int ANIM_DIAGONAL_UP = 2;
     public static int ANIM_RIGHT = 1;
@@ -31,6 +34,20 @@ public class Route extends Entity {
         }
 
         noCollision();
+    }
+
+    public Route(Transform transform, int zone, Vector3f position) {
+        super(ANIM_SIZE, transform);
+
+        setAnimation(ANIM_ZONE_LOW, new Animation(1,1, "routebases/zonelow"));
+        setAnimation(ANIM_ZONE_MID, new Animation(1,1, "routebases/zonemid"));
+        setAnimation(ANIM_ZONE_HIGH, new Animation(1,1, "routebases/zonehigh"));
+
+        switch (zone) {
+            case 0 : useAnimation(ANIM_ZONE_LOW); this.transform.pos.set(position); this.transform.scale.set(2,4,1); break;
+            case 1 : useAnimation(ANIM_ZONE_MID); this.transform.pos.set(position); this.transform.scale.set(4,6,1); break;
+            case 2 : useAnimation(ANIM_ZONE_HIGH); this.transform.pos.set(position); this.transform.scale.set(6,6,1); break;
+        }
     }
 
     public Route(Vector3f position, float distanceX, float distanceY, float degrees, Transform transform, boolean normalAssetUsage) {

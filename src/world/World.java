@@ -199,12 +199,18 @@ public class World {
                             if (getCountingUpEntity(i).guardedReceiver != 0) {
                                 float dX = (getCountingUpEntity(22-getCountingUpEntity(i).guardedReceiver).getPosition().x) - getCountingUpEntity(i).getPosition().x;
                                 float dY = (getCountingUpEntity(22-getCountingUpEntity(i).guardedReceiver).getPosition().y) - getCountingUpEntity(i).getPosition().y;
-                                System.out.println(getCountingUpEntity(i).guardedReceiver + " " + getCountingUpEntity(i) + " " + dX + " " + dY);
                                 routes.add(new Route(new Vector3f(getCountingUpEntity(i).getPosition()), dX, dY, (float) (Math.atan(dY/dX) * 180/Math.PI), new Transform(), false));
                             }
                             if (getCountingUpEntity(i).defensiveBack) {
                                 switch (getCountingUpEntity(i).route) {
-                                    case 1 : break;
+                                    case 1 : routes.add(new Route(new Transform(), 0, new Vector3f(GameManager.ballPosX + 5, -240,0))); break;
+                                    case 2 : routes.add(new Route(new Transform(), 0, new Vector3f(GameManager.ballPosX + 5, -260,0))); break;
+                                    case 3 : routes.add(new Route(new Transform(), 2, new Vector3f(GameManager.ballPosX + 20, -260,0))); break;
+                                    case 4 : routes.add(new Route(new Transform(), 2, new Vector3f(GameManager.ballPosX + 20, -240,0))); break;
+                                    case 5 : routes.add(new Route(new Transform(), 1, new Vector3f(GameManager.ballPosX + 12, -250,0))); break;
+                                    case 6 : routes.add(new Route(new Transform(), 2, new Vector3f(GameManager.ballPosX + 20, -250,0))); break;
+                                    case 7 : routes.add(new Route(new Transform(), 1, new Vector3f(GameManager.ballPosX + 12, -240,0))); break;
+                                    case 8 : routes.add(new Route(new Transform(), 1, new Vector3f(GameManager.ballPosX + 12, -260,0))); break;
                                 }
                             }
                         }
