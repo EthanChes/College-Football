@@ -195,11 +195,17 @@ public class World {
                         }
                     } else {
                         for (int i = 0; i < 11; i++) {
+                            // Renders man-man
                             if (getCountingUpEntity(i).guardedReceiver != 0) {
                                 float dX = (getCountingUpEntity(22-getCountingUpEntity(i).guardedReceiver).getPosition().x) - getCountingUpEntity(i).getPosition().x;
                                 float dY = (getCountingUpEntity(22-getCountingUpEntity(i).guardedReceiver).getPosition().y) - getCountingUpEntity(i).getPosition().y;
                                 System.out.println(getCountingUpEntity(i).guardedReceiver + " " + getCountingUpEntity(i) + " " + dX + " " + dY);
                                 routes.add(new Route(new Vector3f(getCountingUpEntity(i).getPosition()), dX, dY, (float) (Math.atan(dY/dX) * 180/Math.PI), new Transform(), false));
+                            }
+                            if (getCountingUpEntity(i).defensiveBack) {
+                                switch (getCountingUpEntity(i).route) {
+                                    case 1 : break;
+                                }
                             }
                         }
                     }

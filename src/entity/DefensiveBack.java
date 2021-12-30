@@ -47,6 +47,8 @@ public class DefensiveBack extends Entity {
         strength = 10f;
         catching = 10f;
         zoneCoverage = 10f;
+
+        defensiveBack = true;
     }
 
     public void catching() {
@@ -67,6 +69,12 @@ public class DefensiveBack extends Entity {
             addX -= 2;
 
             this.transform.pos.y = guardedEntity.transform.pos.y;
+
+            // Prevents Accidental Stacking
+            for (int i = 0; i < 11; i++) {
+                if (this.transform.pos.distance(world.getCountingUpEntity(i).transform.pos) < 1.5)
+                    this.transform.pos.x += 2;
+            }
 
             noCollision();
         }
