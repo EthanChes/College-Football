@@ -431,6 +431,7 @@ public class World {
     public Entity getBallCarrier() { return ballCarrier; }
 
     public void initReset() {
+        GameManager.playClock = 20;
         GameManager.selectedPlay = false;
         GameManager.hasEntities = false;
         Entity.timeFumble = -1f;
