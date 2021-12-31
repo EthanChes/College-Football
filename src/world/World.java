@@ -2,6 +2,7 @@ package world;
 import collision.AABB;
 import entity.*;
 import entity.GameManager;
+import gameplay.Timer;
 import graphics.Camera;
 import graphics.Shader;
 import graphics.Window;
@@ -322,6 +323,8 @@ public class World {
                 System.out.println("Touchdown Offense");
             }
         }
+
+        GameManager.updateTimer(Timer.getTime());
 
     }
 

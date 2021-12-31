@@ -29,6 +29,8 @@ public class GameManager {
     public static boolean userHome = false;
     public static int homeScore = 0;
     public static int awayScore = 0;
+    public static double previousKnownTime = Timer.getTime();
+    public static boolean runClock = false;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
         this.yMax = yMax;
@@ -162,6 +164,20 @@ public class GameManager {
             } else {
                 this.ballPosY = world.getFootballEntity().transform.pos.y + .3f;
             }
+        }
+    }
+
+    public static void updateTimer(double time) {
+        // Update Timer if Clock should be running
+        if (runClock) {
+
+            timeLeft -= (time - previousKnownTime);
+            if (! Entity.playStart && ! Entity.canPlay) {
+                playClock -= (time - previousKnownTime);
+            }
+
+            previousKnownTime = time;
+
         }
     }
 
