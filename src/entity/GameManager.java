@@ -172,13 +172,14 @@ public class GameManager {
         if (runClock) {
 
             timeLeft -= (time - previousKnownTime);
-            if (! Entity.playStart && ! Entity.canPlay) {
-                playClock -= (time - previousKnownTime);
-            }
-
-            previousKnownTime = time;
 
         }
+
+        if (! Entity.playStart && ! Entity.canPlay) {
+            playClock -= (time - previousKnownTime);
+        }
+
+        previousKnownTime = time;
     }
 
     public static void printDownInfo() {
