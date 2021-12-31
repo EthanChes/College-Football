@@ -26,6 +26,9 @@ public class GameManager {
     public static float timeLeft = 300; // seconds
     public static float playClock = 20; // seconds
     public static int quarter = 1;
+    public static boolean userHome = false;
+    public static int homeScore = 0;
+    public static int awayScore = 0;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
         this.yMax = yMax;

@@ -1,6 +1,7 @@
 package gui;
 
 import assets.Assets;
+import entity.Entity;
 import entity.GameManager;
 import graphics.Camera;
 import graphics.Shader;
@@ -14,6 +15,7 @@ public class Scoreboard {
     private static TileSheet teams;
     private static TileSheet numbers;
     private static TileSheet yellowNumbers;
+    private static TileSheet invisNumbers;
 
     private static float translateX;
     private static float translateY;
@@ -28,6 +30,7 @@ public class Scoreboard {
         teams = new TileSheet("TEAMS.png",3);
         numbers = new TileSheet("NUMBERS.png",4);
         yellowNumbers = new TileSheet("YELLOWNUMBERS.png",4);
+        invisNumbers = new TileSheet("INVISIBLENUMBERS.png",4);
 
         translateX = transX;
         translateY = transY;
@@ -35,10 +38,6 @@ public class Scoreboard {
 
     public void resizeCamera(Window window) {
         camera.setProjection(window.getWidth(), window.getHeight());
-    }
-
-    public void update() {
-
     }
 
     public void Render() {
@@ -105,6 +104,110 @@ public class Scoreboard {
 
         numbers.bindTile(shader,pointer);
         Assets.getModel().render();
+
+        // Render Quarter
+        mat.translate(1.8f,0,0);
+        shader.setUniform("projection",mat);
+        pointer = GameManager.quarter;
+        numbers.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Renders Quarter's following letters
+        mat.translate(1.6f,0,0);
+        shader.setUniform("projection",mat);
+        pointer = GameManager.quarter + 11;
+        numbers.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Render Time in Game - 1st Digit Minutes
+        mat.translate(2,0,0);
+        shader.setUniform("projection",mat);
+        pointer = (int) Math.ceil(GameManager.timeLeft)/60/10;
+        numbers.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Render Time in Game - 2nd Digit Minutes
+        mat.translate(1.4f,0,0);
+        shader.setUniform("projection",mat);
+        pointer = (int) Math.ceil(GameManager.timeLeft)/60%10;
+        numbers.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Render Time in Game - Semicolon
+        mat.translate(1.4f,0,0);
+        shader.setUniform("projection",mat);
+        pointer = 10;
+        numbers.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Render Time in Game - 1st Digit Seconds
+        mat.translate(1.4f,0,0);
+        shader.setUniform("projection",mat);
+        pointer = (int) Math.ceil(GameManager.timeLeft)%60/10;
+        numbers.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Render Time in Game - 2nd Digit Seconds
+        mat.translate(1.4f,0,0);
+        shader.setUniform("projection",mat);
+        pointer = (int) Math.ceil(GameManager.timeLeft)%60%10;
+        numbers.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Render PlayClock only if play hasn't started yet
+        if (!Entity.playStart && !Entity.canPlay) {
+            // Render 1st digit
+            mat.translate(2,0,0);
+            shader.setUniform("projection",mat);
+            pointer = (int) Math.ceil(GameManager.playClock)/10;
+            yellowNumbers.bindTile(shader,pointer);
+            Assets.getModel().render();
+
+            // Render 2nd digit
+            mat.translate(1.5f,0,0);
+            shader.setUniform("projection",mat);
+            pointer = (int) Math.ceil(GameManager.playClock)%10;
+            yellowNumbers.bindTile(shader,pointer);
+            Assets.getModel().render();
+        }
+
+        // Render Scores for home team (first digit)
+        camera.getUntransformedProjection().scale(25,mat);
+        mat.translate(-12.42f,-8.75f,0);
+        shader.setUniform("projection",mat);
+        pointer = GameManager.homeScore/10;
+        invisNumbers.bindTile(shader,pointer);
+        if (pointer != 0)
+            Assets.getModel().render();
+
+        // Render Scores for home team (second digit)
+        mat.translate(1,0,0);
+        shader.setUniform("projection",mat);
+        pointer = GameManager.homeScore%10;
+        invisNumbers.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Render Scores for away team (first digit)
+        mat.translate(3,0,0);
+        shader.setUniform("projection",mat);
+        pointer = GameManager.awayScore/10;
+        invisNumbers.bindTile(shader,pointer);
+        if (pointer != 0)
+            Assets.getModel().render();
+
+        // Render Scores for away team (second digit)
+        mat.translate(1,0,0);
+        shader.setUniform("projection",mat);
+        pointer = GameManager.awayScore%10;
+        invisNumbers.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+
+
+
+
+
+
 
 
         // Same Thing as above
