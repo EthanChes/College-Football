@@ -52,10 +52,10 @@ public class main {
             Assets.initAsset();
 
             Shader shader = new Shader("shader"); // Creates a new shader, filename is singular, because in the directory, the shader files start with "shader" Shader Class Handles Names.
-            World world = new World("test");
+            World world = new World("test", window);
             world.calculateView(window,camera);
 
-            glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Window Initial Color
+            glClearColor(0.0f, 1.0f, 0.0f, 0.0f); // Window Initial Color
 
             double frame_cap = 1.0 / 60.0; // Max frames per second
 

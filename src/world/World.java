@@ -1,16 +1,15 @@
 package world;
-import assets.Assets;
 import collision.AABB;
 import entity.*;
 import entity.GameManager;
 import graphics.Camera;
 import graphics.Shader;
 import graphics.Window;
+import gui.Scoreboard;
 import gui.SelectPlay;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.lwjgl.opengl.GL11;
 import plays.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -19,14 +18,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Vector;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11C.GL_LINE;
 
 public class World {
     GameManager gameManager = new GameManager(-234.3f, -265.9f, 366.6f, 141.8f, 153f, 354.5f);
+    Scoreboard scoreboard;
     private int viewX;
     private int viewY;
     private int[] tiles;
@@ -46,7 +43,7 @@ public class World {
 
 
 
-    public World(String stadium) { // Load world from file
+    public World(String stadium, Window window) { // Load world from file
 
         try {
              BufferedImage tile_sheet = ImageIO.read(new File("res/stadiums/" + stadium + "_tiles.png"));
@@ -81,6 +78,8 @@ public class World {
 
                 }
             }
+
+            scoreboard = new Scoreboard(window,-5.4f,-3.8f);
 
 
 
@@ -233,6 +232,8 @@ public class World {
                 entities.get(count).collideWithTiles(this);
             }
         }
+
+        scoreboard.Render();
     }
 
 
