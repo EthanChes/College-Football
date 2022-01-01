@@ -97,7 +97,8 @@ public class Kicker extends Entity {
         Football.fieldGoal = true;
         this.kickPower -= ((20 - KickMarker.level)/10);
         System.out.println(KickMarker.level + " Actual");
-        Football.ball_slope = (20-KickMarker.level)/(15*kickAccuracy);
+        Football.ball_slope = (world.getFootballEntity().transform.pos.y - world.getGoalPost().transform.pos.y)/(world.getFootballEntity().transform.pos.x - world.getGoalPost().transform.pos.x);
+        Football.ball_slope -= (20-KickMarker.level)/(15*kickAccuracy);
         uniqueEvents = true;
         hasBall = false;
         world.setBallCarrier(world.getFootballEntity());

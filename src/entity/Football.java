@@ -227,8 +227,8 @@ public class Football extends Entity {
         if (fieldGoal) {
             if (gotWideReceiverPos) {
                 world.setBallCarrier(this);
-                speed = world.getCountingUpEntity(12).kickPower*2*delta;
-                throw_height = world.getCountingUpEntity(12).kickPower*2f;
+                speed = world.getCountingUpEntity(12).kickPower*3*delta;
+                throw_height = world.getCountingUpEntity(12).kickPower*3f;
 
                 gotWideReceiverPos = false;
             }
@@ -237,12 +237,30 @@ public class Football extends Entity {
 
             movement.add(speed,ball_slope*speed);
 
+            if (this.transform.pos.x > world.getGoalPost().transform.pos.x && this.transform.pos.y < world.getGoalPost().transform.pos.y + 5 && this.transform.pos.y > world.getGoalPost().transform.pos.y - 5 && throw_height > 2) {
+                fieldGoal = false;
+                throw_height = 0;
+                System.out.println("GOOD");
+
+                if (GameManager.userHome && GameManager.userOffense)
+                    GameManager.homeScore += 3;
+                else if (! GameManager.userHome && ! GameManager.userOffense)
+                    GameManager.homeScore += 3;
+                else
+                    GameManager.awayScore += 3;
+            }
+
             if (throw_height > 0) {
                 throw_height -= 8*delta;
             } else {
                 useAnimation(ANIM_QB_THROW_START);
                 fieldGoal = false;
                 canPlay = false;
+                System.out.println("NO GOOD");
+
+                GameManager.down = 4;
+
+                Entity.incompletePass = true;
             }
         }
 

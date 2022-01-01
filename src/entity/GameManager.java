@@ -12,7 +12,7 @@ public class GameManager {
     public static float xMin;
     public static float xEndzoneLeft;
     public static float xEndzoneRight;
-    public static float ballPosX = 223; // 223
+    public static float ballPosX = 300; // 223
     public static float ballPosY = -250f;
     public static int down = 0;
     public static float firstDownLine = ballPosX + 20;
@@ -99,14 +99,16 @@ public class GameManager {
             }
         }
         else { // For FUmbles
-            if (world.getBallCarrier().transform.pos.x > 366.76367) {
-                return true;
-            } else if (world.getBallCarrier().transform.pos.x < 141.26694) {
-                return true;
-            } else if (world.getBallCarrier().transform.pos.y > -235.13287) {
-                return true;
-            } else if (world.getBallCarrier().transform.pos.y < -266.79953) {
-                return true;
+            if (! Football.fieldGoal) {
+                if (world.getBallCarrier().transform.pos.x > 366.76367) {
+                    return true;
+                } else if (world.getBallCarrier().transform.pos.x < 141.26694) {
+                    return true;
+                } else if (world.getBallCarrier().transform.pos.y > -235.13287) {
+                    return true;
+                } else if (world.getBallCarrier().transform.pos.y < -266.79953) {
+                    return true;
+                }
             }
         }
         return false;
@@ -138,7 +140,12 @@ public class GameManager {
         } else {
             // Set Ball Pos
             System.out.println(world.getFootballEntity().transform.pos.x);
-            this.ballPosX = (507 - world.getFootballEntity().transform.pos.x);
+            if (! Entity.incompletePass)
+                this.ballPosX = (507 - world.getFootballEntity().transform.pos.x);
+            else
+                this.ballPosX = (507 - ballPosX);
+
+
             System.out.println(ballPosX);
 
             // Set Vars

@@ -714,6 +714,7 @@ public class World {
     public Entity getKickMarker() { return misc.get(3); }
     public Entity getKickLevel() { return misc.get(2); }
 
+    public Entity getGoalPost() { return misc.get(5); }
 
 
     public int getScale() { return scale; }
