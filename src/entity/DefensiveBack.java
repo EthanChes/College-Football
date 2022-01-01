@@ -470,7 +470,7 @@ public class DefensiveBack extends Entity {
             }
         }
 
-        if (world.getCountingUpEntity(0) != this && (Football.kickoff || Football.punt)) {
+        if (world.getCountingUpEntity(10) != this && (Football.kickoff || Football.punt)) {
             if (routeMovement <= 20) {
                 movement.add(speed * delta, 0);
                 routeMovement += speed*delta;

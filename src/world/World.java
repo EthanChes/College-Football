@@ -462,6 +462,8 @@ public class World {
 
         misc.add(new PlayerMarker(new Transform(0,0,1.5f)));
         misc.add(new FirstDownLine(new Transform(GameManager.firstDownLine + 1, -251f,1,16f)));
+        misc.add(new KickMarker(new Transform(0,0,1,10)));
+        misc.add(new KickLevel(new Transform(0,0,1,5)));
 
         GameManager.printDownInfo();
     }
@@ -587,6 +589,9 @@ public class World {
     }
 
     public Entity getPlayerMarker() { return misc.get(0); }
+
+    public Entity getKickMarker() { return misc.get(3); }
+    public Entity getKickLevel() { return misc.get(2); }
 
 
 

@@ -3,6 +3,7 @@ package entity;
 import gameplay.Timer;
 import graphics.Animation;
 import graphics.Camera;
+import graphics.Shader;
 import graphics.Window;
 import org.joml.Vector2f;
 import world.World;
@@ -44,7 +45,8 @@ public class Kicker extends Entity {
 
     public void kickoff(World world) {
         Football.kickoff = true;
-        Football.ball_slope = 0;
+        this.kickPower -= (20 - KickMarker.level)/20;
+        Football.ball_slope = (20-KickMarker.level)/(20*kickAccuracy);
         uniqueEvents = true;
 
         if (GameManager.offenseBall)
@@ -156,6 +158,14 @@ public class Kicker extends Entity {
             useAnimation(ANIM_MOVE);
         } else {
             useAnimation(ANIM_IDLE);
+        }
+
+        if (! canStart) {
+            world.getKickMarker().transform.pos.set(this.transform.pos.x - 10, this.transform.pos.y - 12 + KickMarker.level/1.17f,0);
+            world.getKickLevel().transform.pos.set(this.transform.pos.x - 10,this.transform.pos.y,0);
+        } else {
+            world.getKickMarker().transform.pos.set(0,0,0);
+            world.getKickLevel().transform.pos.set(0,0,0);
         }
 
         if (userControl) {
