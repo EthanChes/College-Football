@@ -282,6 +282,24 @@ public class World {
                     Entity.forceInitiateDefensivePlayer(this);
                 }
             }
+            else if (window.getInput().isKeyPressed(GLFW_KEY_A)) {
+                GameManager.selectedPlay = true;
+                SelectPlay.calculateSpecificPlayID(-1);
+                enterSpecificEntities();
+
+                if (! GameManager.userOffense) {
+                    Entity.forceInitiateDefensivePlayer(this);
+                }
+            }
+            else if (window.getInput().isKeyPressed(GLFW_KEY_B)) {
+                GameManager.selectedPlay = true;
+                SelectPlay.calculateSpecificPlayID(-2);
+                enterSpecificEntities();
+
+                if (! GameManager.userOffense) {
+                    Entity.forceInitiateDefensivePlayer(this);
+                }
+            }
 
             if (GameManager.selectedPlay) {
                 System.out.println(SelectPlay.getPlayID());
@@ -630,6 +648,58 @@ public class World {
 
         }
         setBallCarrier(this.getFootballEntity());
+    }
+
+    public void enterSpecificEntities() {
+        GameManager.hasEntities = true;
+        List<Entity> offense = new ArrayList<Entity>();
+        Random rand = new Random();
+
+        if (GameManager.userOffense) {
+            switch (SelectPlay.getPlayID()) {
+                case -1 : // FG
+                    break;
+                case -2 : // Punt
+                    Punt punt = new Punt(GameManager.ballPosX, GameManager.ballPosY);
+                    offense.addAll(punt.getEntities());
+                    PuntReturn pr = new PuntReturn(GameManager.ballPosX, GameManager.ballPosY);
+                    entities.addAll(pr.getEntities());
+                    break;
+            }
+            entities.addAll(offense);
+        } else {
+            int randPlay = rand.nextInt(3) + 1;
+
+            switch (randPlay) {
+                case 1:
+                    T_Form_FB_Dive TFBDive = new T_Form_FB_Dive(GameManager.ballPosX, GameManager.ballPosY);
+                    offense.addAll(TFBDive.getEntities());
+                    break;
+                case 2:
+                    Spread_Inside_Cut_Deep cutDeep = new Spread_Inside_Cut_Deep(GameManager.ballPosX, GameManager.ballPosY);
+                    offense.addAll(cutDeep.getEntities());
+                    break;
+                case 3:
+                    T_Form_HB_Stretch THBStretch = new T_Form_HB_Stretch(GameManager.ballPosX, GameManager.ballPosY);
+                    offense.addAll(THBStretch.getEntities());
+                    break;
+            }
+
+            switch (SelectPlay.getPlayID()) {
+                case -1 : // FG Block
+                    break;
+                case -2: // Punt Return
+                    PuntReturn PR = new PuntReturn(GameManager.ballPosX, GameManager.ballPosY);
+                    entities.addAll(PR.getEntities());
+                    break;
+            }
+            entities.addAll(offense);
+        }
+
+        setBallCarrier(this.getFootballEntity());
+
+
+
     }
 
     public Entity getPlayerMarker() { return misc.get(0); }

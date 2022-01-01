@@ -200,6 +200,28 @@ public class Football extends Entity {
             }
         }
 
+        if (punt) {
+            if (gotWideReceiverPos) {
+                world.setBallCarrier(this);
+                speed = world.getQuarterbackEntity().kickPower*3*delta;
+                throw_height = world.getQuarterbackEntity().kickPower*3.5f;
+
+                gotWideReceiverPos = false;
+            }
+
+            movement.add(speed, ball_slope*speed);
+
+            if (throw_height > 0) {
+                throw_height -= 8*delta;
+            } else {
+                useAnimation(ANIM_QB_THROW_START);
+                punt = false;
+                if (world.getBallCarrier() == world.getFootballEntity()) {
+                    canPlay = false;
+                }
+            }
+        }
+
         if (canPlay) {
             move(movement);
         }

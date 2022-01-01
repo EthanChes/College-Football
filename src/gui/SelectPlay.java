@@ -113,5 +113,7 @@ public class SelectPlay {
 
     public static void calculatePlayID(int input) { playID = (lastTileID + input + 1) % 9; System.out.println(playID); } // Only 9 plays
 
+    public static void calculateSpecificPlayID(int input) { playID = input; System.out.println(playID); } // For Special Plays
+
     public static int getPlayID() { return playID; }
 }

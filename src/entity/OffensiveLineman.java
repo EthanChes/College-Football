@@ -266,7 +266,7 @@ public class OffensiveLineman extends Entity {
                     movement.add(defensive_movement(world.getBallCarrier(), delta));
 
                     if (collidingWithBallCarrier(this, world)) {
-                        if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && !GameManager.offenseBall) {
+                        if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && !GameManager.offenseBall && world.getBallCarrier() != world.getFootballEntity()) {
                             boolean tackResult = tackle(world.getBallCarrier(), window, world);
                             if (tackResult) {
                                 world.getBallCarrier().useAnimation(3); // 3 is universal falling animation

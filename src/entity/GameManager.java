@@ -31,7 +31,7 @@ public class GameManager {
     public static int awayScore = 0;
     public static double previousKnownTime = Timer.getTime();
     public static boolean runClock = false;
-    public static boolean kickoff = true;
+    public static boolean kickoff = false;
     public static boolean pat = false;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
@@ -44,7 +44,7 @@ public class GameManager {
     }
 
     public boolean ballCarrierOutOfBounds(World world) { // Check if Out of Bounds (ALL)
-        if (world.getBallCarrier() != world.getFootballEntity()) {
+        if (world.getBallCarrier() != world.getFootballEntity() && world.getBallCarrier() != null) {
             if (world.getBallCarrier().transform.pos.x > xMax) {
                 Entity.canPlay = false;
 

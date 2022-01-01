@@ -50,6 +50,26 @@ public class Kicker extends Entity {
         System.out.println(KickMarker.level + " Actual");
         Football.ball_slope = (20-KickMarker.level)/(15*kickAccuracy);
         uniqueEvents = true;
+        hasBall = false;
+        world.setBallCarrier(world.getFootballEntity());
+
+        if (GameManager.offenseBall)
+            GameManager.offenseBall = false;
+        else
+            GameManager.offenseBall = true;
+
+        world.getFootballEntity().useAnimation(2);
+    }
+
+    public void punt(World world) {
+        Football.punt = true;
+        this.kickPower -= ((20 - KickMarker.level)/10);
+        System.out.println(KickMarker.level + " Actual");
+        Football.ball_slope = (20-KickMarker.level)/(15*kickAccuracy);
+        uniqueEvents = true;
+        hasBall = false;
+        world.setBallCarrier(world.getFootballEntity());
+
 
         if (GameManager.offenseBall)
             GameManager.offenseBall = false;
@@ -117,6 +137,22 @@ public class Kicker extends Entity {
                     case 1: // Field Goal
                         break;
                     case 2: // Punt
+                        if (canStart) {
+                            if (! hasKicked) {
+                                snap(window, world);
+
+                                if (this.transform.pos.distance(world.getFootballEntity().transform.pos) < .5f) {
+                                    kickoffSnap();
+                                    timeKicked = Timer.getTime();
+                                    hasKicked = true;
+                                }
+                            } else {
+                                if (preventDoubleKick) {
+                                    punt(world);
+                                    preventDoubleKick = false;
+                                }
+                            }
+                        }
                         break;
                 }
             } // end of uniqueevents false
@@ -163,8 +199,8 @@ public class Kicker extends Entity {
         }
 
         if (! canStart) {
-            world.getKickMarker().transform.pos.set(this.transform.pos.x - 10, this.transform.pos.y - 12 + KickMarker.level/1.17f,0);
-            world.getKickLevel().transform.pos.set(this.transform.pos.x - 10,this.transform.pos.y,0);
+            world.getKickMarker().transform.pos.set(this.transform.pos.x - 5, this.transform.pos.y - 12 + KickMarker.level/1.17f,0);
+            world.getKickLevel().transform.pos.set(this.transform.pos.x - 5,this.transform.pos.y,0);
         } else {
             world.getKickMarker().transform.pos.set(0,0,0);
             world.getKickLevel().transform.pos.set(0,0,0);
