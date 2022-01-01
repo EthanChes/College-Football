@@ -15,7 +15,7 @@ public class GameManager {
     public static float ballPosX = 300; // 223
     public static float ballPosY = -250f;
     public static int down = 0;
-    public static float firstDownLine = ballPosX + 20;
+    public static float firstDownLine;
     public static boolean offenseBall = true;
     public static boolean userOffense = true;
     public static boolean selectedPlay = false;
@@ -173,6 +173,7 @@ public class GameManager {
 
             if (ballPosX > firstDownLine) {
                 down = 1;
+                System.out.println("TEST");
                 firstDownLine = ballPosX + 20;
                 System.out.println("FIRST DOWN");
             }
@@ -184,8 +185,6 @@ public class GameManager {
             else
                 this.ballPosX = (507 - ballPosX);
 
-
-            System.out.println(ballPosX);
 
             // Set Vars
             Entity.turnover = false;
@@ -236,6 +235,12 @@ public class GameManager {
             GameManager.ballPosY = -250f;
             Football.keepMoving = true;
         }
+
+        if (Entity.incompletePass || Entity.turnover) {
+            GameManager.runClock = false;
+        } else {
+            GameManager.runClock = true;
+        }
     }
 
     public static void updateTimer(double time) {
@@ -254,6 +259,7 @@ public class GameManager {
     }
 
     public static void printDownInfo() {
+        System.out.println(firstDownLine + " " + ballPosX);
         System.out.println(down + " & " + (firstDownLine - ballPosX)/2);
     }
 

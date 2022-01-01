@@ -351,6 +351,8 @@ public class World {
 
         GameManager.updateTimer(Timer.getTime());
 
+        if (Entity.canPlay)
+            GameManager.runClock = true;
     }
 
 
@@ -456,6 +458,7 @@ public class World {
     public Entity getBallCarrier() { return ballCarrier; }
 
     public void initReset() {
+        GameManager.touchback = false;
         GameManager.playClock = 20;
         GameManager.selectedPlay = false;
         GameManager.hasEntities = false;
@@ -473,6 +476,7 @@ public class World {
         Entity.canPlay = false;
         Entity.incompletePass = false;
         Entity.playStart = false;
+        Entity.turnover = false;
         Football.gotWideReceiverPos = true;
         WideReceiver.totalReceivers = 0;
         DefensiveBack.guardedReceivers = 0;
