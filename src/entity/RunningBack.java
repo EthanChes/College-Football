@@ -174,6 +174,11 @@ public class RunningBack extends Entity {
             }
         }
 
+        if (Football.kickoff || Football.punt) {
+            if (world.getBallCarrier() == world.getFootballEntity() || world.getBallCarrier().transform.pos.distance(this.transform.pos) > 5) {
+                movement.y = 0;
+            }
+        }
 
         if (canPlay && !(pancaked || isBeingMovedExternally)) {
             move(movement);
