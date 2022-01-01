@@ -184,7 +184,7 @@ public class Football extends Entity {
         if (kickoff) {
             if (gotWideReceiverPos) {
                 speed = world.getQuarterbackEntity().kickPower * 2.5f * delta;
-                throw_height = world.getQuarterbackEntity().kickPower*5.2f;
+                throw_height = world.getQuarterbackEntity().kickPower*6f;
 
                 gotWideReceiverPos = false;
             }

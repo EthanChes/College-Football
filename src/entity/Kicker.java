@@ -45,8 +45,8 @@ public class Kicker extends Entity {
 
     public void kickoff(World world) {
         Football.kickoff = true;
-        this.kickPower -= (20 - KickMarker.level)/20;
-        Football.ball_slope = (20-KickMarker.level)/(20*kickAccuracy);
+        this.kickPower -= (20 - KickMarker.level)/10;
+        Football.ball_slope = (20-KickMarker.level)/(15*kickAccuracy);
         uniqueEvents = true;
 
         if (GameManager.offenseBall)
