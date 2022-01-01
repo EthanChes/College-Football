@@ -31,11 +31,13 @@ public class GameManager {
     public static int awayScore = 0;
     public static double previousKnownTime = Timer.getTime();
     public static boolean runClock = false;
+    public static boolean homeDefer = false;
     public static boolean kickoff = true;
     public static boolean pat = false;
     public static boolean scoreHome = false;
     public static boolean scoreAway = false;
     public static boolean touchback = false;
+    public static boolean gameStarted = false;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
         this.yMax = yMax;
@@ -132,6 +134,28 @@ public class GameManager {
     }
 
     public void setBallPosX(World world) {
+        // Controls start of game functions
+        if (! gameStarted) {
+            gameStarted = true;
+
+            if (homeDefer) {
+                // Set user Offense
+                if (userHome) {
+                    userOffense = true;
+                } else {
+                    userOffense = false;
+                }
+
+                kickoff = true;
+            } else {
+                if (userHome) {
+                    userOffense = false;
+                } else {
+                    userOffense = true;
+                }
+            }
+        }
+
         down++;
 
         if (kickoff) {

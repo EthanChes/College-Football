@@ -462,6 +462,8 @@ public class World {
         Entity.timeFumble = -1f;
         Quarterback.hasHandedOff = false;
         Football.fumbleMovements = new Vector2f();
+        Football.puntEndsInBounds = false;
+        Football.keepMoving = false;
         Football.punt = false;
         Football.fieldGoal = false;
         Football.kickoff = false;

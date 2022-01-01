@@ -3,7 +3,6 @@ package entity;
 import gameplay.Timer;
 import graphics.Animation;
 import graphics.Camera;
-import graphics.Shader;
 import graphics.Window;
 import org.joml.Vector2f;
 import world.World;
