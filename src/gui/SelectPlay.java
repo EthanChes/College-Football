@@ -13,6 +13,7 @@ public class SelectPlay {
     private static Shader shader;
     private static Camera camera;
     private static TileSheet sheet;
+    private static TileSheet special;
 
     private float x;
     private int tileID;
@@ -30,12 +31,14 @@ public class SelectPlay {
                 sheet = new TileSheet("KICKOFF.png",1);
             } else {
                 sheet = new TileSheet("O_PLAYS.png", 3);
+                special = new TileSheet("SPECIALOFFENSE.png",1);
             }
         } else {
             if (GameManager.kickoff) {
                 sheet = new TileSheet("KICKOFFRETURN.png",1);
             } else {
                 sheet = new TileSheet("D_PLAYS.png", 3);
+                special = new TileSheet("SPECIALDEFENSE.png",1);
             }
         }
 
@@ -70,6 +73,14 @@ public class SelectPlay {
         shader.setUniform("projection", mat);
         sheet.bindTile(shader, tileID + 2);
         Assets.getModel().render();
+
+        if (! GameManager.kickoff) {
+            camera.getUntransformedProjection().scale(50,mat);
+            mat.translate(5.5f,3.1f,0);
+            shader.setUniform("projection",mat);
+            special.bindTile(shader, 0);
+            Assets.getModel().render();
+        }
 
         //shader.setUniform("color", new Vector4f(0,0,0,.4f));
     }
