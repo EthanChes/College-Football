@@ -31,7 +31,7 @@ public class GameManager {
     public static int awayScore = 0;
     public static double previousKnownTime = Timer.getTime();
     public static boolean runClock = false;
-    public static boolean kickoff = false;
+    public static boolean kickoff = true;
     public static boolean pat = false;
     public static boolean scoreHome = false;
     public static boolean scoreAway = false;
@@ -133,6 +133,11 @@ public class GameManager {
 
     public void setBallPosX(World world) {
         down++;
+
+        if (kickoff) {
+            GameManager.ballPosX = 223;
+            GameManager.ballPosY = -251;
+        }
 
         if (down > 4 && (firstDownLine + .6f > world.getFootballEntity().transform.pos.x || Entity.incompletePass))
             Entity.turnover = true;
