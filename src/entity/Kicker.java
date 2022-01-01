@@ -79,6 +79,18 @@ public class Kicker extends Entity {
         world.getFootballEntity().useAnimation(2);
     }
 
+    public void kick(World world) {
+        Football.fieldGoal = true;
+        this.kickPower -= ((20 - KickMarker.level)/10);
+        System.out.println(KickMarker.level + " Actual");
+        Football.ball_slope = (20-KickMarker.level)/(15*kickAccuracy);
+        uniqueEvents = true;
+        hasBall = false;
+        world.setBallCarrier(world.getFootballEntity());
+
+        world.getFootballEntity().useAnimation(2);
+    }
+
     @Override
     public void update(float delta, Window window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
@@ -135,6 +147,27 @@ public class Kicker extends Entity {
 
                         break;
                     case 1: // Field Goal
+                        if (canStart) {
+                            if (! hasKicked) {
+                                snap(window, world);
+                                if (world.getQuarterbackEntity().hasBall) {
+                                    movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
+                                }
+
+                                if (this.transform.pos.distance(world.getFootballEntity().transform.pos) < .5f) {
+                                    kickoffSnap();
+                                    world.getQuarterbackEntity().hasBall = false;
+                                    world.setBallCarrier(world.getFootballEntity());
+                                    hasKicked = true;
+                                    timeKicked = Timer.getTime();
+                                }
+                            } else {
+                                if (preventDoubleKick) {
+                                    kick(world);
+                                    preventDoubleKick = false;
+                                }
+                            }
+                        }
                         break;
                     case 2: // Punt
                         if (canStart) {

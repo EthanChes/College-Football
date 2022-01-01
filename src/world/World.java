@@ -1,5 +1,6 @@
 package world;
 import collision.AABB;
+import com.sun.jdi.Field;
 import entity.*;
 import entity.GameManager;
 import gameplay.Timer;
@@ -486,6 +487,8 @@ public class World {
         misc.add(new FirstDownLine(new Transform(GameManager.firstDownLine + 1, -251f,1,16f)));
         misc.add(new KickMarker(new Transform(0,0,1,10)));
         misc.add(new KickLevel(new Transform(0,0,1,5)));
+        misc.add(new Goalpost(new Transform(139.8f,-249,3,6),1));
+        misc.add(new Goalpost(new Transform(367.4f, -249,3,6),0));
 
         GameManager.printDownInfo();
     }
@@ -658,6 +661,10 @@ public class World {
         if (GameManager.userOffense) {
             switch (SelectPlay.getPlayID()) {
                 case -1 : // FG
+                    FieldGoal fg = new FieldGoal(GameManager.ballPosX, GameManager.ballPosY);
+                    offense.addAll(fg.getEntities());
+                    FieldGoalBlock fgb = new FieldGoalBlock(GameManager.ballPosX, GameManager.ballPosY);
+                    entities.addAll(fgb.getEntities());
                     break;
                 case -2 : // Punt
                     Punt punt = new Punt(GameManager.ballPosX, GameManager.ballPosY);

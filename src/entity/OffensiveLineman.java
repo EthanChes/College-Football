@@ -12,7 +12,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 
 public class OffensiveLineman extends Entity {
-    public static final int ANIM_SIZE = 7;
+    public static final int ANIM_SIZE = 8;
     public static final int ANIM_IDLE = 0;
     public static final int ANIM_MOVE = 1;
     public static final int ANIM_BLOCK = 2;
@@ -20,6 +20,7 @@ public class OffensiveLineman extends Entity {
     public static final int ANIM_BLOCK_MOVING = 4;
     public static final int ANIM_PRESNAP = 5;
     public static final int ANIM_CENTER = 6;
+    public static final int ANIM_PLACE_HOLDER = 7;
 
     public boolean isBlocking = false;
     public byte blockOutcome = 0;
@@ -34,6 +35,7 @@ public class OffensiveLineman extends Entity {
         setAnimation(ANIM_BLOCK_MOVING, new Animation(4, 16, "offensivelineblockmoving"));
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/offensiveline"));
         setAnimation(ANIM_CENTER, new Animation(2, 4, "presnap/center"));
+        setAnimation(ANIM_PLACE_HOLDER, new Animation(1,1, "placeholder"));
         speed = 3f;
         strength = 10f;
     }
@@ -281,6 +283,13 @@ public class OffensiveLineman extends Entity {
             }
         }
 
+        if (route == -2) {
+            movement.set(0,0);
+            useAnimation(ANIM_PLACE_HOLDER);
+            if (hasBall)
+                world.getFootballEntity().transform.pos.set(this.transform.pos);
+        }
+
         if (canPlay && ! pancaked)
             move(movement);
 
@@ -303,6 +312,8 @@ public class OffensiveLineman extends Entity {
         }
         else if (getAnimationIndex() == 6 && timeSnapped + .4 > Timer.getTime()) {
             useAnimation(ANIM_CENTER);
+        } else if (getAnimationIndex() == ANIM_PLACE_HOLDER) {
+            useAnimation(ANIM_PLACE_HOLDER);
         }
         else if (pancaked) {
             useAnimation(ANIM_FALL);

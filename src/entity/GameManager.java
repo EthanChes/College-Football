@@ -12,7 +12,7 @@ public class GameManager {
     public static float xMin;
     public static float xEndzoneLeft;
     public static float xEndzoneRight;
-    public static float ballPosX = 223f;
+    public static float ballPosX = 223; // 223
     public static float ballPosY = -250f;
     public static int down = 0;
     public static float firstDownLine = ballPosX + 20;
