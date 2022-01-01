@@ -282,7 +282,7 @@ public class World {
                     Entity.forceInitiateDefensivePlayer(this);
                 }
             }
-            else if (window.getInput().isKeyPressed(GLFW_KEY_A)) {
+            else if (window.getInput().isKeyPressed(GLFW_KEY_A) && ! GameManager.kickoff) {
                 GameManager.selectedPlay = true;
                 SelectPlay.calculateSpecificPlayID(-1);
                 enterSpecificEntities();
@@ -291,7 +291,7 @@ public class World {
                     Entity.forceInitiateDefensivePlayer(this);
                 }
             }
-            else if (window.getInput().isKeyPressed(GLFW_KEY_B)) {
+            else if (window.getInput().isKeyPressed(GLFW_KEY_B) && ! GameManager.kickoff) {
                 GameManager.selectedPlay = true;
                 SelectPlay.calculateSpecificPlayID(-2);
                 enterSpecificEntities();

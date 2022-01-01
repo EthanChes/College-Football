@@ -209,6 +209,8 @@ public class Football extends Entity {
                 gotWideReceiverPos = false;
             }
 
+            useAnimation(ANIM_QB_THROW);
+
             movement.add(speed, ball_slope*speed);
 
             if (throw_height > 0) {
