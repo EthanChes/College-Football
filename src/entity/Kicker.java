@@ -8,6 +8,8 @@ import graphics.Window;
 import org.joml.Vector2f;
 import world.World;
 
+import java.util.Random;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Kicker extends Entity {
@@ -49,6 +51,12 @@ public class Kicker extends Entity {
         this.kickPower -= (20 - KickMarker.level)/10;
         System.out.println(KickMarker.level + " Actual");
         Football.ball_slope = (20-KickMarker.level)/(15*kickAccuracy);
+
+        Random rand = new Random();
+        boolean random = rand.nextBoolean();
+        if (random)
+            Football.ball_slope *= -1;
+
         uniqueEvents = true;
         hasBall = false;
         world.setBallCarrier(world.getFootballEntity());
@@ -66,6 +74,12 @@ public class Kicker extends Entity {
         this.kickPower -= ((20 - KickMarker.level)/10);
         System.out.println(KickMarker.level + " Actual");
         Football.ball_slope = (20-KickMarker.level)/(15*kickAccuracy);
+
+        Random rand = new Random();
+        boolean random = rand.nextBoolean();
+        if (random)
+            Football.ball_slope *= -1;
+
         uniqueEvents = true;
         hasBall = false;
         world.setBallCarrier(world.getFootballEntity());
@@ -79,7 +93,7 @@ public class Kicker extends Entity {
         world.getFootballEntity().useAnimation(2);
     }
 
-    public void kick(World world) {
+    public void fieldGoal(World world) {
         Football.fieldGoal = true;
         this.kickPower -= ((20 - KickMarker.level)/10);
         System.out.println(KickMarker.level + " Actual");
@@ -163,7 +177,7 @@ public class Kicker extends Entity {
                                 }
                             } else {
                                 if (preventDoubleKick) {
-                                    kick(world);
+                                    fieldGoal(world);
                                     preventDoubleKick = false;
                                 }
                             }
