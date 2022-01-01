@@ -55,6 +55,8 @@ public abstract class Entity {
 
     // Player Info
     public byte route = 0;
+    public float kickPower = 10f;
+    public float kickAccuracy = 10f;
     public float throw_decisions = 10f;
     public float manCoverage = 10f;
     public float routeMovement = 0f;
@@ -189,7 +191,7 @@ public abstract class Entity {
         }
     }
 
-    public void selectDefensivePlayer(Window win, World world) {
+    public static void selectDefensivePlayer(Window win, World world) {
         if (!GameManager.userOffense && GameManager.offenseBall && win.getInput().isKeyPressed(GLFW_KEY_Z) && selectPlayerCooldown + .05f < Timer.getTime()) {
             // Enabled to select new player
 
@@ -234,7 +236,7 @@ public abstract class Entity {
         }
     }
 
-    public void selectOffensivePlayer(Window win, World world) {
+    public static void selectOffensivePlayer(Window win, World world) {
         // Upon Key Press, Switch Player
         if (win.getInput().isKeyPressed(GLFW_KEY_Z) && GameManager.userOffense && ! GameManager.offenseBall && selectPlayerCooldown + .3f < Timer.getTime()) {
             selectPlayerCooldown = Timer.getTime();
@@ -465,6 +467,11 @@ public abstract class Entity {
         }
 
         return false;
+    }
+
+    public void kickoffSnap() {
+        canPlay = true;
+        playStart = true;
     }
 
     public void passCaught(World world) {

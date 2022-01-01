@@ -108,8 +108,6 @@ public class Quarterback extends Entity {
         double time_current = getTime();
         Entity football = world.getFootballEntity();
 
-        selectOffensivePlayer(window, world);
-
         // Prevents issues with QB running behind the play
         if (this.transform.pos.x + 30 < GameManager.ballPosX) {
             movement.add(speed*delta,0);

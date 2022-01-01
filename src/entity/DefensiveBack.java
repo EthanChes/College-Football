@@ -84,7 +84,8 @@ public class DefensiveBack extends Entity {
                 case -2 : break; // Blitz on Right Side (Acts as RDE)
                 case 0 : // In case There are less receivers than Backs, Blitz instead of man-man. Set Locs Here
                 default : // Default Position Setters
-                    this.transform.pos.x = GameManager.ballPosX + 8; // Initializer For LBs
+                    if (defenderID != -1)
+                        this.transform.pos.x = GameManager.ballPosX + 8; // Initializer For LBs
                     switch (defenderID) { // For LBs
                         case 0 : this.transform.pos.y = GameManager.ballPosY + 4f; break; // Left Normal
                         case 1 : this.transform.pos.y = GameManager.ballPosY; break; // Central Normal

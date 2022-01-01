@@ -26,9 +26,17 @@ public class SelectPlay {
 
         // Select Correct Sheet
         if (GameManager.userOffense) {
-            sheet = new TileSheet("O_PLAYS.png", 3);
+            if (GameManager.kickoff) {
+                sheet = new TileSheet("KICKOFF.png",1);
+            } else {
+                sheet = new TileSheet("O_PLAYS.png", 3);
+            }
         } else {
-            sheet = new TileSheet("D_PLAYS.png",3);
+            if (GameManager.kickoff) {
+                sheet = new TileSheet("KICKOFFRETURN.png",1);
+            } else {
+                sheet = new TileSheet("D_PLAYS.png", 3);
+            }
         }
 
         this.x = x;

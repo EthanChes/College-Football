@@ -11,8 +11,6 @@ import world.World;
 
 import java.util.Random;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 
 public class Football extends Entity {
     public static final int ANIM_SIZE = 3;
@@ -29,6 +27,10 @@ public class Football extends Entity {
 
     public static double passDropStart = 0;
     public static Vector2f fumbleMovements = new Vector2f();
+
+    public static boolean fieldGoal = false;
+    public static boolean kickoff = false;
+    public static boolean punt = false;
 
     public Football(Transform transform) {
         super(ANIM_SIZE, transform);
@@ -177,6 +179,26 @@ public class Football extends Entity {
             }
         } else {
             timeFumble = -1;
+        }
+
+        if (kickoff) {
+            if (gotWideReceiverPos) {
+                speed = world.getQuarterbackEntity().kickPower * 2.5f * delta;
+                throw_height = world.getQuarterbackEntity().kickPower*5.2f;
+
+                gotWideReceiverPos = false;
+            }
+
+            movement.add(speed,ball_slope*speed);
+
+            System.out.println(throw_height);
+            if (throw_height > 0) {
+                throw_height -= 8*delta;
+            } else {
+                useAnimation(ANIM_QB_THROW_START);
+                kickoff = false;
+                timeFumble = Timer.getTime();
+            }
         }
 
         if (canPlay) {

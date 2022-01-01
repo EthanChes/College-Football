@@ -59,8 +59,6 @@ public class DefensiveLineman extends Entity {
             canCollide = true;
         }
 
-        selectDefensivePlayer(window, world);
-
         if ( (! GameManager.userOffense) && hasBall) userControl = true; // change false to gamemanager on defense, make sure to have ids for different defenders to switch through them
         else if (forceUserControl && ! GameManager.userOffense) userControl = true;
         else userControl = false;

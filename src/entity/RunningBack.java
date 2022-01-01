@@ -151,7 +151,7 @@ public class RunningBack extends Entity {
                     movement.add(defensive_movement(world.getBallCarrier(), delta));
 
                     if (collidingWithBallCarrier(this, world)) {
-                        if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && !GameManager.offenseBall) {
+                        if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && !GameManager.offenseBall && world.getBallCarrier() != world.getFootballEntity()) {
                             boolean tackResult = tackle(world.getBallCarrier(), window, world);
                             if (tackResult) {
                                 world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
@@ -207,7 +207,7 @@ public class RunningBack extends Entity {
             useAnimation(ANIM_IDLE_WITH_BALL);
             world.getFootballEntity().transform.pos.set(this.transform.pos.x - .25f,this.transform.pos.y,0);
         }
-        else if (movement.x != 0 || movement.y != 0) {
+        else if (canPlay && (movement.x != 0 || movement.y != 0)) {
             useAnimation(ANIM_RUN_WITHOUT_BALL);
         }
         else {
