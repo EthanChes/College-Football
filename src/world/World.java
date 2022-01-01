@@ -458,6 +458,7 @@ public class World {
         GameManager.offenseBall = true;
         GameManager.timePlayEnd = 0;
         DefensiveBack.addX = 10;
+        KickMarker.stop = false;
 
         entities.clear();
 

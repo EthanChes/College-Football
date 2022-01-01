@@ -40,12 +40,14 @@ public class Kicker extends Entity {
     public void kick(Window window) {
         if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && ! playStart && GameManager.selectedPlay) {
             canStart = true;
+            KickMarker.stop = true;
         }
     }
 
     public void kickoff(World world) {
         Football.kickoff = true;
         this.kickPower -= (20 - KickMarker.level)/10;
+        System.out.println(KickMarker.level + " Actual");
         Football.ball_slope = (20-KickMarker.level)/(15*kickAccuracy);
         uniqueEvents = true;
 

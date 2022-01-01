@@ -11,6 +11,7 @@ public class KickMarker extends Entity {
 
     public static float level = 0;
 
+    public static boolean stop = false;
     public boolean increasing = true;
 
     public KickMarker(Transform transform) {
@@ -23,15 +24,17 @@ public class KickMarker extends Entity {
 
     @Override
     public void update(float delta, Window window, Camera camera, World world) {
-        if (level == 20)
-            increasing = false;
-        if (level == 0)
-            increasing = true;
+        if (! stop) {
+            if (level == 20)
+                increasing = false;
+            if (level == 0)
+                increasing = true;
 
-        if (increasing) {
-            level += .5f;
-        } else {
-            level -= .5f;
+            if (increasing) {
+                level += .5f;
+            } else {
+                level -= .5f;
+            }
         }
 
 

@@ -12,7 +12,7 @@ public class GameManager {
     public static float xMin;
     public static float xEndzoneLeft;
     public static float xEndzoneRight;
-    public static float ballPosX = 192f;
+    public static float ballPosX = 223f;
     public static float ballPosY = -250f;
     public static int down = 0;
     public static float firstDownLine = ballPosX + 20;
@@ -31,7 +31,7 @@ public class GameManager {
     public static int awayScore = 0;
     public static double previousKnownTime = Timer.getTime();
     public static boolean runClock = false;
-    public static boolean kickoff = false;
+    public static boolean kickoff = true;
     public static boolean pat = false;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
