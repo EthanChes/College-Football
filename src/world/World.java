@@ -322,6 +322,9 @@ public class World {
             if (gameManager.touchDown(this)) {
                 System.out.println("Touchdown Offense");
             }
+
+            if (! Entity.canPlay && Entity.playStart) // Updates play status (Kickoffs + PATs) after play has ended
+            GameManager.postUpdate();
         }
 
         Entity.selectOffensivePlayer(window, this);
@@ -549,40 +552,80 @@ public class World {
         } else {
             List<Entity> offensive = new ArrayList<Entity>();
 
-            // Random Offensive Play
+            // Add Random KickReturn
             Random rand = new Random(); // Replace With Versatile Play Function
             int random = rand.nextInt(3) + 1;
 
-            switch (random) {
-                case 1:
-                    T_Form_FB_Dive TFBDive = new T_Form_FB_Dive(GameManager.ballPosX, GameManager.ballPosY);
-                    offensive.addAll(TFBDive.getEntities());
-                    break;
-                case 2:
-                    Spread_Inside_Cut_Deep cutDeep = new Spread_Inside_Cut_Deep(GameManager.ballPosX, GameManager.ballPosY);
-                    offensive.addAll(cutDeep.getEntities());
-                    break;
-                case 3:
-                    T_Form_HB_Stretch THBStretch = new T_Form_HB_Stretch(GameManager.ballPosX, GameManager.ballPosY);
-                    offensive.addAll(THBStretch.getEntities());
-                    break;
-            }
+            if (GameManager.kickoff) {
+                switch (random) {
+                    case 1:
+                        Kickoff kickoff = new Kickoff(GameManager.ballPosX, GameManager.ballPosY);
+                        offense.addAll(kickoff.getEntities());
+                        break;
+                    case 2:
+                        Kickoff k = new Kickoff(GameManager.ballPosX, GameManager.ballPosY);
+                        offense.addAll(k.getEntities());
+                        break;
+                    case 3:
+                        Kickoff kick = new Kickoff(GameManager.ballPosX, GameManager.ballPosY);
+                        offense.addAll(kick.getEntities());
+                        break;
+                }
 
-            switch (SelectPlay.getPlayID()) {
-                case 1 : Cover1 cover1 = new Cover1(GameManager.ballPosX, GameManager.ballPosY);
-                    entities.addAll(cover1.getEntities());
-                    break;
-                case 2 :
-                    FS_Blitz fs_blitz = new FS_Blitz(GameManager.ballPosX, GameManager.ballPosY);
-                    entities.addAll(fs_blitz.getEntities());
-                    break;
-                case 3 :
-                    Cover3 cover3 = new Cover3(GameManager.ballPosX, GameManager.ballPosY);
-                    entities.addAll(cover3.getEntities());
-                    break;
-            }
+                switch (SelectPlay.getPlayID()) {
+                    case 1:
+                        KickReturn kickReturn = new KickReturn(GameManager.ballPosX, GameManager.ballPosY);
+                        entities.addAll(kickReturn.getEntities());
+                        break;
+                    case 2:
+                        KickReturn kReturn = new KickReturn(GameManager.ballPosX, GameManager.ballPosY);
+                        entities.addAll(kReturn.getEntities());
+                        break;
+                    case 3:
+                        KickReturn kr = new KickReturn(GameManager.ballPosX, GameManager.ballPosY);
+                        entities.addAll(kr.getEntities());
+                        break;
+                }
 
-            entities.addAll(offensive);
+                entities.addAll(offense);
+            } else {
+
+                // Random Offensive Play
+                Random rands = new Random(); // Replace With Versatile Play Function
+                int randNum = rands.nextInt(3) + 1;
+
+                switch (randNum) {
+                    case 1:
+                        T_Form_FB_Dive TFBDive = new T_Form_FB_Dive(GameManager.ballPosX, GameManager.ballPosY);
+                        offensive.addAll(TFBDive.getEntities());
+                        break;
+                    case 2:
+                        Spread_Inside_Cut_Deep cutDeep = new Spread_Inside_Cut_Deep(GameManager.ballPosX, GameManager.ballPosY);
+                        offensive.addAll(cutDeep.getEntities());
+                        break;
+                    case 3:
+                        T_Form_HB_Stretch THBStretch = new T_Form_HB_Stretch(GameManager.ballPosX, GameManager.ballPosY);
+                        offensive.addAll(THBStretch.getEntities());
+                        break;
+                }
+
+                switch (SelectPlay.getPlayID()) {
+                    case 1:
+                        Cover1 cover1 = new Cover1(GameManager.ballPosX, GameManager.ballPosY);
+                        entities.addAll(cover1.getEntities());
+                        break;
+                    case 2:
+                        FS_Blitz fs_blitz = new FS_Blitz(GameManager.ballPosX, GameManager.ballPosY);
+                        entities.addAll(fs_blitz.getEntities());
+                        break;
+                    case 3:
+                        Cover3 cover3 = new Cover3(GameManager.ballPosX, GameManager.ballPosY);
+                        entities.addAll(cover3.getEntities());
+                        break;
+                }
+
+                entities.addAll(offensive);
+            }
 
         }
         setBallCarrier(this.getFootballEntity());

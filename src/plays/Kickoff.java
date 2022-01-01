@@ -12,7 +12,8 @@ public class Kickoff {
             entities = new ArrayList<Entity>();
             entities.add(new Kicker(new Transform(ballX - 3, ballY + 1)));
             entities.get(0).setRoute(0);
-            entities.get(0).forceUserControl = true;
+            if (GameManager.userOffense)
+                entities.get(0).forceUserControl = true;
 
             // Add Chasers
             entities.add(new RunningBack(new Transform(ballX,ballY + 2)));
