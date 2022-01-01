@@ -35,6 +35,7 @@ public class GameManager {
     public static boolean pat = false;
     public static boolean scoreHome = false;
     public static boolean scoreAway = false;
+    public static boolean touchback = false;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
         this.yMax = yMax;
@@ -109,6 +110,13 @@ public class GameManager {
                 } else if (world.getBallCarrier().transform.pos.y > -235.13287) {
                     return true;
                 } else if (world.getBallCarrier().transform.pos.y < -266.79953) {
+                    return true;
+                }
+            }
+            if (Football.punt || Football.kickoff) {
+                if (world.getBallCarrier().transform.pos.x > 354.5f) {
+                    Entity.canPlay = false;
+                    touchback = true;
                     return true;
                 }
             }
@@ -191,6 +199,13 @@ public class GameManager {
             kickoff = true;
             if ((! GameManager.userHome && GameManager.userOffense) || GameManager.userHome && ! GameManager.userOffense)
                 GameManager.userOffense = true;
+        }
+
+        if (touchback) {
+            Entity.incompletePass = true;
+            GameManager.ballPosX = 304;
+            GameManager.ballPosY = -250f;
+            Football.keepMoving = true;
         }
     }
 

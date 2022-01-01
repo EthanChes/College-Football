@@ -24,6 +24,8 @@ public class Football extends Entity {
     public static float wideReceiverX;
     public static float wideReceiverY;
     public static boolean gotWideReceiverPos = true;
+    public static boolean keepMoving = false;
+    public static boolean puntEndsInBounds = false;
 
     public static double passDropStart = 0;
     public static Vector2f fumbleMovements = new Vector2f();
@@ -202,6 +204,7 @@ public class Football extends Entity {
 
         if (punt) {
             if (gotWideReceiverPos) {
+                Entity.turnover = true;
                 world.setBallCarrier(this);
                 speed = world.getQuarterbackEntity().kickPower*3*delta;
                 throw_height = world.getQuarterbackEntity().kickPower*3.5f;
@@ -270,7 +273,7 @@ public class Football extends Entity {
             }
         }
 
-        if (canPlay) {
+        if (canPlay || keepMoving) {
             move(movement);
         }
 
