@@ -14,6 +14,7 @@ public class SelectPlay {
     private static Camera camera;
     private static TileSheet sheet;
     private static TileSheet special;
+    private static TileSheet numbers;
 
     private float x;
     private int tileID;
@@ -42,6 +43,8 @@ public class SelectPlay {
             }
         }
 
+        numbers = new TileSheet("INVISIBLENUMBERS.png",4);
+
         this.x = x;
         this.tileID = tileID;
 
@@ -64,19 +67,34 @@ public class SelectPlay {
         sheet.bindTile(shader, tileID);
         Assets.getModel().render();
 
-        mat.translate(2,0,0);
+        mat.translate(0,1.8f,0);
+        shader.setUniform("projection",mat);
+        numbers.bindTile(shader,1);
+        Assets.getModel().render();
+
+        mat.translate(2,-1.8f,0);
         shader.setUniform("projection", mat);
         sheet.bindTile(shader, tileID + 1);
         Assets.getModel().render();
 
-        mat.translate(2,0,0);
+        mat.translate(0,1.8f,0);
+        shader.setUniform("projection",mat);
+        numbers.bindTile(shader,2);
+        Assets.getModel().render();
+
+        mat.translate(2,-1.8f,0);
         shader.setUniform("projection", mat);
         sheet.bindTile(shader, tileID + 2);
         Assets.getModel().render();
 
+        mat.translate(0,1.8f,0);
+        shader.setUniform("projection",mat);
+        numbers.bindTile(shader,3);
+        Assets.getModel().render();
+
         if (! GameManager.kickoff) {
-            camera.getUntransformedProjection().scale(50,mat);
-            mat.translate(5.5f,3.1f,0);
+            camera.getUntransformedProjection().scale(75,mat);
+            mat.translate(3.3f,-2.4f,0);
             shader.setUniform("projection",mat);
             special.bindTile(shader, 0);
             Assets.getModel().render();
