@@ -33,6 +33,8 @@ public class GameManager {
     public static boolean runClock = false;
     public static boolean kickoff = false;
     public static boolean pat = false;
+    public static boolean scoreHome = false;
+    public static boolean scoreAway = false;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
         this.yMax = yMax;
@@ -177,8 +179,19 @@ public class GameManager {
     }
 
     public static void postUpdate() {
-        if (kickoff)
+        if (kickoff) {
             kickoff = false;
+        }
+        if (scoreHome) {
+            kickoff = true;
+            if ((GameManager.userHome && GameManager.userOffense) || ! GameManager.userHome && ! GameManager.userOffense)
+                GameManager.userOffense = false;
+        }
+        if (scoreAway) {
+            kickoff = true;
+            if ((! GameManager.userHome && GameManager.userOffense) || GameManager.userHome && ! GameManager.userOffense)
+                GameManager.userOffense = true;
+        }
     }
 
     public static void updateTimer(double time) {

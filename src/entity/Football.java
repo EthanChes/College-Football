@@ -242,12 +242,18 @@ public class Football extends Entity {
                 throw_height = 0;
                 System.out.println("GOOD");
 
-                if (GameManager.userHome && GameManager.userOffense)
+                if (GameManager.userHome && GameManager.userOffense) {
                     GameManager.homeScore += 3;
-                else if (! GameManager.userHome && ! GameManager.userOffense)
+                    GameManager.scoreHome = true;
+                }
+                else if (! GameManager.userHome && ! GameManager.userOffense) {
                     GameManager.homeScore += 3;
-                else
+                    GameManager.scoreHome = true;
+                }
+                else {
                     GameManager.awayScore += 3;
+                    GameManager.scoreAway = true;
+                }
             }
 
             if (throw_height > 0) {
