@@ -242,7 +242,7 @@ public class Football extends Entity {
 
             movement.add(speed,ball_slope*speed);
 
-            if (this.transform.pos.x > world.getGoalPost().transform.pos.x && this.transform.pos.y < world.getGoalPost().transform.pos.y + 5 && this.transform.pos.y > world.getGoalPost().transform.pos.y - 5 && throw_height > 2 && ! fieldGoalScored) {
+            if (this.transform.pos.x > world.getGoalPost().transform.pos.x && this.transform.pos.y < world.getGoalPost().transform.pos.y + 5 && this.transform.pos.y > world.getGoalPost().transform.pos.y - 5 && throw_height > 0 && ! fieldGoalScored) {
                 fieldGoalScored = true;
                 System.out.println("GOOD");
 
