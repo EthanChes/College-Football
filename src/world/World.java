@@ -362,7 +362,7 @@ public class World {
         Entity.selectOffensivePlayer(window, this);
         Entity.selectDefensivePlayer(window, this);
 
-        GameManager.updateTimer(Timer.getTime(), this);
+        GameManager.updateTimer(Timer.getTime(), this, window);
 
         if (Entity.playStart && ! Entity.canPlay)
             GameManager.postUpdate(window);

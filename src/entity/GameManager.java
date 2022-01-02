@@ -350,35 +350,32 @@ public class GameManager {
                 GameManager.runClock = true;
             }
 
-            if (timeLeft <= 0) {
-                // Update Next Quarter
-                if (quarter <= 3) {
-                    quarter++;
-                    timeLeft = 300;
-                } else {
-                    System.out.println("GAME OVER");
-                    win.closeWindow();
+            if (! pat) {
+                if (timeLeft <= 0) {
+                    // Update Next Quarter
+                    if (quarter <= 3) {
+                        quarter++;
+                        timeLeft = 300;
+                    } else {
+                        endGame(win);
 
-                    // Add End of Game Stuff Here
+                        // Add End of Game Stuff Here
+                    }
                 }
-
-                // Prepare next kickoff
-                if (quarter == 3) {
-                    kickoff = true;
-                    if (homeDefer)
-                        userOffense = false;
-                    else
-                        userOffense = true;
-                }
-
-
-
             }
 
+            // Prepare next kickoff
+            if (quarter == 3) {
+                kickoff = true;
+                if (homeDefer)
+                    userOffense = false;
+                else
+                    userOffense = true;
+            }
         }
     }
 
-    public static void updateTimer(double time, World world) {
+    public static void updateTimer(double time, World world, Window win) {
         // Update Timer if Clock should be running
         if (runClock && hasEntities) {
 
@@ -386,7 +383,6 @@ public class GameManager {
 
             if (! appliedTimeCut && ! Entity.canPlay && ! Entity.playStart) {
                 appliedTimeCut = true;
-
                 if (! GameManager.userOffense) {
                     if (userHome) {
                         switch (homeTimeStrategy) {
@@ -417,8 +413,14 @@ public class GameManager {
             playClock -= (time - previousKnownTime);
         }
 
-        if (timeLeft < 0)
+        if (timeLeft <= 0) {
+
+            if (! Entity.playStart && ! Entity.canPlay && ! pat && quarter == 4) {
+                endGame(win);
+            }
+
             timeLeft = 0;
+        }
 
         if (playClock <= 0) { // DOG Penalty
             playClock = 0;
@@ -443,6 +445,11 @@ public class GameManager {
     public static void printDownInfo() {
         System.out.println(firstDownLine + " " + ballPosX);
         System.out.println(down + " & " + (firstDownLine - ballPosX)/2);
+    }
+
+    public static void endGame(Window win) {
+        System.out.println("GAME OVER");
+        win.closeWindow();
     }
 
     public float getBallPosX() { return ballPosX; }
