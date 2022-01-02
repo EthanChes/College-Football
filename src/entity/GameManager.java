@@ -120,10 +120,8 @@ public class GameManager {
             }
             if (Football.punt || Football.kickoff) {
                 if (world.getBallCarrier().transform.pos.x > 354.5f) {
-                    if (world.getBallCarrier() == world.getFootballEntity() && Entity.throw_height < 0) {
-                        Entity.canPlay = false;
-                        touchback = true;
-                    }
+                    Entity.canPlay = false;
+                    touchback = true;
                     Football.keepMoving = true;
                     return true;
                 }
@@ -235,7 +233,6 @@ public class GameManager {
         if (! Entity.turnover && ! pat && ! kickoff) {
             if (world.getBallCarrier() != null && !Entity.incompletePass) {
                 this.ballPosX = world.getFootballEntity().transform.pos.x - .6f;
-                System.out.println("RUNS");
                 System.out.println(pat);
             }
 
@@ -245,7 +242,6 @@ public class GameManager {
                 System.out.println("FIRST DOWN");
             }
         } else if (! pat && ! kickoff) {
-            System.out.println("RUNNING");
             // Set Ball Pos
             System.out.println(world.getFootballEntity().transform.pos.x);
             if (! Entity.incompletePass)
@@ -280,10 +276,10 @@ public class GameManager {
         }
 
         if (ballPosX < 153f) {
-            if ((GameManager.userOffense && GameManager.userHome) || (!GameManager.userOffense && !GameManager.userHome)) {
-                scoreHome = true; homeScore += 2; kickoff = true;
+            if (((GameManager.userOffense && GameManager.userHome) || (!GameManager.userOffense && !GameManager.userHome)) && ! touchback) {
+                scoreHome = true; awayScore += 2; kickoff = true;
             } else {
-                scoreAway = true; awayScore += 2; kickoff = true;
+                scoreAway = true; homeScore += 2; kickoff = true;
             }
 
             GameManager.ballPosX = 223;
@@ -327,17 +323,17 @@ public class GameManager {
             if (scoreHome) {
                 kickoff = true;
                 if ((GameManager.userHome && GameManager.userOffense) || (!GameManager.userHome && !GameManager.userOffense))
-                    GameManager.userOffense = false;
-                else {
                     GameManager.userOffense = true;
+                else {
+                    GameManager.userOffense = false;
                 }
             }
             if (scoreAway) {
                 kickoff = true;
                 if ((!GameManager.userHome && GameManager.userOffense) || (GameManager.userHome && !GameManager.userOffense)) {
-                    GameManager.userOffense = true;
-                } else {
                     GameManager.userOffense = false;
+                } else {
+                    GameManager.userOffense = true;
                 }
             }
 
