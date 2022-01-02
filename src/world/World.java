@@ -601,7 +601,15 @@ public class World {
                     break;
             }
         } else { // Regular Plays
-            if (GameManager.ballPosX > GameManager.xEndzoneRight - 70 && GameManager.down == 4 && true) { // Replace True with late Game down by > 4 < 14 (Field Goal)
+            // Calculate Score difference
+            int scoreDiff;
+            if (GameManager.userHome) {
+                scoreDiff = GameManager.awayScore - GameManager.homeScore;
+            } else {
+                scoreDiff = GameManager.homeScore - GameManager.awayScore;
+            }
+
+            if ((GameManager.ballPosX > GameManager.xEndzoneRight - 70 && GameManager.down == 4 && true) || (GameManager.pat && GameManager.quarter == 4 && ! (scoreDiff == -2 || scoreDiff == -5 || scoreDiff == 1))) { // Replace True with late Game down by > 4 < 14 (Field Goal)
                 FieldGoal fg = new FieldGoal(GameManager.ballPosX, GameManager.ballPosY);
                 offense.addAll(fg.getEntities());
             } else if (GameManager.down == 4 && true) { // Replace True with late Game Down By >= 1 (Punt)
