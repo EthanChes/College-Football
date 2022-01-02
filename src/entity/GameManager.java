@@ -165,14 +165,14 @@ public class GameManager {
                 timePlayEnd = Timer.getTime();
                 if ((GameManager.userHome && GameManager.userOffense) || (!GameManager.userHome && !GameManager.userOffense)) {
                     if (! pat) {
-                        awayScore += 6; shouldPAT = true;
+                        awayScore += 6; shouldPAT = true; if (GameManager.userOffense) GameManager.userOffense = false; else GameManager.userOffense = true;
                     }
                     else {
                         awayScore += 2; kickoff = true;
                     }
                 } else {
                     if (! pat) {
-                        homeScore += 6; shouldPAT = true;
+                        homeScore += 6; shouldPAT = true; if (GameManager.userOffense) GameManager.userOffense = false; else GameManager.userOffense = true;
                     } else {
                         homeScore += 2; kickoff = true;
                     }
