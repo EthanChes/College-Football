@@ -86,14 +86,6 @@ public class main {
                         glfwSetWindowShouldClose(window.getWindow(), true);
                     }
 
-                    if (window.getInput().isKeyPressed(GLFW_KEY_R)) {
-
-                        world.initReset();
-                        camera.setProjection(640,480);
-                        camera.setProjMultiplierX(1);
-                        camera.setProjMultiplierY(1);
-                    }
-
                     world.update((float) frame_cap, window, camera);
 
                     world.correctCamera(camera,window);

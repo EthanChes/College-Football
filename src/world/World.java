@@ -246,6 +246,17 @@ public class World {
 
 
     public void update(float delta, Window window, Camera camera) {
+        if (! Entity.canPlay && Entity.playStart && GameManager.timePlayEnd == 0) {
+            GameManager.timePlayEnd = Timer.getTime();
+        }
+
+        if (GameManager.timePlayEnd + 2 < Timer.getTime() && GameManager.timePlayEnd != 0) {
+            this.initReset();
+            camera.setProjection(640,480);
+            camera.setProjMultiplierX(1);
+            camera.setProjMultiplierY(1);
+        }
+
         for (Entity entity : entities) {
             entity.update(delta,window,camera,this);
 
