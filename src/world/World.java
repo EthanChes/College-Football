@@ -365,7 +365,7 @@ public class World {
         GameManager.updateTimer(Timer.getTime(), this);
 
         if (Entity.playStart && ! Entity.canPlay)
-            GameManager.postUpdate();
+            GameManager.postUpdate(window);
 
         if (Entity.canPlay && ! GameManager.kickoff && ! GameManager.pat)
             GameManager.runClock = true;

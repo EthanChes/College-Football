@@ -2,8 +2,11 @@ package entity;
 
 import entity.Entity;
 import gameplay.Timer;
+import graphics.Window;
 import org.joml.Vector2f;
 import world.World;
+
+import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 
 public class GameManager {
     public static float yMax;
@@ -21,11 +24,11 @@ public class GameManager {
     public static boolean selectedPlay = false;
     public static boolean hasEntities = false;
     public static double timePlayEnd = 0;
-    public static int homeID = 1;
-    public static int awayID = 0;
-    public static float timeLeft = 300; // seconds
+    public static int homeID = 2;
+    public static int awayID = 7;
+    public static float timeLeft = 10; // seconds
     public static float playClock = 20; // seconds
-    public static int quarter = 1;
+    public static int quarter = 4;
     public static boolean userHome = true;
     public static int homeScore = 0;
     public static int awayScore = 0;
@@ -305,7 +308,7 @@ public class GameManager {
         }
     }
 
-    public static void postUpdate() {
+    public static void postUpdate(Window win) {
         if (!hasUpdated) {
             hasUpdated = true;
 
@@ -346,6 +349,32 @@ public class GameManager {
             } else {
                 GameManager.runClock = true;
             }
+
+            if (timeLeft <= 0) {
+                // Update Next Quarter
+                if (quarter <= 3) {
+                    quarter++;
+                    timeLeft = 300;
+                } else {
+                    System.out.println("GAME OVER");
+                    win.closeWindow();
+
+                    // Add End of Game Stuff Here
+                }
+
+                // Prepare next kickoff
+                if (quarter == 3) {
+                    kickoff = true;
+                    if (homeDefer)
+                        userOffense = false;
+                    else
+                        userOffense = true;
+                }
+
+
+
+            }
+
         }
     }
 
@@ -386,10 +415,10 @@ public class GameManager {
 
         if (! Entity.playStart && ! Entity.canPlay && hasEntities) {
             playClock -= (time - previousKnownTime);
-
-
-
         }
+
+        if (timeLeft < 0)
+            timeLeft = 0;
 
         if (playClock <= 0) { // DOG Penalty
             playClock = 0;

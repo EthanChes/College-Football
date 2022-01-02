@@ -17,6 +17,10 @@ public class Window {
         setFullscreen(false);
     }
 
+    public void closeWindow() {
+        glfwSetWindowShouldClose(window, true);
+    }
+
     public void createWindow(String title) {
         window = glfwCreateWindow(width, height, title, fullscreen ? glfwGetPrimaryMonitor() : 0, 0); // If fullscreen is true then pass Primary Monitor, if false then pass 0
 
