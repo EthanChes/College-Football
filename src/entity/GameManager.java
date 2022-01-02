@@ -26,7 +26,7 @@ public class GameManager {
     public static float timeLeft = 300; // seconds
     public static float playClock = 20; // seconds
     public static int quarter = 1;
-    public static boolean userHome = false;
+    public static boolean userHome = true;
     public static int homeScore = 0;
     public static int awayScore = 0;
     public static double previousKnownTime = Timer.getTime();
@@ -275,6 +275,19 @@ public class GameManager {
             GameManager.ballPosY = -250f;
 
             firstDownLine = 223;
+        }
+
+        if (ballPosX < 153f) {
+            if ((GameManager.userOffense && GameManager.userHome) || (!GameManager.userOffense && !GameManager.userHome)) {
+                scoreHome = true; homeScore += 2; kickoff = true;
+            } else {
+                scoreAway = true; awayScore += 2; kickoff = true;
+            }
+
+            GameManager.ballPosX = 223;
+            System.out.println("KICKOFF");
+            GameManager.ballPosY = -250;
+
         }
 
     }
