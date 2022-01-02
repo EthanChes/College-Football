@@ -49,6 +49,7 @@ public class DefensiveBack extends Entity {
         zoneCoverage = 10f;
 
         defensiveBack = true;
+        defender = true;
     }
 
     public void catching() {

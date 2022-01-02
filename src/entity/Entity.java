@@ -51,6 +51,7 @@ public abstract class Entity {
     public double lastAnimationChange = -1;
     public int guardedReceiver = 0;
     public float degrees = 0;
+    public boolean defender = false;
     public boolean defensiveBack = false;
 
     // Player Info

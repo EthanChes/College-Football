@@ -38,6 +38,7 @@ public class GameManager {
     public static boolean scoreAway = false;
     public static boolean touchback = false;
     public static boolean gameStarted = false;
+    public static boolean touchDown = false;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
         this.yMax = yMax;
@@ -127,8 +128,44 @@ public class GameManager {
     }
 
     public boolean touchDown(World world) { // Check If TD (Offense)
-        if (world.getBallCarrier().transform.pos.x > xEndzoneRight && world.getBallCarrier().transform.pos.x < xMax && world.getBallCarrier() != world.getFootballEntity()) {
+        if (world.getBallCarrier().transform.pos.x > xEndzoneRight && world.getBallCarrier().transform.pos.x < xMax && world.getBallCarrier() != world.getFootballEntity() && ! world.getBallCarrier().defender) {
+            if (timePlayEnd == 0) {
+                timePlayEnd = Timer.getTime();
+                if ((GameManager.userHome && GameManager.userOffense) || (!GameManager.userHome && !GameManager.userOffense)) {
+                    homeScore += 6;
+                } else {
+                    awayScore += 6;
+                }
+            }
+
+            if (timePlayEnd + .5f > Timer.getTime()) {
+                world.getBallCarrier().useAnimation(1);
+                world.getBallCarrier().move(new Vector2f(world.getBallCarrier().speed/60,0));
+            }
+
             return true;
+        }
+        return false;
+    }
+
+    public boolean defensiveTouchDown(World world) {
+        if (world.getBallCarrier().transform.pos.x < xEndzoneLeft && world.getBallCarrier().transform.pos.x < xMax && world.getBallCarrier() != world.getFootballEntity() && world.getBallCarrier().defender) {
+            if (timePlayEnd == 0) {
+                timePlayEnd = Timer.getTime();
+                if ((GameManager.userHome && GameManager.userOffense) || (!GameManager.userHome && !GameManager.userOffense)) {
+                    awayScore += 6;
+                } else {
+                    homeScore += 6;
+                }
+            }
+
+            if (timePlayEnd + .5f > Timer.getTime()) {
+                world.getBallCarrier().useAnimation(1);
+                world.getBallCarrier().move(new Vector2f(-world.getBallCarrier().speed/60,0));
+            }
+
+            return true;
+
         }
         return false;
     }

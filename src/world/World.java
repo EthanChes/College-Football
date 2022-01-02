@@ -338,8 +338,12 @@ public class World {
                 Entity.canPlay = false;
             }
 
-            if (gameManager.touchDown(this)) {
+            if (gameManager.touchDown(this) && getBallCarrier() != getFootballEntity() && ! getBallCarrier().defender) {
                 System.out.println("Touchdown Offense");
+                Entity.canPlay = false;
+            } else if (gameManager.defensiveTouchDown(this) && getBallCarrier() != getFootballEntity() && getBallCarrier().defender) {
+                System.out.println("Touchdown Defense");
+                Entity.canPlay = false;
             }
 
             if (! Entity.canPlay && Entity.playStart) // Updates play status (Kickoffs + PATs) after play has ended
@@ -458,6 +462,7 @@ public class World {
     public Entity getBallCarrier() { return ballCarrier; }
 
     public void initReset() {
+        GameManager.touchDown = false;
         GameManager.touchback = false;
         GameManager.playClock = 20;
         GameManager.selectedPlay = false;

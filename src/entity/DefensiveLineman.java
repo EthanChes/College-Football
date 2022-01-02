@@ -27,6 +27,8 @@ public class DefensiveLineman extends Entity {
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/defensiveline"));
         speed = 7f; // 8
         strength = 10f; // 10
+
+        defender = true;
     }
 
     public Vector2f pursuit(Entity ballCarrier, float delta, World world) {
