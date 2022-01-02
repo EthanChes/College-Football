@@ -19,7 +19,7 @@ public class Kicker extends Entity {
 
     public boolean hasKicked = false;
     public boolean canStart = false;
-    public double timeKicked = 0;
+    public static double timeKicked = 0;
     public boolean preventDoubleKick = true;
 
     public Kicker(Transform transform) {
@@ -39,13 +39,41 @@ public class Kicker extends Entity {
     }
 
     public void kick(Window window) {
-        if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && ! playStart && GameManager.selectedPlay) {
-            canStart = true;
-            KickMarker.stop = true;
+        if (GameManager.userOffense) {
+            if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && !playStart && GameManager.selectedPlay) {
+                canStart = true;
+                KickMarker.stop = true;
+            }
+        }
+        else {
+            int preferredSnapTime = 10;
+            if (GameManager.userHome) {
+                switch (GameManager.homeTimeStrategy) {
+                    case 0 : preferredSnapTime = 10; break;
+                    case 1 : preferredSnapTime = 15; break;
+                    case 2 : preferredSnapTime = 3; break;
+                }
+            } else {
+                switch (GameManager.awayTimeStrategy) {
+                    case 0 : preferredSnapTime = 10; break;
+                    case 1 : preferredSnapTime = 15; break;
+                    case 2 : preferredSnapTime = 3; break;
+                }
+            }
+
+            if (GameManager.playClock <= preferredSnapTime) {
+                canStart = true;
+            }
+
         }
     }
 
     public void kickoff(World world) {
+        if (! GameManager.userOffense) {
+            Random rand = new Random();
+            KickMarker.level = rand.nextInt(10) + 10;
+        }
+
         Football.kickoff = true;
         this.kickPower -= (20 - KickMarker.level)/10;
         System.out.println(KickMarker.level + " Actual");
@@ -69,6 +97,11 @@ public class Kicker extends Entity {
     }
 
     public void punt(World world) {
+        if (! GameManager.userOffense) {
+            Random rand = new Random();
+            KickMarker.level = rand.nextInt(10) + 10;
+        }
+
         Football.punt = true;
         this.kickPower -= ((20 - KickMarker.level)/10);
         System.out.println(KickMarker.level + " Actual");
@@ -93,6 +126,11 @@ public class Kicker extends Entity {
     }
 
     public void fieldGoal(World world) {
+        if (! GameManager.userOffense) {
+            Random rand = new Random();
+            KickMarker.level = rand.nextInt(10) + 10;
+        }
+
         Football.fieldGoal = true;
         this.kickPower -= ((20 - KickMarker.level)/10);
         System.out.println(KickMarker.level + " Actual");
@@ -134,7 +172,8 @@ public class Kicker extends Entity {
             movement.add(speed*delta,0);
         }
 
-        kick(window);
+        if (! playStart)
+           kick(window);
 
         if (canStart) {
             if (!uniqueEvents) {
@@ -163,7 +202,8 @@ public class Kicker extends Entity {
                     case 1: // Field Goal
                         if (canStart) {
                             if (! hasKicked) {
-                                snap(window, world);
+                                if (! playStart)
+                                    snap(window, world);
                                 if (world.getQuarterbackEntity().hasBall) {
                                     movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
                                 }
@@ -186,7 +226,8 @@ public class Kicker extends Entity {
                     case 2: // Punt
                         if (canStart) {
                             if (! hasKicked) {
-                                snap(window, world);
+                                if (! playStart)
+                                    snap(window, world);
 
                                 if (this.transform.pos.distance(world.getFootballEntity().transform.pos) < .5f) {
                                     kickoffSnap();
@@ -245,7 +286,7 @@ public class Kicker extends Entity {
             useAnimation(ANIM_IDLE);
         }
 
-        if (! canStart) {
+        if (! canStart && GameManager.userOffense) {
             world.getKickMarker().transform.pos.set(this.transform.pos.x - 5, this.transform.pos.y - 12 + KickMarker.level/1.17f,0);
             world.getKickLevel().transform.pos.set(this.transform.pos.x - 5,this.transform.pos.y,0);
         } else {

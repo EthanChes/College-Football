@@ -463,6 +463,7 @@ public class World {
     public Entity getBallCarrier() { return ballCarrier; }
 
     public void initReset() {
+        Kicker.timeKicked = 0;
         gameManager.setBallPosX(this);
         gameManager.setBallPosY(this);
         GameManager.scoreAway = false;

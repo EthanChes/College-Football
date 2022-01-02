@@ -41,6 +41,8 @@ public class GameManager {
     public static boolean touchDown = false;
     public static boolean hasUpdated = false;
     public static boolean shouldPAT = false;
+    public static int homeTimeStrategy = 0;
+    public static int awayTimeStrategy = 0;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
         this.yMax = yMax;

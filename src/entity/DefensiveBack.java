@@ -643,6 +643,10 @@ public class DefensiveBack extends Entity {
             useAnimation(ANIM_FALL);
         }
 
+        if (Kicker.timeKicked + .3f > Timer.getTime()) {
+            canCollide = true;
+        }
+
     }
 
 

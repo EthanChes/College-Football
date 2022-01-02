@@ -51,6 +51,10 @@ public class FieldGoalBlock {
         defensiveBacks.get(10).uniqueEvents = true;
 
         entities.addAll(defensiveBacks);
+
+        for (int i = 0; i < 11; i++) {
+            entities.get(i).noCollision();
+        }
     }
 
     public List getEntities() { return entities; }

@@ -459,12 +459,38 @@ public abstract class Entity {
     }
 
     public boolean snap(Window window, World world) {
-        if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && ! playStart && GameManager.selectedPlay) {
-            world.getCountingUpEntity(14).useAnimation(6);
-            timeSnapped = Timer.getTime();
-            canPlay = true;
-            playStart = true;
-            return true;
+        if (GameManager.userOffense) {
+            if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && !playStart && GameManager.selectedPlay) {
+                world.getCountingUpEntity(14).useAnimation(6);
+                timeSnapped = Timer.getTime();
+                canPlay = true;
+                playStart = true;
+                return true;
+            }
+        } else {
+            int preferredSnapTime = 10;
+            if (GameManager.userHome) {
+                switch (GameManager.homeTimeStrategy) {
+                    case 0 : preferredSnapTime = 10; break;
+                    case 1 : preferredSnapTime = 15; break;
+                    case 2 : preferredSnapTime = 3; break;
+                }
+            } else {
+                switch (GameManager.awayTimeStrategy) {
+                    case 0 : preferredSnapTime = 10; break;
+                    case 1 : preferredSnapTime = 15; break;
+                    case 2 : preferredSnapTime = 3; break;
+                }
+            }
+
+            if (GameManager.playClock <= preferredSnapTime) {
+                world.getCountingUpEntity(14).useAnimation(6);
+                timeSnapped = Timer.getTime();
+                canPlay = true;
+                playStart = true;
+                return true;
+            }
+
         }
 
         return false;

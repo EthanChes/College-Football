@@ -244,7 +244,8 @@ public class Quarterback extends Entity {
             if (canPlay && ! pancaked) {
                 move(movement);
             }
-            else {
+            else if (! playStart) {
+                System.out.println("RUNNING");
                 snap(window,world);
             }
 
@@ -338,7 +339,7 @@ public class Quarterback extends Entity {
             if (canPlay && hasHandedOff && ! pancaked) {
                 move(movement);
             }
-            else {
+            else if (! playStart) {
                 snap(window,world);
             }
 
