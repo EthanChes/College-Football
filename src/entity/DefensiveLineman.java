@@ -91,10 +91,6 @@ public class DefensiveLineman extends Entity {
             uniqueEvents = true;
         }
 
-
-
-
-
         if (! userControl) {
             if (canPlay && (!uniqueEvents) && (!pancaked) && !isBeingMovedExternally) {
                 movement.add(pursuit(world.getBallCarrier(), delta, world));

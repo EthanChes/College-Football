@@ -490,7 +490,14 @@ public class DefensiveBack extends Entity {
                 if (this.transform.pos.x > 355) {
                     this.transform.pos.x = 355;
                 }
+
                 movement.add(moveToward(x, y, delta));
+            }
+        }
+
+        if (! userControl && route == -30) {
+            if (this.transform.pos.x > 355) {
+                this.transform.pos.x = 355;
             }
         }
 

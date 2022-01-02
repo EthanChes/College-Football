@@ -49,6 +49,7 @@ public class PuntReturn {
         defensiveBacks.add(new DefensiveBack(new Transform(ballX + 100, ballY)));
         defensiveBacks.get(0).setDefenderID(-1,defensiveBacks.get(10));
         defensiveBacks.get(10).uniqueEvents = true;
+        defensiveBacks.get(10).setRoute(-30);
 
         entities.addAll(defensiveBacks);
 
