@@ -32,13 +32,13 @@ public class Quarterback extends Entity {
 
     public Quarterback(Transform transform) {
         super(ANIM_SIZE,transform);
-        setAnimation(ANIM_IDLE, new Animation(1,1,"qbidle"));
-        setAnimation(ANIM_WALK, new Animation(4,16,"qbrun"));
-        setAnimation(ANIM_THROW, new Animation(2,4,"qbthrow"));
-        setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall"));
-        setAnimation(ANIM_HANDOFF, new Animation(1,1,"qbhandoff"));
-        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/quarterback"));
-        setAnimation(ANIM_RUN, new Animation(4, 16, "widereceiverrouterun"));
+        setAnimation(ANIM_IDLE, new Animation(1,1,"qbidle",true));
+        setAnimation(ANIM_WALK, new Animation(4,16,"qbrun",true));
+        setAnimation(ANIM_THROW, new Animation(2,4,"qbthrow",true));
+        setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall",true));
+        setAnimation(ANIM_HANDOFF, new Animation(1,1,"qbhandoff",true));
+        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/quarterback",true));
+        setAnimation(ANIM_RUN, new Animation(4, 16, "widereceiverrouterun",true));
         speed = 7f;
         strength = 10f;
         throw_accuracy = 10f;
@@ -245,7 +245,6 @@ public class Quarterback extends Entity {
                 move(movement);
             }
             else if (! playStart) {
-                System.out.println("RUNNING");
                 snap(window,world);
             }
 

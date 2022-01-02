@@ -21,8 +21,8 @@ public class GameManager {
     public static boolean selectedPlay = false;
     public static boolean hasEntities = false;
     public static double timePlayEnd = 0;
-    public static int homeID = 0;
-    public static int awayID = 1;
+    public static int homeID = 1;
+    public static int awayID = 0;
     public static float timeLeft = 300; // seconds
     public static float playClock = 20; // seconds
     public static int quarter = 1;

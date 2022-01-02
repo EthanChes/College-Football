@@ -25,9 +25,9 @@ public class Kicker extends Entity {
     public Kicker(Transform transform) {
         super(ANIM_SIZE, transform);
 
-        setAnimation(ANIM_IDLE, new Animation(1,1,"widereceiveridle"));
-        setAnimation(ANIM_MOVE, new Animation(4,16,"widereceiverrouterun"));
-        setAnimation(ANIM_KICK, new Animation(2,2, "kick"));
+        setAnimation(ANIM_IDLE, new Animation(1,1,"widereceiveridle",true));
+        setAnimation(ANIM_MOVE, new Animation(4,16,"widereceiverrouterun",true));
+        setAnimation(ANIM_KICK, new Animation(2,2, "kick",true));
     }
 
     public Vector2f runToBall(World world, float delta) {

@@ -28,14 +28,14 @@ public class OffensiveLineman extends Entity {
 
     public OffensiveLineman (Transform transform) {
         super(ANIM_SIZE,transform);
-        setAnimation(ANIM_IDLE, new Animation(1,1,"offensivelineidle"));
-        setAnimation(ANIM_MOVE, new Animation(3,12, "offensivelinemove"));
-        setAnimation(ANIM_BLOCK, new Animation(1,1, "offensivelineblock"));
-        setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall"));
-        setAnimation(ANIM_BLOCK_MOVING, new Animation(4, 16, "offensivelineblockmoving"));
-        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/offensiveline"));
-        setAnimation(ANIM_CENTER, new Animation(2, 4, "presnap/center"));
-        setAnimation(ANIM_PLACE_HOLDER, new Animation(1,1, "placeholder"));
+        setAnimation(ANIM_IDLE, new Animation(1,1,"offensivelineidle",true));
+        setAnimation(ANIM_MOVE, new Animation(3,12, "offensivelinemove",true));
+        setAnimation(ANIM_BLOCK, new Animation(1,1, "offensivelineblock",true));
+        setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall",true));
+        setAnimation(ANIM_BLOCK_MOVING, new Animation(4, 16, "offensivelineblockmoving",true));
+        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/offensiveline",true));
+        setAnimation(ANIM_CENTER, new Animation(2, 4, "presnap/center",true));
+        setAnimation(ANIM_PLACE_HOLDER, new Animation(1,1, "placeholder",true));
         speed = 3f;
         strength = 10f;
     }

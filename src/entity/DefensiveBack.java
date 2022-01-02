@@ -36,11 +36,11 @@ public class DefensiveBack extends Entity {
     public DefensiveBack(Transform transform) {
         super(ANIM_SIZE, transform);
         uniqueEvents = false;
-        setAnimation(ANIM_IDLE, new Animation(1, 1, "defensivelineidle"));
-        setAnimation(ANIM_MOVE, new Animation(4,16,"defensivemovement"));
-        setAnimation(ANIM_UNKNOWN, new Animation(0,0, "defensivelinemovement"));
-        setAnimation(ANIM_FALL, new Animation(1,1, "defensivefall"));
-        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/defensiveback"));
+        setAnimation(ANIM_IDLE, new Animation(1, 1, "defensivelineidle", false));
+        setAnimation(ANIM_MOVE, new Animation(4,16,"defensivemovement", false));
+        setAnimation(ANIM_UNKNOWN, new Animation(0,0, "defensivelinemovement", false));
+        setAnimation(ANIM_FALL, new Animation(1,1, "defensivefall", false));
+        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/defensiveback", false));
 
         speed = 10f;
         manCoverage = 8f;

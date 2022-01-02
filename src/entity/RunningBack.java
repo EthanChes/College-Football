@@ -24,11 +24,11 @@ public class RunningBack extends Entity {
 
     public RunningBack(Transform transform) {
         super(ANIM_SIZE, transform);
-        setAnimation(ANIM_IDLE, new Animation(1,1,"runningbackidle"));
-        setAnimation(ANIM_RUN_WITHOUT_BALL, new Animation(3,12, "runningbackmovewithoutball"));
-        setAnimation(ANIM_RUN_WITH_BALL, new Animation(3,12,"runningbackmovewithball"));
-        setAnimation(ANIM_IDLE_WITH_BALL, new Animation(1,1,"runningbackidlewithball"));
-        setAnimation(ANIM_FALL, new Animation(1,1, "offensivefall"));
+        setAnimation(ANIM_IDLE, new Animation(1,1,"runningbackidle",true));
+        setAnimation(ANIM_RUN_WITHOUT_BALL, new Animation(3,12, "runningbackmovewithoutball",true));
+        setAnimation(ANIM_RUN_WITH_BALL, new Animation(3,12,"runningbackmovewithball",true));
+        setAnimation(ANIM_IDLE_WITH_BALL, new Animation(1,1,"runningbackidlewithball",true));
+        setAnimation(ANIM_FALL, new Animation(1,1, "offensivefall",true));
         setRoute(1);
         strength = 8f;
         speed = 10f;
