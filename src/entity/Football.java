@@ -33,6 +33,7 @@ public class Football extends Entity {
     public static boolean fieldGoal = false;
     public static boolean kickoff = false;
     public static boolean punt = false;
+    public boolean fieldGoalScored = false;
 
     public Football(Transform transform) {
         super(ANIM_SIZE, transform);
@@ -241,9 +242,8 @@ public class Football extends Entity {
 
             movement.add(speed,ball_slope*speed);
 
-            if (this.transform.pos.x > world.getGoalPost().transform.pos.x && this.transform.pos.y < world.getGoalPost().transform.pos.y + 5 && this.transform.pos.y > world.getGoalPost().transform.pos.y - 5 && throw_height > 2) {
-                fieldGoal = false;
-                throw_height = 0;
+            if (this.transform.pos.x > world.getGoalPost().transform.pos.x && this.transform.pos.y < world.getGoalPost().transform.pos.y + 5 && this.transform.pos.y > world.getGoalPost().transform.pos.y - 5 && throw_height > 2 && ! fieldGoalScored) {
+                fieldGoalScored = true;
                 System.out.println("GOOD");
 
                 if (GameManager.userHome && GameManager.userOffense) {
@@ -270,6 +270,10 @@ public class Football extends Entity {
                     }
                     GameManager.scoreAway = true;
                 }
+            }
+
+            if (this.transform.pos.x - 20 > world.getGoalPost().transform.pos.x) {
+                throw_height = 0;
             }
 
             if (throw_height > 0) {
