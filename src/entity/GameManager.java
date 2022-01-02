@@ -43,6 +43,7 @@ public class GameManager {
     public static boolean shouldPAT = false;
     public static int homeTimeStrategy = 0;
     public static int awayTimeStrategy = 0;
+    public static boolean appliedPenalty = false;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
         this.yMax = yMax;
@@ -347,16 +348,33 @@ public class GameManager {
         }
     }
 
-    public static void updateTimer(double time) {
+    public static void updateTimer(double time, World world) {
         // Update Timer if Clock should be running
-        if (runClock) {
+        if (runClock && hasEntities) {
 
             timeLeft -= (time - previousKnownTime);
 
         }
 
-        if (! Entity.playStart && ! Entity.canPlay) {
+        if (! Entity.playStart && ! Entity.canPlay && hasEntities) {
             playClock -= (time - previousKnownTime);
+        }
+
+        if (playClock <= 0) { // DOG Penalty
+            playClock = 0;
+
+            if (timePlayEnd + 2 < Timer.getTime() && timePlayEnd != 0) {
+                world.initReset();
+            }
+
+            if (! appliedPenalty) {
+                world.getFootballEntity().transform.pos.x -= 10;
+                timePlayEnd = Timer.getTime();
+                appliedPenalty = true;
+            }
+
+            Entity.playStart = true;
+            Entity.canPlay = false;
         }
 
         previousKnownTime = time;

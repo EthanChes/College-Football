@@ -362,7 +362,7 @@ public class World {
         Entity.selectOffensivePlayer(window, this);
         Entity.selectDefensivePlayer(window, this);
 
-        GameManager.updateTimer(Timer.getTime());
+        GameManager.updateTimer(Timer.getTime(), this);
 
         if (Entity.playStart && ! Entity.canPlay)
             GameManager.postUpdate();
@@ -474,6 +474,7 @@ public class World {
     public Entity getBallCarrier() { return ballCarrier; }
 
     public void initReset() {
+        GameManager.appliedPenalty = false;
         Kicker.timeKicked = 0;
         gameManager.setBallPosX(this);
         gameManager.setBallPosY(this);
@@ -593,6 +594,24 @@ public class World {
         List<Entity> offense = new ArrayList<Entity>();
 
         Random rand = new Random();
+
+        // Set Timer on Playclock accordingly to play strategy
+        int playTimeNew = 20;
+        if (GameManager.userHome) {
+            switch (GameManager.homeTimeStrategy) {
+                case 0 : playTimeNew = 15; break;
+                case 1 : playTimeNew = 20; break;
+                case 2 : playTimeNew = 10; break;
+            }
+        } else {
+            switch (GameManager.homeTimeStrategy) {
+                case 0 : playTimeNew = 15; break;
+                case 1 : playTimeNew = 20; break;
+                case 2 : playTimeNew = 10; break;
+            }
+        }
+
+        GameManager.playClock = playTimeNew;
 
         if (GameManager.kickoff) { // Kickoff Plays
             // Add Random KickReturn
