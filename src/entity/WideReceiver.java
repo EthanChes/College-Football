@@ -31,7 +31,7 @@ public class WideReceiver extends Entity {
         setAnimation(ANIM_RUN_BALL, new Animation(4,16,"widereceiverrunwithball",true));
         setAnimation(ANIM_IDLE_BALL, new Animation(1,1,"widereceiveridlewithball",true));
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/receiver",true));
-        speed = 9f;
+        speed = 10f;
         catching = 10f;
         strength = 10f;
         totalReceivers++;

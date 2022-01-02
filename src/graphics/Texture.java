@@ -76,7 +76,7 @@ public class Texture {
                                 case 1 : if (pixel == offenseJersey) {pixel = 0xFF1b5e1f; } else if (pixel == pantsOriginal) { pixel = 0xFFffffff; } break;
                                 case 2 : if (pixel == offenseJersey) {pixel = 0xFFF56600; } else if (pixel == pantsOriginal) { pixel = 0xFFffffff; } break;
                                 case 3 : if (pixel == offenseJersey) {pixel = 0xFFBA0C2F; } else if (pixel == pantsOriginal) { pixel = 0xFFffffff; } break;
-                                case 4 : if (pixel == offenseJersey) {pixel = 0xFF3f51b5; } else if (pixel == pantsOriginal) { pixel = 0xFFffffff; } break;
+                                case 4 : if (pixel == offenseJersey) {pixel = 0xFFffffff; } else if (pixel == pantsOriginal) { pixel = 0xFFffffff; } break;
                                 case 5 : if (pixel == offenseJersey) {pixel = 0xFFBB0000; } else if (pixel == pantsOriginal) { pixel = 0xFFffffff; } break;
                                 case 6 : if (pixel == offenseJersey) {pixel = 0xFF154733; } else if (pixel == pantsOriginal) { pixel = 0xFF154733; } break;
                                 case 7 : if (pixel == offenseJersey) {pixel = 0xFF841617; } else if (pixel == pantsOriginal) { pixel = 0xFFFDF9D8; } break;
@@ -111,7 +111,7 @@ public class Texture {
                                 case 1 : if (pixel == defenseJersey) {pixel = 0xFF1b5e1f; } else if (pixel == pantsOriginal) { pixel = 0xFFffffff; } break;
                                 case 2 : if (pixel == defenseJersey) {pixel = 0xFFF56600; } else if (pixel == pantsOriginal) { pixel = 0xFFffffff; } break;
                                 case 3 : if (pixel == defenseJersey) {pixel = 0xFFBA0C2F; } else if (pixel == pantsOriginal) { pixel = 0xFFffffff; } break;
-                                case 4 : if (pixel == defenseJersey) {pixel = 0xFF3f51b5; } else if (pixel == pantsOriginal) { pixel = 0xFFffffff; } break;
+                                case 4 : if (pixel == defenseJersey) {pixel = 0xFFffffff; } else if (pixel == pantsOriginal) { pixel = 0xFFffffff; } break;
                                 case 5 : if (pixel == defenseJersey) {pixel = 0xFFBB0000; } else if (pixel == pantsOriginal) { pixel = 0xFFffffff; } break;
                                 case 6 : if (pixel == defenseJersey) {pixel = 0xFF154733; } else if (pixel == pantsOriginal) { pixel = 0xFF154733; } break;
                                 case 7 : if (pixel == defenseJersey) {pixel = 0xFF841617; } else if (pixel == pantsOriginal) { pixel = 0xFFFDF9D8; } break;
