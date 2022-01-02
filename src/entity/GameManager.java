@@ -44,6 +44,7 @@ public class GameManager {
     public static int homeTimeStrategy = 0;
     public static int awayTimeStrategy = 0;
     public static boolean appliedPenalty = false;
+    public static boolean appliedTimeCut = false;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
         this.yMax = yMax;
@@ -354,10 +355,40 @@ public class GameManager {
 
             timeLeft -= (time - previousKnownTime);
 
+            if (! appliedTimeCut && ! Entity.canPlay && ! Entity.playStart) {
+                appliedTimeCut = true;
+
+                if (! GameManager.userOffense) {
+                    if (userHome) {
+                        switch (homeTimeStrategy) {
+                            case 0:
+                                timeLeft -= 5;
+                                break;
+                            case 2:
+                                timeLeft -= 10;
+                                break;
+                        }
+                    } else {
+                        switch (awayTimeStrategy) {
+                            case 0:
+                                timeLeft -= 5;
+                                break;
+                            case 2:
+                                timeLeft -= 10;
+                                break;
+                        }
+                    }
+                }
+
+            }
+
         }
 
         if (! Entity.playStart && ! Entity.canPlay && hasEntities) {
             playClock -= (time - previousKnownTime);
+
+
+
         }
 
         if (playClock <= 0) { // DOG Penalty
