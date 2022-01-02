@@ -346,14 +346,15 @@ public class World {
                 Entity.canPlay = false;
             }
 
-            if (! Entity.canPlay && Entity.playStart) // Updates play status (Kickoffs + PATs) after play has ended
-            GameManager.postUpdate();
         }
 
         Entity.selectOffensivePlayer(window, this);
         Entity.selectDefensivePlayer(window, this);
 
         GameManager.updateTimer(Timer.getTime());
+
+        if (Entity.playStart && ! Entity.canPlay)
+            GameManager.postUpdate();
 
         if (Entity.canPlay)
             GameManager.runClock = true;
@@ -462,6 +463,10 @@ public class World {
     public Entity getBallCarrier() { return ballCarrier; }
 
     public void initReset() {
+        gameManager.setBallPosX(this);
+        gameManager.setBallPosY(this);
+        GameManager.scoreAway = false;
+        GameManager.scoreHome = false;
         GameManager.touchDown = false;
         GameManager.touchback = false;
         GameManager.playClock = 20;
@@ -475,8 +480,6 @@ public class World {
         Football.punt = false;
         Football.fieldGoal = false;
         Football.kickoff = false;
-        gameManager.setBallPosX(this);
-        gameManager.setBallPosY(this);
         entities.clear();
         Entity.canPlay = false;
         Entity.incompletePass = false;
@@ -489,6 +492,8 @@ public class World {
         GameManager.timePlayEnd = 0;
         DefensiveBack.addX = 10;
         KickMarker.stop = false;
+        GameManager.shouldPAT = false;
+        GameManager.hasUpdated = false;
 
         entities.clear();
 

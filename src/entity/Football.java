@@ -247,15 +247,27 @@ public class Football extends Entity {
                 System.out.println("GOOD");
 
                 if (GameManager.userHome && GameManager.userOffense) {
-                    GameManager.homeScore += 3;
+                    if (! GameManager.pat) {
+                        GameManager.homeScore += 3; GameManager.kickoff = true;
+                    } else {
+                        GameManager.homeScore += 1;
+                    }
                     GameManager.scoreHome = true;
                 }
                 else if (! GameManager.userHome && ! GameManager.userOffense) {
-                    GameManager.homeScore += 3;
+                    if (! GameManager.pat) {
+                        GameManager.homeScore += 3; GameManager.kickoff = true;
+                    } else {
+                        GameManager.homeScore += 1;
+                    }
                     GameManager.scoreHome = true;
                 }
                 else {
-                    GameManager.awayScore += 3;
+                    if (! GameManager.pat) {
+                        GameManager.awayScore += 3; GameManager.kickoff = true;
+                    } else {
+                        GameManager.awayScore += 1;
+                    }
                     GameManager.scoreAway = true;
                 }
             }
