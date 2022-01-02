@@ -471,25 +471,27 @@ public class DefensiveBack extends Entity {
             }
         }
 
-        if (world.getCountingUpEntity(10) != this && (Football.kickoff || Football.punt)) {
-            if (routeMovement <= 20) {
-                movement.add(speed * delta, 0);
-                routeMovement += speed*delta;
-            }
-        } else if (Football.kickoff || Football.punt) {
-            float thisHeight = Football.throw_height;
-            float x = world.getFootballEntity().transform.pos.x;
-            float y = world.getFootballEntity().transform.pos.y;
-            while (thisHeight > 0) {
-                thisHeight -= 8*delta;
-                x += world.getFootballEntity().speed;
-                y += world.getFootballEntity().speed*Football.ball_slope;
-            }
+        if (! userControl) {
+            if (world.getCountingUpEntity(10) != this && (Football.kickoff || Football.punt)) {
+                if (routeMovement <= 20) {
+                    movement.add(speed * delta, 0);
+                    routeMovement += speed * delta;
+                }
+            } else if (Football.kickoff || Football.punt) {
+                float thisHeight = Football.throw_height;
+                float x = world.getFootballEntity().transform.pos.x;
+                float y = world.getFootballEntity().transform.pos.y;
+                while (thisHeight > 0) {
+                    thisHeight -= 8 * delta;
+                    x += world.getFootballEntity().speed;
+                    y += world.getFootballEntity().speed * Football.ball_slope;
+                }
 
-            if (this.transform.pos.x > 355) {
-                this.transform.pos.x = 355;
+                if (this.transform.pos.x > 355) {
+                    this.transform.pos.x = 355;
+                }
+                movement.add(moveToward(x, y, delta));
             }
-            movement.add(moveToward(x,y,delta));
         }
 
 
