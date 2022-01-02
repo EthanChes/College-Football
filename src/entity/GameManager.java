@@ -26,9 +26,9 @@ public class GameManager {
     public static double timePlayEnd = 0;
     public static int homeID = 2;
     public static int awayID = 7;
-    public static float timeLeft = 10; // seconds
+    public static float timeLeft = 300; // seconds
     public static float playClock = 20; // seconds
-    public static int quarter = 4;
+    public static int quarter = 1;
     public static boolean userHome = true;
     public static int homeScore = 0;
     public static int awayScore = 0;
