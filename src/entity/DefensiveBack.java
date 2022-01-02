@@ -486,8 +486,8 @@ public class DefensiveBack extends Entity {
                 y += world.getFootballEntity().speed*Football.ball_slope;
             }
 
-            if (this.transform.pos.x > 370) {
-                this.transform.pos.x = 365;
+            if (this.transform.pos.x > 355) {
+                this.transform.pos.x = 355;
             }
             movement.add(moveToward(x,y,delta));
         }

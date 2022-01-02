@@ -120,8 +120,10 @@ public class GameManager {
             }
             if (Football.punt || Football.kickoff) {
                 if (world.getBallCarrier().transform.pos.x > 354.5f) {
-                    Entity.canPlay = false;
-                    touchback = true;
+                    if (world.getBallCarrier() == world.getFootballEntity() && Entity.throw_height < 0) {
+                        Entity.canPlay = false;
+                        touchback = true;
+                    }
                     Football.keepMoving = true;
                     return true;
                 }
