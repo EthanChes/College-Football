@@ -82,6 +82,14 @@ public class Football extends Entity {
 
             movement.add(throw_power*delta*distance_multiplier,throw_power*delta*ball_slope*distance_multiplier); // Ball Movements
 
+            keepMoving = true;
+
+
+            if (this.transform.pos.x >= GameManager.xEndzoneRight) {
+                incompletePass = true;
+                canPlay = false;
+            }
+
 
 
             if (throw_height > 0) {
