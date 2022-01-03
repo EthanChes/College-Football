@@ -817,14 +817,14 @@ public class World {
 
     public void timeOutAI(Window window, World world) {
         if (((! Entity.playStart && ! Entity.canPlay) || (Entity.playStart && ! Entity.canPlay))) {
-            if (GameManager.userHome && (GameManager.quarter == 4 && GameManager.timeLeft < 75 && GameManager.awayScore < GameManager.homeScore && GameManager.homeScore - GameManager.awayScore < 16)) {
+            if (GameManager.userHome && GameManager.runClock && (GameManager.quarter == 4 && GameManager.timeLeft < 75 && GameManager.awayScore < GameManager.homeScore && GameManager.homeScore - GameManager.awayScore < 16)) {
                 if (GameManager.timeOutsAway > 0) {
                     GameManager.down--;
                     GameManager.timeOutsAway--;
                     GameManager.runClock = false;
                     world.initReset();
                 }
-            } else if ((GameManager.quarter == 4 && GameManager.timeLeft < 75 && GameManager.awayScore < GameManager.homeScore && GameManager.homeScore - GameManager.awayScore < 16)) {
+            } else if ((GameManager.quarter == 4 && GameManager.runClock && GameManager.timeLeft < 75 && GameManager.awayScore > GameManager.homeScore && GameManager.awayScore - GameManager.homeScore < 16)) {
                 if (GameManager.timeoutsHome > 0) {
                     GameManager.down--;
                     GameManager.timeoutsHome--;

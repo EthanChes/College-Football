@@ -471,13 +471,13 @@ public abstract class Entity {
         } else {
             int preferredSnapTime = 10;
             if (GameManager.userHome) {
-                switch (GameManager.homeTimeStrategy) {
+                switch (GameManager.awayTimeStrategy) {
                     case 0 : preferredSnapTime = 10; break;
                     case 1 : preferredSnapTime = 15; break;
                     case 2 : preferredSnapTime = 3; break;
                 }
             } else {
-                switch (GameManager.awayTimeStrategy) {
+                switch (GameManager.homeTimeStrategy) {
                     case 0 : preferredSnapTime = 10; break;
                     case 1 : preferredSnapTime = 15; break;
                     case 2 : preferredSnapTime = 3; break;

@@ -26,11 +26,11 @@ public class GameManager {
     public static double timePlayEnd = 0;
     public static int homeID = 2;
     public static int awayID = 4;
-    public static float timeLeft = 300; // seconds
+    public static float timeLeft = 45; // seconds
     public static float playClock = 20; // seconds
-    public static int quarter = 1;
-    public static boolean userHome = true;
-    public static int homeScore = 0;
+    public static int quarter = 4;
+    public static boolean userHome = false;
+    public static int homeScore = 14;
     public static int awayScore = 0;
     public static double previousKnownTime = Timer.getTime();
     public static boolean runClock = false;
@@ -355,6 +355,20 @@ public class GameManager {
 
             if (timePlayEnd + 2 < Timer.getTime() && timePlayEnd != 0)
                 updateQuarter(win,world);
+
+            // Set Time Strategies throughout game
+            if (homeScore > awayScore && quarter == 4 && timeLeft <= 90) {
+                homeTimeStrategy = 2;
+                awayTimeStrategy = 1;
+            } else if (homeScore < awayScore && quarter == 4 && timeLeft <= 90) {
+                homeTimeStrategy = 1;
+                awayTimeStrategy = 2;
+            } else {
+                homeTimeStrategy = 1;
+                awayTimeStrategy = 1;
+            }
+
+
         }
     }
 
@@ -368,7 +382,8 @@ public class GameManager {
                 appliedTimeCut = true;
                 if (! GameManager.userOffense) {
                     if (userHome) {
-                        switch (homeTimeStrategy) {
+                        System.out.println(homeTimeStrategy);
+                        switch (awayTimeStrategy) {
                             case 0:
                                 timeLeft -= 5;
                                 break;
@@ -377,7 +392,7 @@ public class GameManager {
                                 break;
                         }
                     } else {
-                        switch (awayTimeStrategy) {
+                        switch (homeTimeStrategy) {
                             case 0:
                                 timeLeft -= 5;
                                 break;
