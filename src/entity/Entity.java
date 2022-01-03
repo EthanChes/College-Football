@@ -1,5 +1,6 @@
 package entity;
 import assets.Assets;
+import assets.Degrees;
 import collision.AABB;
 import collision.Collision;
 import gameplay.Timer;
@@ -22,6 +23,7 @@ public abstract class Entity {
 
     // Game booleans
     public static boolean turnover = false;
+    public boolean normalAssets = true;
     public static float throw_height;
     public static int totalReceivers = 0;
     public static boolean canPlay = false;
@@ -47,9 +49,15 @@ public abstract class Entity {
     public double timeFumbled = -1;
     public static double selectPlayerCooldown = -1;
     public double lastAnimationChange = -1;
+    public int guardedReceiver = 0;
+    public float degrees = 0;
+    public boolean defender = false;
+    public boolean defensiveBack = false;
 
     // Player Info
     public byte route = 0;
+    public float kickPower = 10f;
+    public float kickAccuracy = 10f;
     public float throw_decisions = 10f;
     public float manCoverage = 10f;
     public float routeMovement = 0f;
@@ -93,7 +101,13 @@ public abstract class Entity {
         shader.setUniform("sampler", sampler_0);
         shader.setUniform("projection",transform.getProjection(target));
         animations[use_animation].bind(0);
-        Assets.getModel().render();
+        if (normalAssets) {
+            Assets.getModel().render();
+        } else {
+            // Put Degree Assets Here
+            Degrees.initAsset(degrees);
+            Degrees.getModel().render();
+        }
     }
 
     public boolean collidingWithFootball(Entity entity, World world) {
@@ -178,7 +192,7 @@ public abstract class Entity {
         }
     }
 
-    public void selectDefensivePlayer(Window win, World world) {
+    public static void selectDefensivePlayer(Window win, World world) {
         if (!GameManager.userOffense && GameManager.offenseBall && win.getInput().isKeyPressed(GLFW_KEY_Z) && selectPlayerCooldown + .05f < Timer.getTime()) {
             // Enabled to select new player
 
@@ -223,7 +237,7 @@ public abstract class Entity {
         }
     }
 
-    public void selectOffensivePlayer(Window win, World world) {
+    public static void selectOffensivePlayer(Window win, World world) {
         // Upon Key Press, Switch Player
         if (win.getInput().isKeyPressed(GLFW_KEY_Z) && GameManager.userOffense && ! GameManager.offenseBall && selectPlayerCooldown + .3f < Timer.getTime()) {
             selectPlayerCooldown = Timer.getTime();
@@ -445,15 +459,46 @@ public abstract class Entity {
     }
 
     public boolean snap(Window window, World world) {
-        if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && ! playStart && GameManager.selectedPlay) {
-            world.getCountingUpEntity(14).useAnimation(6);
-            timeSnapped = Timer.getTime();
-            canPlay = true;
-            playStart = true;
-            return true;
+        if (GameManager.userOffense) {
+            if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && !playStart && GameManager.selectedPlay) {
+                world.getCountingUpEntity(14).useAnimation(6);
+                timeSnapped = Timer.getTime();
+                canPlay = true;
+                playStart = true;
+                return true;
+            }
+        } else {
+            int preferredSnapTime = 10;
+            if (GameManager.userHome) {
+                switch (GameManager.homeTimeStrategy) {
+                    case 0 : preferredSnapTime = 10; break;
+                    case 1 : preferredSnapTime = 15; break;
+                    case 2 : preferredSnapTime = 3; break;
+                }
+            } else {
+                switch (GameManager.awayTimeStrategy) {
+                    case 0 : preferredSnapTime = 10; break;
+                    case 1 : preferredSnapTime = 15; break;
+                    case 2 : preferredSnapTime = 3; break;
+                }
+            }
+
+            if (GameManager.playClock <= preferredSnapTime) {
+                world.getCountingUpEntity(14).useAnimation(6);
+                timeSnapped = Timer.getTime();
+                canPlay = true;
+                playStart = true;
+                return true;
+            }
+
         }
 
         return false;
+    }
+
+    public void kickoffSnap() {
+        canPlay = true;
+        playStart = true;
     }
 
     public void passCaught(World world) {
@@ -698,8 +743,12 @@ public abstract class Entity {
         return move;
     }
 
+    public Vector3f getPosition() {
+        return transform.pos;
+    }
+
     public void userTackle(Window window, Entity user, Entity ballCarrier, World world) {
-        if (window.getInput().isKeyPressed(GLFW_KEY_T)) {
+        if (window.getInput().isKeyPressed(GLFW_KEY_T) && world.getBallCarrier() != world.getFootballEntity()) {
             if (user.transform.pos.distance(ballCarrier.transform.pos) < 3) {
                 if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime()) {
                     timeSinceLastTackleAttempt = Timer.getTime();

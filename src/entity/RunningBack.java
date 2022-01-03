@@ -19,19 +19,19 @@ public class RunningBack extends Entity {
     public static final int ANIM_RUN_WITHOUT_BALL = 1;
     public static final int ANIM_IDLE = 0;
 
-    public int runnerRoute = 0;
+    public static int runnerRoute = 0;
     public float runnerRouteMovement = 0;
 
     public RunningBack(Transform transform) {
         super(ANIM_SIZE, transform);
-        setAnimation(ANIM_IDLE, new Animation(1,1,"runningbackidle"));
-        setAnimation(ANIM_RUN_WITHOUT_BALL, new Animation(3,12, "runningbackmovewithoutball"));
-        setAnimation(ANIM_RUN_WITH_BALL, new Animation(3,12,"runningbackmovewithball"));
-        setAnimation(ANIM_IDLE_WITH_BALL, new Animation(1,1,"runningbackidlewithball"));
-        setAnimation(ANIM_FALL, new Animation(1,1, "offensivefall"));
+        setAnimation(ANIM_IDLE, new Animation(1,1,"runningbackidle",true));
+        setAnimation(ANIM_RUN_WITHOUT_BALL, new Animation(3,12, "runningbackmovewithoutball",true));
+        setAnimation(ANIM_RUN_WITH_BALL, new Animation(3,12,"runningbackmovewithball",true));
+        setAnimation(ANIM_IDLE_WITH_BALL, new Animation(1,1,"runningbackidlewithball",true));
+        setAnimation(ANIM_FALL, new Animation(1,1, "offensivefall",true));
         setRoute(1);
         strength = 8f;
-        speed = 10f;
+        speed = 12f;
     }
 
     public void setRunnerRoute(int x) {
@@ -87,12 +87,16 @@ public class RunningBack extends Entity {
             userTackle(window, this, world.getBallCarrier(), world);
         }
 
+        float constant = 1;
+        if (GameManager.offenseBall) // Prevents stacking up defenders by running backward
+            constant = 2;
+
         // Moves Player using various WASD directions using vectors.
         if (window.getInput().isKeyDown(GLFW_KEY_S) && userControl) { // When S is pressed, player moves 5 down
             movement.add(0,-speed*delta); // multiply by delta (framecap) to move 10 frames in a second.
         }
         if (window.getInput().isKeyDown(GLFW_KEY_A) && userControl) { // When A is pressed, camera shifts left 5
-            movement.add(-speed*delta,0);
+            movement.add(-speed*delta/constant,0);
         }
         if (window.getInput().isKeyDown(GLFW_KEY_W) && userControl) { // When W is pressed, camera shifts up 5
             movement.add(0,speed*delta);
@@ -151,7 +155,7 @@ public class RunningBack extends Entity {
                     movement.add(defensive_movement(world.getBallCarrier(), delta));
 
                     if (collidingWithBallCarrier(this, world)) {
-                        if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && !GameManager.offenseBall) {
+                        if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && !GameManager.offenseBall && world.getBallCarrier() != world.getFootballEntity()) {
                             boolean tackResult = tackle(world.getBallCarrier(), window, world);
                             if (tackResult) {
                                 world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
@@ -174,6 +178,11 @@ public class RunningBack extends Entity {
             }
         }
 
+        if (Football.kickoff || Football.punt) {
+            if (world.getBallCarrier() == world.getFootballEntity() || world.getBallCarrier().transform.pos.distance(this.transform.pos) > 5) {
+                movement.y = 0;
+            }
+        }
 
         if (canPlay && !(pancaked || isBeingMovedExternally)) {
             move(movement);
@@ -207,7 +216,7 @@ public class RunningBack extends Entity {
             useAnimation(ANIM_IDLE_WITH_BALL);
             world.getFootballEntity().transform.pos.set(this.transform.pos.x - .25f,this.transform.pos.y,0);
         }
-        else if (movement.x != 0 || movement.y != 0) {
+        else if (canPlay && (movement.x != 0 || movement.y != 0)) {
             useAnimation(ANIM_RUN_WITHOUT_BALL);
         }
         else {

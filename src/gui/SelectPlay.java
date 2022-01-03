@@ -13,6 +13,8 @@ public class SelectPlay {
     private static Shader shader;
     private static Camera camera;
     private static TileSheet sheet;
+    private static TileSheet special;
+    private static TileSheet numbers;
 
     private float x;
     private int tileID;
@@ -26,10 +28,22 @@ public class SelectPlay {
 
         // Select Correct Sheet
         if (GameManager.userOffense) {
-            sheet = new TileSheet("O_PLAYS.png", 3);
+            if (GameManager.kickoff) {
+                sheet = new TileSheet("KICKOFF.png",1);
+            } else {
+                sheet = new TileSheet("O_PLAYS.png", 3);
+                special = new TileSheet("SPECIALOFFENSE.png",1);
+            }
         } else {
-            sheet = new TileSheet("D_PLAYS.png",3);
+            if (GameManager.kickoff) {
+                sheet = new TileSheet("KICKOFFRETURN.png",1);
+            } else {
+                sheet = new TileSheet("D_PLAYS.png", 3);
+                special = new TileSheet("SPECIALDEFENSE.png",1);
+            }
         }
+
+        numbers = new TileSheet("INVISIBLENUMBERS.png",4);
 
         this.x = x;
         this.tileID = tileID;
@@ -53,15 +67,38 @@ public class SelectPlay {
         sheet.bindTile(shader, tileID);
         Assets.getModel().render();
 
-        mat.translate(2,0,0);
+        mat.translate(0,1.8f,0);
+        shader.setUniform("projection",mat);
+        numbers.bindTile(shader,1);
+        Assets.getModel().render();
+
+        mat.translate(2,-1.8f,0);
         shader.setUniform("projection", mat);
         sheet.bindTile(shader, tileID + 1);
         Assets.getModel().render();
 
-        mat.translate(2,0,0);
+        mat.translate(0,1.8f,0);
+        shader.setUniform("projection",mat);
+        numbers.bindTile(shader,2);
+        Assets.getModel().render();
+
+        mat.translate(2,-1.8f,0);
         shader.setUniform("projection", mat);
         sheet.bindTile(shader, tileID + 2);
         Assets.getModel().render();
+
+        mat.translate(0,1.8f,0);
+        shader.setUniform("projection",mat);
+        numbers.bindTile(shader,3);
+        Assets.getModel().render();
+
+        if (! GameManager.kickoff) {
+            camera.getUntransformedProjection().scale(75,mat);
+            mat.translate(3.3f,-2.4f,0);
+            shader.setUniform("projection",mat);
+            special.bindTile(shader, 0);
+            Assets.getModel().render();
+        }
 
         //shader.setUniform("color", new Vector4f(0,0,0,.4f));
     }
@@ -75,6 +112,8 @@ public class SelectPlay {
     public static void decrementNextTileID() { if (lastTileID < 0) { lastTileID += 36; } lastTileID -= 3; }
 
     public static void calculatePlayID(int input) { playID = (lastTileID + input + 1) % 9; System.out.println(playID); } // Only 9 plays
+
+    public static void calculateSpecificPlayID(int input) { playID = input; System.out.println(playID); } // For Special Plays
 
     public static int getPlayID() { return playID; }
 }

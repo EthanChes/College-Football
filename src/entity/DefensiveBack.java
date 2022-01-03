@@ -22,8 +22,8 @@ public class DefensiveBack extends Entity {
     public static final int ANIM_IDLE = 0;
 
     public double timeSinceLastCoverageAttempt = -12f;
+    public static int addX = 10; // To Prevent Player Stacking in man-man
     public static int guardedReceivers = 0;
-    public int guardedReceiver = 0;
     public boolean setLoc = true;
     public int defenderID = 0; // For Linebackers (Consistent Placement)
     public Vector2f coverageMovement = new Vector2f(0,0);
@@ -36,17 +36,20 @@ public class DefensiveBack extends Entity {
     public DefensiveBack(Transform transform) {
         super(ANIM_SIZE, transform);
         uniqueEvents = false;
-        setAnimation(ANIM_IDLE, new Animation(1, 1, "defensivelineidle"));
-        setAnimation(ANIM_MOVE, new Animation(4,16,"defensivemovement"));
-        setAnimation(ANIM_UNKNOWN, new Animation(0,0, "defensivelinemovement"));
-        setAnimation(ANIM_FALL, new Animation(1,1, "defensivefall"));
-        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/defensiveback"));
+        setAnimation(ANIM_IDLE, new Animation(1, 1, "defensivelineidle", false));
+        setAnimation(ANIM_MOVE, new Animation(4,16,"defensivemovement", false));
+        setAnimation(ANIM_UNKNOWN, new Animation(0,0, "defensivelinemovement", false));
+        setAnimation(ANIM_FALL, new Animation(1,1, "defensivefall", false));
+        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/defensiveback", false));
 
         speed = 10f;
-        manCoverage = 10f;
+        manCoverage = 8f;
         strength = 10f;
         catching = 10f;
         zoneCoverage = 10f;
+
+        defensiveBack = true;
+        defender = true;
     }
 
     public void catching() {
@@ -62,19 +65,28 @@ public class DefensiveBack extends Entity {
             guardedReceiver = guardedReceivers;
 
             Entity guardedEntity = world.getCountingUpEntity(22-guardedReceiver);
-            this.transform.pos.x = GameManager.ballPosX + 7;
+
+            this.transform.pos.x = GameManager.ballPosX + addX;
+            addX -= 2;
+
             this.transform.pos.y = guardedEntity.transform.pos.y;
+
+            // Prevents Accidental Stacking
+            for (int i = 0; i < 11; i++) {
+                if (this.transform.pos.distance(world.getCountingUpEntity(i).transform.pos) < 1.5)
+                    this.transform.pos.x += 2;
+            }
 
             noCollision();
         }
-
-        if (defenderID >= 0) {
+        else {
             switch (route) {
                 case -3 : break; // Blitz on Left Side (Acts as LDE)
                 case -2 : break; // Blitz on Right Side (Acts as RDE)
                 case 0 : // In case There are less receivers than Backs, Blitz instead of man-man. Set Locs Here
                 default : // Default Position Setters
-                    this.transform.pos.x = GameManager.ballPosX + 8; // Initializer For LBs
+                    if (defenderID != -1)
+                        this.transform.pos.x = GameManager.ballPosX + 8; // Initializer For LBs
                     switch (defenderID) { // For LBs
                         case 0 : this.transform.pos.y = GameManager.ballPosY + 4f; break; // Left Normal
                         case 1 : this.transform.pos.y = GameManager.ballPosY; break; // Central Normal
@@ -459,6 +471,37 @@ public class DefensiveBack extends Entity {
             }
         }
 
+        if (! userControl) {
+            if (world.getCountingUpEntity(10) != this && (Football.kickoff || Football.punt)) {
+                if (routeMovement <= 20) {
+                    movement.add(speed * delta, 0);
+                    routeMovement += speed * delta;
+                }
+            } else if (Football.kickoff || Football.punt) {
+                float thisHeight = Football.throw_height;
+                float x = world.getFootballEntity().transform.pos.x;
+                float y = world.getFootballEntity().transform.pos.y;
+                while (thisHeight > 0) {
+                    thisHeight -= 8 * delta;
+                    x += world.getFootballEntity().speed;
+                    y += world.getFootballEntity().speed * Football.ball_slope;
+                }
+
+                if (this.transform.pos.x > 355) {
+                    this.transform.pos.x = 355;
+                }
+
+                movement.add(moveToward(x, y, delta));
+            }
+        }
+
+        if (! userControl && route == -30) {
+            if (this.transform.pos.x > 355) {
+                this.transform.pos.x = 355;
+            }
+        }
+
+
         if (userControl && !playStart || (! (pancaked || isBeingMovedExternally) && canPlay)) {
             move(movement);
         } else {
@@ -607,6 +650,10 @@ public class DefensiveBack extends Entity {
 
         if (pancaked) {
             useAnimation(ANIM_FALL);
+        }
+
+        if (Kicker.timeKicked + .3f > Timer.getTime()) {
+            canCollide = true;
         }
 
     }

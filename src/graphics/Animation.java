@@ -24,6 +24,19 @@ public class Animation {
         }
     }
 
+    public Animation(int amount, int fps, String filename, boolean offense) { // For Player jerseys & such
+        this.pointer = 0;
+        this.elapsedTime = 0;
+        this.currentTime = 0;
+        this.lastTime = Timer.getTime();
+        this.fps = 1.0/(double)fps;
+
+        this.frames = new Texture[amount];
+        for (int count = 0; count < amount; count++) {
+            this.frames[count] = new Texture("animation/" + filename + "/_" + count + ".png", offense);
+        }
+    }
+
     public void bind() { bind(0); }
 
     public void bind(int sampler) {

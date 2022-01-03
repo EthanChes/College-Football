@@ -11,8 +11,6 @@ import world.World;
 
 import java.util.Random;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 
 public class Football extends Entity {
     public static final int ANIM_SIZE = 3;
@@ -26,9 +24,16 @@ public class Football extends Entity {
     public static float wideReceiverX;
     public static float wideReceiverY;
     public static boolean gotWideReceiverPos = true;
+    public static boolean keepMoving = false;
+    public static boolean puntEndsInBounds = false;
 
     public static double passDropStart = 0;
     public static Vector2f fumbleMovements = new Vector2f();
+
+    public static boolean fieldGoal = false;
+    public static boolean kickoff = false;
+    public static boolean punt = false;
+    public boolean fieldGoalScored = false;
 
     public Football(Transform transform) {
         super(ANIM_SIZE, transform);
@@ -76,6 +81,14 @@ public class Football extends Entity {
             }
 
             movement.add(throw_power*delta*distance_multiplier,throw_power*delta*ball_slope*distance_multiplier); // Ball Movements
+
+            keepMoving = true;
+
+
+            if (this.transform.pos.x >= GameManager.xEndzoneRight) {
+                incompletePass = true;
+                canPlay = false;
+            }
 
 
 
@@ -179,7 +192,113 @@ public class Football extends Entity {
             timeFumble = -1;
         }
 
-        if (canPlay) {
+        if (kickoff) {
+            if (gotWideReceiverPos) {
+                Entity.turnover = true;
+                speed = world.getQuarterbackEntity().kickPower * 3f * delta;
+                throw_height = world.getQuarterbackEntity().kickPower*4f;
+
+                gotWideReceiverPos = false;
+            }
+
+            movement.add(speed,ball_slope*speed);
+
+            if (throw_height > 0) {
+                throw_height -= 8*delta;
+            } else {
+                useAnimation(ANIM_QB_THROW_START);
+                kickoff = false;
+                timeFumble = Timer.getTime();
+            }
+        }
+
+        if (punt) {
+            if (gotWideReceiverPos) {
+                Entity.turnover = true;
+                world.setBallCarrier(this);
+                speed = world.getQuarterbackEntity().kickPower*3*delta;
+                throw_height = world.getQuarterbackEntity().kickPower*3.5f;
+
+                gotWideReceiverPos = false;
+            }
+
+            useAnimation(ANIM_QB_THROW);
+
+            movement.add(speed, ball_slope*speed);
+
+            if (throw_height > 0) {
+                throw_height -= 8*delta;
+            } else {
+                useAnimation(ANIM_QB_THROW_START);
+                punt = false;
+                if (world.getBallCarrier() == world.getFootballEntity()) {
+                    canPlay = false;
+                }
+            }
+        }
+
+        if (fieldGoal) {
+            if (gotWideReceiverPos) {
+                world.setBallCarrier(this);
+                speed = world.getCountingUpEntity(12).kickPower*3*delta;
+                throw_height = world.getCountingUpEntity(12).kickPower*3f;
+
+                gotWideReceiverPos = false;
+            }
+
+            useAnimation(ANIM_QB_THROW);
+
+            movement.add(speed,ball_slope*speed);
+
+            if (this.transform.pos.x > world.getGoalPost().transform.pos.x && this.transform.pos.y < world.getGoalPost().transform.pos.y + 5 && this.transform.pos.y > world.getGoalPost().transform.pos.y - 5 && throw_height > 0 && ! fieldGoalScored) {
+                fieldGoalScored = true;
+                System.out.println("GOOD");
+
+                if (GameManager.userHome && GameManager.userOffense) {
+                    if (! GameManager.pat) {
+                        GameManager.homeScore += 3; GameManager.kickoff = true;
+                    } else {
+                        GameManager.homeScore += 1;
+                    }
+                    GameManager.scoreHome = true;
+                }
+                else if (! GameManager.userHome && ! GameManager.userOffense) {
+                    if (! GameManager.pat) {
+                        GameManager.homeScore += 3; GameManager.kickoff = true;
+                    } else {
+                        GameManager.homeScore += 1;
+                    }
+                    GameManager.scoreHome = true;
+                }
+                else {
+                    if (! GameManager.pat) {
+                        GameManager.awayScore += 3; GameManager.kickoff = true;
+                    } else {
+                        GameManager.awayScore += 1;
+                    }
+                    GameManager.scoreAway = true;
+                }
+            }
+
+            if (this.transform.pos.x - 20 > world.getGoalPost().transform.pos.x) {
+                throw_height = 0;
+            }
+
+            if (throw_height > 0) {
+                throw_height -= 8*delta;
+            } else {
+                useAnimation(ANIM_QB_THROW_START);
+                fieldGoal = false;
+                canPlay = false;
+                System.out.println("NO GOOD");
+
+                GameManager.down = 4;
+
+                Entity.incompletePass = true;
+            }
+        }
+
+        if (canPlay || keepMoving) {
             move(movement);
         }
 

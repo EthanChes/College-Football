@@ -41,7 +41,7 @@ public class T_Form_HB_Stretch {
         entities.add(runner);
         entities.get(10).setRoute(1);
 
-        WideReceiver.totalReceivers += 3;
+        WideReceiver.totalReceivers += 5;
 
         // Add football
         entities.add(new Football(new Transform(ballX-3,ballY,.5f)));

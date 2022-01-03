@@ -42,9 +42,9 @@ public class Model {
     }
 
     protected void finalize() {
-        glDeleteBuffers(vertex_id);
-        glDeleteBuffers(texture_id);
-        glDeleteBuffers(i_id);
+        //glDeleteBuffers(vertex_id);
+        //glDeleteBuffers(texture_id);
+        //glDeleteBuffers(i_id);
     }
 
     public void render() {

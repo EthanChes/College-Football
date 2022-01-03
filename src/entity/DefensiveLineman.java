@@ -20,13 +20,15 @@ public class DefensiveLineman extends Entity {
     public DefensiveLineman(Transform transform) {
         super(ANIM_SIZE, transform);
         uniqueEvents = false;
-        setAnimation(ANIM_IDLE, new Animation(1, 1, "defensivelineidle"));
-        setAnimation(ANIM_MOVE, new Animation(4,16,"defensivemovement"));
-        setAnimation(ANIM_UNKNOWN, new Animation(0,0, "defensivelinemovement"));
-        setAnimation(ANIM_FALL, new Animation(1,1, "defensivefall"));
-        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/defensiveline"));
+        setAnimation(ANIM_IDLE, new Animation(1, 1, "defensivelineidle", false));
+        setAnimation(ANIM_MOVE, new Animation(4,16,"defensivemovement", false));
+        setAnimation(ANIM_UNKNOWN, new Animation(0,0, "defensivelinemovement", false));
+        setAnimation(ANIM_FALL, new Animation(1,1, "defensivefall", false));
+        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/defensiveline", false));
         speed = 7f; // 8
         strength = 10f; // 10
+
+        defender = true;
     }
 
     public Vector2f pursuit(Entity ballCarrier, float delta, World world) {
@@ -59,8 +61,6 @@ public class DefensiveLineman extends Entity {
             canCollide = true;
         }
 
-        selectDefensivePlayer(window, world);
-
         if ( (! GameManager.userOffense) && hasBall) userControl = true; // change false to gamemanager on defense, make sure to have ids for different defenders to switch through them
         else if (forceUserControl && ! GameManager.userOffense) userControl = true;
         else userControl = false;
@@ -90,10 +90,6 @@ public class DefensiveLineman extends Entity {
             move(new Vector2f(speed*delta,0));
             uniqueEvents = true;
         }
-
-
-
-
 
         if (! userControl) {
             if (canPlay && (!uniqueEvents) && (!pancaked) && !isBeingMovedExternally) {

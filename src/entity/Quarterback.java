@@ -32,13 +32,13 @@ public class Quarterback extends Entity {
 
     public Quarterback(Transform transform) {
         super(ANIM_SIZE,transform);
-        setAnimation(ANIM_IDLE, new Animation(1,1,"qbidle"));
-        setAnimation(ANIM_WALK, new Animation(4,16,"qbrun"));
-        setAnimation(ANIM_THROW, new Animation(2,4,"qbthrow"));
-        setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall"));
-        setAnimation(ANIM_HANDOFF, new Animation(1,1,"qbhandoff"));
-        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/quarterback"));
-        setAnimation(ANIM_RUN, new Animation(4, 16, "widereceiverrouterun"));
+        setAnimation(ANIM_IDLE, new Animation(1,1,"qbidle",true));
+        setAnimation(ANIM_WALK, new Animation(4,16,"qbrun",true));
+        setAnimation(ANIM_THROW, new Animation(2,4,"qbthrow",true));
+        setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall",true));
+        setAnimation(ANIM_HANDOFF, new Animation(1,1,"qbhandoff",true));
+        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/quarterback",true));
+        setAnimation(ANIM_RUN, new Animation(4, 16, "widereceiverrouterun",true));
         speed = 7f;
         strength = 10f;
         throw_accuracy = 10f;
@@ -90,7 +90,7 @@ public class Quarterback extends Entity {
         if (this.transform.pos.x - speed*delta > entity.transform.pos.x) {
             movement.add(speed*delta,0);
         } else if (this.transform.pos.x + speed*delta < entity.transform.pos.x) {
-            movement.add(-speed*delta/2,0);
+            movement.add(-speed*delta/3,0);
         }
 
         if (this.transform.pos.y - speed*delta > entity.transform.pos.y) {
@@ -107,8 +107,6 @@ public class Quarterback extends Entity {
         Vector2f movement = new Vector2f();
         double time_current = getTime();
         Entity football = world.getFootballEntity();
-
-        selectOffensivePlayer(window, world);
 
         // Prevents issues with QB running behind the play
         if (this.transform.pos.x + 30 < GameManager.ballPosX) {
@@ -231,7 +229,7 @@ public class Quarterback extends Entity {
                     movement.add(0, -speed * delta); // multiply by delta (framecap) to move 10 frames in a second.
                 }
                 if (window.getInput().isKeyDown(GLFW_KEY_A) && userControl) { // When A is pressed, camera shifts left 5
-                    movement.add(-speed * delta, 0);
+                    movement.add(-speed * delta/3, 0);
                 }
                 if (window.getInput().isKeyDown(GLFW_KEY_W) && userControl) { // When W is pressed, camera shifts up 5
                     movement.add(0, speed * delta);
@@ -246,7 +244,7 @@ public class Quarterback extends Entity {
             if (canPlay && ! pancaked) {
                 move(movement);
             }
-            else {
+            else if (! playStart) {
                 snap(window,world);
             }
 
@@ -340,7 +338,7 @@ public class Quarterback extends Entity {
             if (canPlay && hasHandedOff && ! pancaked) {
                 move(movement);
             }
-            else {
+            else if (! playStart) {
                 snap(window,world);
             }
 

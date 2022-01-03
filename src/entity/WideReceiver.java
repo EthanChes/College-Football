@@ -24,14 +24,14 @@ public class WideReceiver extends Entity {
 
     public WideReceiver(Transform transform) {
         super(ANIM_SIZE,transform);
-        setAnimation(ANIM_IDLE, new Animation(1,1,"widereceiveridle"));
-        setAnimation(ANIM_RUN, new Animation(4,16,"widereceiverrouterun"));
-        setAnimation(ANIM_CATCH, new Animation(1,1,"widereceiverincatch"));
-        setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall"));
-        setAnimation(ANIM_RUN_BALL, new Animation(4,16,"widereceiverrunwithball"));
-        setAnimation(ANIM_IDLE_BALL, new Animation(1,1,"widereceiveridlewithball"));
-        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/receiver"));
-        speed = 10;
+        setAnimation(ANIM_IDLE, new Animation(1,1,"widereceiveridle",true));
+        setAnimation(ANIM_RUN, new Animation(4,16,"widereceiverrouterun",true));
+        setAnimation(ANIM_CATCH, new Animation(1,1,"widereceiverincatch",true));
+        setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall",true));
+        setAnimation(ANIM_RUN_BALL, new Animation(4,16,"widereceiverrunwithball",true));
+        setAnimation(ANIM_IDLE_BALL, new Animation(1,1,"widereceiveridlewithball",true));
+        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/receiver",true));
+        speed = 10f;
         catching = 10f;
         strength = 10f;
         totalReceivers++;
@@ -180,6 +180,13 @@ public class WideReceiver extends Entity {
                         }
 
                 }
+
+                if (this.transform.pos.x + movement.x > 366.5f) {
+                    routeMovement = 1000;
+                    movement.set(0,0);
+                    reachedEndOfRoute = true;
+                }
+
             } else if (world.getFootballEntity().pass && !uniqueEvents) {
                 movement.add(moveToward(Football.wideReceiverX, Football.wideReceiverY, delta));
             } else if (timeFumble > 0) {

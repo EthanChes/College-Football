@@ -12,7 +12,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 
 public class OffensiveLineman extends Entity {
-    public static final int ANIM_SIZE = 7;
+    public static final int ANIM_SIZE = 8;
     public static final int ANIM_IDLE = 0;
     public static final int ANIM_MOVE = 1;
     public static final int ANIM_BLOCK = 2;
@@ -20,6 +20,7 @@ public class OffensiveLineman extends Entity {
     public static final int ANIM_BLOCK_MOVING = 4;
     public static final int ANIM_PRESNAP = 5;
     public static final int ANIM_CENTER = 6;
+    public static final int ANIM_PLACE_HOLDER = 7;
 
     public boolean isBlocking = false;
     public byte blockOutcome = 0;
@@ -27,13 +28,14 @@ public class OffensiveLineman extends Entity {
 
     public OffensiveLineman (Transform transform) {
         super(ANIM_SIZE,transform);
-        setAnimation(ANIM_IDLE, new Animation(1,1,"offensivelineidle"));
-        setAnimation(ANIM_MOVE, new Animation(3,12, "offensivelinemove"));
-        setAnimation(ANIM_BLOCK, new Animation(1,1, "offensivelineblock"));
-        setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall"));
-        setAnimation(ANIM_BLOCK_MOVING, new Animation(4, 16, "offensivelineblockmoving"));
-        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/offensiveline"));
-        setAnimation(ANIM_CENTER, new Animation(2, 4, "presnap/center"));
+        setAnimation(ANIM_IDLE, new Animation(1,1,"offensivelineidle",true));
+        setAnimation(ANIM_MOVE, new Animation(3,12, "offensivelinemove",true));
+        setAnimation(ANIM_BLOCK, new Animation(1,1, "offensivelineblock",true));
+        setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall",true));
+        setAnimation(ANIM_BLOCK_MOVING, new Animation(4, 16, "offensivelineblockmoving",true));
+        setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/offensiveline",true));
+        setAnimation(ANIM_CENTER, new Animation(2, 4, "presnap/center",true));
+        setAnimation(ANIM_PLACE_HOLDER, new Animation(1,1, "placeholder",true));
         speed = 3f;
         strength = 10f;
     }
@@ -266,7 +268,7 @@ public class OffensiveLineman extends Entity {
                     movement.add(defensive_movement(world.getBallCarrier(), delta));
 
                     if (collidingWithBallCarrier(this, world)) {
-                        if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && !GameManager.offenseBall) {
+                        if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime() && !GameManager.offenseBall && world.getBallCarrier() != world.getFootballEntity()) {
                             boolean tackResult = tackle(world.getBallCarrier(), window, world);
                             if (tackResult) {
                                 world.getBallCarrier().useAnimation(3); // 3 is universal falling animation
@@ -279,6 +281,13 @@ public class OffensiveLineman extends Entity {
                     }
                 }
             }
+        }
+
+        if (route == -2) {
+            movement.set(0,0);
+            useAnimation(ANIM_PLACE_HOLDER);
+            if (hasBall)
+                world.getFootballEntity().transform.pos.set(this.transform.pos);
         }
 
         if (canPlay && ! pancaked)
@@ -303,6 +312,8 @@ public class OffensiveLineman extends Entity {
         }
         else if (getAnimationIndex() == 6 && timeSnapped + .4 > Timer.getTime()) {
             useAnimation(ANIM_CENTER);
+        } else if (getAnimationIndex() == ANIM_PLACE_HOLDER) {
+            useAnimation(ANIM_PLACE_HOLDER);
         }
         else if (pancaked) {
             useAnimation(ANIM_FALL);

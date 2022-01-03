@@ -31,17 +31,17 @@ public class T_Form_FB_Dive {
         entities.add(new OffensiveLineman(new Transform(ballX, ballY + 6)));
         entities.get(7).setRoute(1);
 
+        entities.add(new RunningBack(new Transform(ballX - 6, ballY + 3)));
+        entities.get(8).setRoute(2);
+        entities.add(new RunningBack(new Transform(ballX - 6, ballY - 3)));
+        entities.get(9).setRoute(3);
+
         runner = new RunningBack(new Transform(ballX - 6, ballY));
         runner.setRunnerRoute(0);
         entities.add(runner);
-        entities.get(8).setRoute(1);
+        entities.get(10).setRoute(1);
 
-        entities.add(new RunningBack(new Transform(ballX - 6, ballY + 3)));
-        entities.get(9).setRoute(2);
-        entities.add(new RunningBack(new Transform(ballX - 6, ballY - 3)));
-        entities.get(10).setRoute(3);
-
-        WideReceiver.totalReceivers += 3;
+        WideReceiver.totalReceivers += 5;
 
         // Add football
         entities.add(new Football(new Transform(ballX-3,ballY,.5f)));

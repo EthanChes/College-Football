@@ -52,10 +52,10 @@ public class main {
             Assets.initAsset();
 
             Shader shader = new Shader("shader"); // Creates a new shader, filename is singular, because in the directory, the shader files start with "shader" Shader Class Handles Names.
-            World world = new World("test");
+            World world = new World("test", window);
             world.calculateView(window,camera);
 
-            glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Window Initial Color
+            glClearColor(0.0f, 1.0f, 0.0f, 0.0f); // Window Initial Color
 
             double frame_cap = 1.0 / 60.0; // Max frames per second
 
@@ -67,6 +67,7 @@ public class main {
             // While loop for frame to stay open while it should not close.
             world.initReset();
             while (!window.shouldClose()) {
+
                 // Add Loop Code Here
                 boolean can_render = false; // Initially, images cannot render
                 double time_2 = Timer.getTime(); // Sets most recent time
@@ -83,14 +84,6 @@ public class main {
                     // Window Closes when Key Escape is Pressed
                     if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
                         glfwSetWindowShouldClose(window.getWindow(), true);
-                    }
-
-                    if (window.getInput().isKeyPressed(GLFW_KEY_R)) {
-
-                        world.initReset();
-                        camera.setProjection(640,480);
-                        camera.setProjMultiplierX(1);
-                        camera.setProjMultiplierY(1);
                     }
 
                     world.update((float) frame_cap, window, camera);
