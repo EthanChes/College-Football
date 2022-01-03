@@ -23,6 +23,7 @@ public abstract class Entity {
 
     // Game booleans
     public static boolean turnover = false;
+    public static double timeEntities = Timer.getTime();
     public boolean normalAssets = true;
     public static float throw_height;
     public static int totalReceivers = 0;
@@ -460,7 +461,7 @@ public abstract class Entity {
 
     public boolean snap(Window window, World world) {
         if (GameManager.userOffense) {
-            if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && !playStart && GameManager.selectedPlay) {
+            if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && !playStart && GameManager.selectedPlay && timeEntities + 3 < Timer.getTime()) {
                 world.getCountingUpEntity(14).useAnimation(6);
                 timeSnapped = Timer.getTime();
                 canPlay = true;

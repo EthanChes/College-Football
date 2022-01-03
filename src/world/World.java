@@ -474,6 +474,7 @@ public class World {
     public Entity getBallCarrier() { return ballCarrier; }
 
     public void initReset() {
+        Entity.timeEntities = Timer.getTime();
         GameManager.updatedQuarter = false;
         GameManager.appliedTimeCut = false;
         GameManager.appliedPenalty = false;
