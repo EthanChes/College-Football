@@ -30,8 +30,8 @@ public class GameManager {
     public static float playClock = 20; // seconds
     public static int quarter = 4;
     public static boolean userHome = false;
-    public static int homeScore = 14;
-    public static int awayScore = 0;
+    public static int homeScore = 0;
+    public static int awayScore = 14;
     public static double previousKnownTime = Timer.getTime();
     public static boolean runClock = false;
     public static boolean homeDefer = false;
@@ -51,6 +51,7 @@ public class GameManager {
     public static boolean appliedTimeCut = false;
     public static int timeoutsHome = 3;
     public static int timeOutsAway = 3;
+    public static double callingTimeout = 0;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
         this.yMax = yMax;
@@ -241,7 +242,7 @@ public class GameManager {
             Entity.turnover = true;
 
         if (! Entity.turnover && ! pat && ! kickoff) {
-            if (world.getBallCarrier() != null && !Entity.incompletePass) {
+            if (world.getBallCarrier() != null && !Entity.incompletePass && hasEntities) {
                 this.ballPosX = world.getFootballEntity().transform.pos.x - .6f;
                 System.out.println(pat);
             }
@@ -300,7 +301,7 @@ public class GameManager {
 
     }
     public void setBallPosY(World world) {
-        if (world.getBallCarrier() != null && !Entity.incompletePass && ! kickoff && ! pat) {
+        if (world.getBallCarrier() != null && !Entity.incompletePass && ! kickoff && ! pat && hasEntities) {
             if (world.getFootballEntity().transform.pos.y > -245.9) {
                 this.ballPosY = -245.9f;
             } else if (world.getFootballEntity().transform.pos.y < -254) {

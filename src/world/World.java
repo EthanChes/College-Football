@@ -372,6 +372,11 @@ public class World {
 
         timeOutUser(window, this);
         timeOutAI(window, this);
+
+        // World Resets after 1 second to prevent weird fazes to initReset.
+        if (GameManager.callingTimeout + 1 < Timer.getTime() && GameManager.callingTimeout != 0) {
+            initReset();
+        }
     }
 
 
@@ -477,6 +482,7 @@ public class World {
     public Entity getBallCarrier() { return ballCarrier; }
 
     public void initReset() {
+        GameManager.callingTimeout = 0;
         Entity.timeEntities = Timer.getTime();
         GameManager.updatedQuarter = false;
         GameManager.appliedTimeCut = false;
@@ -799,17 +805,23 @@ public class World {
         if (window.getInput().isKeyPressed(GLFW_KEY_LEFT) && ((! Entity.playStart && ! Entity.canPlay) || (Entity.playStart && ! Entity.canPlay))) {
             if (GameManager.userHome) {
                 if (GameManager.timeoutsHome > 0) {
-                    GameManager.down--;
+                    // Only After the play, can a down be subtracted, or else down will stay at 1.
+                    if (! Entity.playStart && ! Entity.canPlay)
+                        GameManager.down--;
+
                     GameManager.timeoutsHome--;
                     GameManager.runClock = false;
-                    world.initReset();
+                    GameManager.callingTimeout = Timer.getTime();
                 }
             } else {
                 if (GameManager.timeOutsAway > 0) {
-                    GameManager.down--;
+                    // Only After the play, can a down be subtracted, or else down will stay at 1.
+                    if (! Entity.playStart && ! Entity.canPlay)
+                        GameManager.down--;
+
                     GameManager.timeOutsAway--;
                     GameManager.runClock = false;
-                    world.initReset();
+                    GameManager.callingTimeout = Timer.getTime();
                 }
             }
         }
@@ -819,17 +831,23 @@ public class World {
         if (((! Entity.playStart && ! Entity.canPlay) || (Entity.playStart && ! Entity.canPlay))) {
             if (GameManager.userHome && GameManager.runClock && (GameManager.quarter == 4 && GameManager.timeLeft < 75 && GameManager.awayScore < GameManager.homeScore && GameManager.homeScore - GameManager.awayScore < 16)) {
                 if (GameManager.timeOutsAway > 0) {
-                    GameManager.down--;
+                    // Only After the play, can a down be subtracted, or else down will stay at 1.
+                    if (! Entity.playStart && ! Entity.canPlay)
+                        GameManager.down--;
+
                     GameManager.timeOutsAway--;
                     GameManager.runClock = false;
-                    world.initReset();
+                    GameManager.callingTimeout = Timer.getTime();
                 }
             } else if ((GameManager.quarter == 4 && GameManager.runClock && GameManager.timeLeft < 75 && GameManager.awayScore > GameManager.homeScore && GameManager.awayScore - GameManager.homeScore < 16)) {
                 if (GameManager.timeoutsHome > 0) {
-                    GameManager.down--;
+                    // Only After the play, can a down be subtracted, or else down will stay at 1.
+                    if (! Entity.playStart && ! Entity.canPlay)
+                        GameManager.down--;
+
                     GameManager.timeoutsHome--;
                     GameManager.runClock = false;
-                    world.initReset();
+                    GameManager.callingTimeout = Timer.getTime();
                 }
             }
         }
