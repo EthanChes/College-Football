@@ -1,11 +1,13 @@
 package entity;
 
+import com.sun.tools.javac.Main;
 import entity.Entity;
 import gameplay.Timer;
 import graphics.Window;
 import org.joml.Vector2f;
 import world.World;
 
+import static main.main.endWorld;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 
 public class GameManager {
@@ -62,6 +64,45 @@ public class GameManager {
         this.xMin = xMin;
         this.xEndzoneLeft = xEndzoneLeft;
         this.xEndzoneRight = xEndzoneRight;
+
+        ballPosX = 300; // 223
+        ballPosY = -250f;
+        down = 0;
+        offenseBall = true;
+        userOffense = true;
+        selectedPlay = false;
+        hasEntities = false;
+        timePlayEnd = 0;
+        homeID = 2;
+        awayID = 4;
+        timeLeft = 300; // seconds
+        playClock = 20; // seconds
+        quarter = 1;
+        userHome = true;
+        homeScore = 0;
+        awayScore = 0;
+        previousKnownTime = Timer.getTime();
+        runClock = false;
+        homeDefer = false;
+        kickoff = true;
+        pat = false;
+        scoreHome = false;
+        scoreAway = false;
+        touchback = false;
+        gameStarted = false;
+        touchDown = false;
+        hasUpdated = false;
+        updatedQuarter = false;
+        shouldPAT = false;
+        homeTimeStrategy = 0;
+        awayTimeStrategy = 0;
+        appliedPenalty = false;
+        appliedTimeCut = false;
+        timeoutsHome = 3;
+        timeOutsAway = 3;
+        callingTimeout = 0;
+        overtime = 0;
+        firstTouchOT = false;
     }
 
     public boolean ballCarrierOutOfBounds(World world) { // Check if Out of Bounds (ALL)
@@ -610,7 +651,8 @@ public class GameManager {
 
     public static void endGame(Window win) {
         System.out.println("GAME OVER");
-        win.closeWindow();
+
+        endWorld();
     }
 
     public float getBallPosX() { return ballPosX; }

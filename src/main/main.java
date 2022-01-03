@@ -12,6 +12,7 @@ import org.joml.Vector3f;
 import org.lwjgl.*;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.*;
+import world.Home;
 import world.Tile;
 import world.TileRenderer;
 import world.World;
@@ -24,8 +25,8 @@ import static org.lwjgl.opengl.GL11.*;
 public class main {
 // Note 10 Spaces Indicates New Function/End of Previous Function ONLY in Main
 
-
-
+        public static Home home;
+        public static World world;
 
 
 
@@ -53,8 +54,7 @@ public class main {
             Assets.initAsset();
 
             Shader shader = new Shader("shader"); // Creates a new shader, filename is singular, because in the directory, the shader files start with "shader" Shader Class Handles Names.
-            World world = new World("test", window);
-            world.calculateView(window,camera);
+            home = new Home("HOME.png");
 
             glClearColor(0.0f, 1.0f, 0.0f, 0.0f); // Window Initial Color
 
@@ -66,8 +66,6 @@ public class main {
             int frames = 0; // Total Number of frames that have occured. When frame_time = 1s, this will output the frames produced in 1s (fps) and will set to 0.
 
             // While loop for frame to stay open while it should not close.
-            world.initReset(window);
-            Away away = new Away(2);
             while (!window.shouldClose()) {
 
                 // Add Loop Code Here
@@ -79,7 +77,9 @@ public class main {
                 time = time_2; // Reset time, such that it can calculate difference between this and next frame in next loop.
 
                 while (unprocessed >= frame_cap) { // Loop at rate of fps, only occurs when the unprocessed time is greater than time available for a frame.
-                    world.calculateView(window,camera);
+                    if (world.canRun)
+                         world.calculateView(window,camera);
+
                     unprocessed -= frame_cap; // The amount of unprocessed time decreases by 1 frames amount of time.
                     can_render = true; // If this is set to true, then images may render. Thus it only renders at frame_cap speed. Line 166, this is used for controlling rendering at fps.
 
@@ -88,9 +88,14 @@ public class main {
                         glfwSetWindowShouldClose(window.getWindow(), true);
                     }
 
-                    world.update((float) frame_cap, window, camera);
+                    if (home.canRun) {
+                        homeUpdate(window, camera);
+                    }
 
-                    world.correctCamera(camera,window);
+                    if (world.canRun) {
+                        world.update((float) frame_cap, window, camera);
+                        world.correctCamera(camera, window);
+                    }
 
 
                     // updates keys
@@ -108,7 +113,13 @@ public class main {
                 if (can_render) {
                     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear Framebuffer
 
-                    world.render(tiles, shader, camera, window);
+                    if (home.canRun) {
+                        home.render(shader, camera);
+                    }
+
+                    if (world.canRun) {
+                        world.render(tiles, shader, camera, window);
+                    }
 
                     frames++; // total frames increases when 1 frame render is performed
 
@@ -141,5 +152,21 @@ public class main {
         loop();
 
         glfwTerminate();
+    }
+
+    public static void homeUpdate(Window window, Camera camera) {
+        if (window.getInput().isKeyPressed(GLFW.GLFW_KEY_ENTER)) { // Proceed with game tasks
+            world = new World("test", window);
+            world.canRun = true;
+            home.canRun = false;
+            world.calculateView(window,camera);
+            world.initReset(window);
+            System.out.println("RUNNING");
+        }
+    }
+
+    public static void endWorld() {
+            world.canRun = false;
+            home.canRun = true;
     }
 }
