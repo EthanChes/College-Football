@@ -227,7 +227,15 @@ public class World {
             }
 
             for (Entity entity : entities) {
+                if (entity == getFootballEntity() && !getFootballEntity().pass) {
+                    getFootballEntity().addY(Entity.throw_height);
+                }
+
                 entity.render(shader, camera, window, this);
+
+                if (entity == getFootballEntity() && ! getFootballEntity().pass) {
+                    getFootballEntity().addY(-Entity.throw_height);
+                }
             }
 
             for (int count = 0; count < entities.size(); count++) {

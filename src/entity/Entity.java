@@ -32,7 +32,7 @@ public abstract class Entity {
     public boolean forceUserControl = false;
     public double timeUserControl;
     protected boolean canCollide = true;
-    protected boolean pass = false;
+    public boolean pass = false;
     public boolean hasBall = false;
     public boolean reachedEndOfRoute = false;
     public boolean userControl = false;
@@ -801,5 +801,9 @@ public abstract class Entity {
                 }
             }
         }
+    }
+
+    public void addY(float y) {
+        this.transform.pos.y += y;
     }
 }
