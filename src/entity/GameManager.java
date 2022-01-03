@@ -356,21 +356,20 @@ public class GameManager {
                     if (quarter <= 3) {
                         quarter++;
                         timeLeft = 300;
+                        if (quarter == 3) {
+                            kickoff = true;
+                            runClock = false;
+                            if (homeDefer)
+                                userOffense = false;
+                            else
+                                userOffense = true;
+                        }
                     } else {
                         endGame(win);
 
                         // Add End of Game Stuff Here
                     }
                 }
-            }
-
-            // Prepare next kickoff
-            if (quarter == 3) {
-                kickoff = true;
-                if (homeDefer)
-                    userOffense = false;
-                else
-                    userOffense = true;
             }
         }
     }
