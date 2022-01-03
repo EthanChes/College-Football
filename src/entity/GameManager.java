@@ -358,7 +358,7 @@ public class GameManager {
 
     public static void updateTimer(double time, World world, Window win) {
         // Update Timer if Clock should be running
-        if (runClock && hasEntities) {
+        if (runClock && hasEntities && ! pat) {
 
             timeLeft -= (time - previousKnownTime);
 
@@ -389,7 +389,7 @@ public class GameManager {
             }
         }
 
-        if (! Entity.playStart && ! Entity.canPlay && hasEntities && (! userOffense && (pat || kickoff))) {
+        if (! Entity.playStart && ! Entity.canPlay && hasEntities && ! (userOffense && (pat || kickoff))) {
             playClock -= (time - previousKnownTime);
         }
 
