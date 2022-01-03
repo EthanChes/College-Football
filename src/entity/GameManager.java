@@ -26,12 +26,12 @@ public class GameManager {
     public static double timePlayEnd = 0;
     public static int homeID = 2;
     public static int awayID = 4;
-    public static float timeLeft = 3; // seconds
+    public static float timeLeft = 300; // seconds
     public static float playClock = 20; // seconds
-    public static int quarter = 4;
+    public static int quarter = 1;
     public static boolean userHome = false;
-    public static int homeScore = 14;
-    public static int awayScore = 14;
+    public static int homeScore = 0;
+    public static int awayScore = 0;
     public static double previousKnownTime = Timer.getTime();
     public static boolean runClock = false;
     public static boolean homeDefer = false;
@@ -241,7 +241,7 @@ public class GameManager {
                 GameManager.ballPosY = -250;
             }
 
-            if (down > 4 && (firstDownLine + .6f > world.getFootballEntity().transform.pos.x || Entity.incompletePass))
+            if (down > 4 && hasEntities && (firstDownLine + .6f > world.getFootballEntity().transform.pos.x || Entity.incompletePass))
                 Entity.turnover = true;
 
             if (!Entity.turnover && !pat && !kickoff) {
@@ -419,19 +419,17 @@ public class GameManager {
 
                 if (scoreHome) {
                     kickoff = true;
-                    if ((GameManager.userHome && GameManager.userOffense) || (!GameManager.userHome && !GameManager.userOffense))
+                    if (GameManager.userHome)
                         GameManager.userOffense = true;
-                    else {
+                    else
                         GameManager.userOffense = false;
-                    }
                 }
                 if (scoreAway) {
                     kickoff = true;
-                    if ((!GameManager.userHome && GameManager.userOffense) || (GameManager.userHome && !GameManager.userOffense)) {
+                    if (GameManager.userHome)
                         GameManager.userOffense = false;
-                    } else {
+                    else
                         GameManager.userOffense = true;
-                    }
                 }
 
                 if (Entity.incompletePass || Entity.turnover) {
@@ -571,7 +569,7 @@ public class GameManager {
                             runClock = false;
                             timeOutsAway = 3;
                             timeoutsHome = 3;
-                            if (homeDefer)
+                            if ((homeDefer && userHome) || (! homeDefer && ! userHome))
                                 userOffense = false;
                             else
                                 userOffense = true;
