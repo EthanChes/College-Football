@@ -49,6 +49,8 @@ public class GameManager {
     public static int awayTimeStrategy = 0;
     public static boolean appliedPenalty = false;
     public static boolean appliedTimeCut = false;
+    public static int timeoutsHome = 3;
+    public static int timeOutsAway = 3;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
         this.yMax = yMax;
@@ -446,6 +448,8 @@ public class GameManager {
                         if (quarter == 3) {
                             kickoff = true;
                             runClock = false;
+                            timeOutsAway = 3;
+                            timeoutsHome = 3;
                             if (homeDefer)
                                 userOffense = false;
                             else

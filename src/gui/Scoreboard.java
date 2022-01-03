@@ -17,6 +17,7 @@ public class Scoreboard {
     private static TileSheet yellowNumbers;
     private static TileSheet invisNumbers;
     private static TileSheet letters;
+    private static TileSheet timeouts;
 
     private static float translateX;
     private static float translateY;
@@ -33,6 +34,7 @@ public class Scoreboard {
         yellowNumbers = new TileSheet("YELLOWNUMBERS.png",4);
         invisNumbers = new TileSheet("INVISIBLENUMBERS.png",4);
         letters = new TileSheet("LETTERS.png",6);
+        timeouts = new TileSheet("TIMEOUTS.png", 2);
 
         translateX = transX;
         translateY = transY;
@@ -285,6 +287,80 @@ public class Scoreboard {
         pointer = GameManager.awayScore%10;
         invisNumbers.bindTile(shader,pointer);
         Assets.getModel().render();
+
+        // Render Away Timeouts
+        camera.getUntransformedProjection().scale(10,mat);
+        mat.translate(-17,-18.55f,0);
+        shader.setUniform("projection",mat);
+
+        if (GameManager.timeOutsAway >= 3)
+            pointer = 0;
+        else
+            pointer = 1;
+
+        timeouts.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Render 2nd Timeout
+        mat.translate(-2,0,0);
+        shader.setUniform("projection",mat);
+
+        if (GameManager.timeOutsAway >= 2)
+            pointer = 0;
+        else
+            pointer = 1;
+
+        timeouts.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Render 3rd Timeout
+        mat.translate(-2,0,0);
+        shader.setUniform("projection",mat);
+
+        if (GameManager.timeOutsAway >= 1)
+            pointer = 0;
+        else
+            pointer = 1;
+
+        timeouts.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Render Home Timeouts
+        mat.translate(-6,0,0);
+        shader.setUniform("projection",mat);
+
+        if (GameManager.timeoutsHome >= 3)
+            pointer = 0;
+        else
+            pointer = 1;
+
+        timeouts.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Render 2nd Timeout
+        mat.translate(-2,0,0);
+        shader.setUniform("projection",mat);
+
+        if (GameManager.timeoutsHome >= 2)
+            pointer = 0;
+        else
+            pointer = 1;
+
+        timeouts.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Render 3rd Timeout
+        mat.translate(-2,0,0);
+        shader.setUniform("projection",mat);
+
+        if (GameManager.timeoutsHome >= 1)
+            pointer = 0;
+        else
+            pointer = 1;
+
+        timeouts.bindTile(shader,pointer);
+        Assets.getModel().render();
+
 
 
 

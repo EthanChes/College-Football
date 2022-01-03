@@ -369,6 +369,9 @@ public class World {
 
         if (Entity.canPlay && ! GameManager.kickoff && ! GameManager.pat)
             GameManager.runClock = true;
+
+        timeOutUser(window, this);
+        timeOutAI(window, this);
     }
 
 
@@ -790,6 +793,46 @@ public class World {
         }
 
         return defense;
+    }
+
+    public void timeOutUser(Window window, World world) {
+        if (window.getInput().isKeyPressed(GLFW_KEY_LEFT) && ((! Entity.playStart && ! Entity.canPlay) || (Entity.playStart && ! Entity.canPlay))) {
+            if (GameManager.userHome) {
+                if (GameManager.timeoutsHome > 0) {
+                    GameManager.down--;
+                    GameManager.timeoutsHome--;
+                    GameManager.runClock = false;
+                    world.initReset();
+                }
+            } else {
+                if (GameManager.timeOutsAway > 0) {
+                    GameManager.down--;
+                    GameManager.timeOutsAway--;
+                    GameManager.runClock = false;
+                    world.initReset();
+                }
+            }
+        }
+    }
+
+    public void timeOutAI(Window window, World world) {
+        if (((! Entity.playStart && ! Entity.canPlay) || (Entity.playStart && ! Entity.canPlay))) {
+            if (GameManager.userHome && (GameManager.quarter == 4 && GameManager.timeLeft < 75 && GameManager.awayScore < GameManager.homeScore && GameManager.homeScore - GameManager.awayScore < 16)) {
+                if (GameManager.timeOutsAway > 0) {
+                    GameManager.down--;
+                    GameManager.timeOutsAway--;
+                    GameManager.runClock = false;
+                    world.initReset();
+                }
+            } else if ((GameManager.quarter == 4 && GameManager.timeLeft < 75 && GameManager.awayScore < GameManager.homeScore && GameManager.homeScore - GameManager.awayScore < 16)) {
+                if (GameManager.timeoutsHome > 0) {
+                    GameManager.down--;
+                    GameManager.timeoutsHome--;
+                    GameManager.runClock = false;
+                    world.initReset();
+                }
+            }
+        }
     }
 
 

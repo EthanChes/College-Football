@@ -241,6 +241,10 @@ public class Quarterback extends Entity {
 
             //zoomOutWhenNotVisible(this, camera);
 
+             // Prevents QB from randomly running out of bounds
+             if (this.transform.pos.y + movement.y > GameManager.yMax || this.transform.pos.y + movement.y < GameManager.yMin)
+                 movement.y = 0;
+
             if (canPlay && ! pancaked) {
                 move(movement);
             }
