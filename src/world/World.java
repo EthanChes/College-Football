@@ -228,13 +228,13 @@ public class World {
 
             for (Entity entity : entities) {
                 if (entity == getFootballEntity() && !getFootballEntity().pass) {
-                    getFootballEntity().addY(Entity.throw_height);
+                    getFootballEntity().addY(Entity.throw_height/2);
                 }
 
                 entity.render(shader, camera, window, this);
 
                 if (entity == getFootballEntity() && ! getFootballEntity().pass) {
-                    getFootballEntity().addY(-Entity.throw_height);
+                    getFootballEntity().addY(-Entity.throw_height/2);
                 }
             }
 
