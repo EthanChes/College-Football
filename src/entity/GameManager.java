@@ -43,6 +43,7 @@ public class GameManager {
     public static boolean gameStarted = false;
     public static boolean touchDown = false;
     public static boolean hasUpdated = false;
+    public static boolean updatedQuarter = false;
     public static boolean shouldPAT = false;
     public static int homeTimeStrategy = 0;
     public static int awayTimeStrategy = 0;
@@ -308,7 +309,7 @@ public class GameManager {
         }
     }
 
-    public static void postUpdate(Window win) {
+    public static void postUpdate(Window win, World world) {
         if (!hasUpdated) {
             hasUpdated = true;
 
@@ -350,27 +351,8 @@ public class GameManager {
                 GameManager.runClock = true;
             }
 
-            if (! pat) {
-                if (timeLeft <= 0) {
-                    // Update Next Quarter
-                    if (quarter <= 3) {
-                        quarter++;
-                        timeLeft = 300;
-                        if (quarter == 3) {
-                            kickoff = true;
-                            runClock = false;
-                            if (homeDefer)
-                                userOffense = false;
-                            else
-                                userOffense = true;
-                        }
-                    } else {
-                        endGame(win);
-
-                        // Add End of Game Stuff Here
-                    }
-                }
-            }
+            if (timePlayEnd + 2 < Timer.getTime() && timePlayEnd != 0)
+                updateQuarter(win,world);
         }
     }
 
@@ -405,7 +387,6 @@ public class GameManager {
                 }
 
             }
-
         }
 
         if (! Entity.playStart && ! Entity.canPlay && hasEntities) {
@@ -413,12 +394,11 @@ public class GameManager {
         }
 
         if (timeLeft <= 0) {
-
-            if (! Entity.playStart && ! Entity.canPlay && ! pat && quarter == 4) {
-                endGame(win);
-            }
-
             timeLeft = 0;
+
+            if (! Entity.playStart && ! Entity.canPlay && ! pat) {
+                updateQuarter(win, world);
+            }
         }
 
         if (playClock <= 0) { // DOG Penalty
@@ -445,6 +425,39 @@ public class GameManager {
     public static void printDownInfo() {
         System.out.println(firstDownLine + " " + ballPosX);
         System.out.println(down + " & " + (firstDownLine - ballPosX)/2);
+    }
+
+    public static void updateQuarter(Window win, World world) {
+        if (! updatedQuarter) {
+            updatedQuarter = true;
+            if (!pat) {
+                if (timeLeft <= 0) {
+                    // Update Next Quarter
+                    runClock = false;
+                    System.out.println(timeLeft + " Seconds");
+                    if (quarter <= 3) {
+                        quarter++;
+                        timeLeft = 300;
+                        if (quarter == 3) {
+                            kickoff = true;
+                            runClock = false;
+                            if (homeDefer)
+                                userOffense = false;
+                            else
+                                userOffense = true;
+                        }
+                    } else {
+                        endGame(win);
+                        // Add End of Game Stuff Here
+                    }
+
+                    if (quarter == 2 || quarter == 4) // Prevents Down Increment From InitReset
+                        down--;
+
+                    world.initReset();
+                }
+            }
+        }
     }
 
     public static void endGame(Window win) {

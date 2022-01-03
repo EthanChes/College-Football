@@ -365,7 +365,7 @@ public class World {
         GameManager.updateTimer(Timer.getTime(), this, window);
 
         if (Entity.playStart && ! Entity.canPlay)
-            GameManager.postUpdate(window);
+            GameManager.postUpdate(window, this);
 
         if (Entity.canPlay && ! GameManager.kickoff && ! GameManager.pat)
             GameManager.runClock = true;
@@ -474,6 +474,7 @@ public class World {
     public Entity getBallCarrier() { return ballCarrier; }
 
     public void initReset() {
+        GameManager.updatedQuarter = false;
         GameManager.appliedTimeCut = false;
         GameManager.appliedPenalty = false;
         Kicker.timeKicked = 0;
