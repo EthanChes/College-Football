@@ -389,7 +389,7 @@ public class GameManager {
             }
         }
 
-        if (! Entity.playStart && ! Entity.canPlay && hasEntities) {
+        if (! Entity.playStart && ! Entity.canPlay && hasEntities && (! userOffense && (pat || kickoff))) {
             playClock -= (time - previousKnownTime);
         }
 
@@ -404,15 +404,20 @@ public class GameManager {
         if (playClock <= 0) { // DOG Penalty
             playClock = 0;
 
-            if (timePlayEnd + 2 < Timer.getTime() && timePlayEnd != 0) {
-                world.initReset();
-            }
-
             if (! appliedPenalty) {
-                world.getFootballEntity().transform.pos.x -= 10;
-                runClock = false;
+                if (world.getFootballEntity().transform.pos.x > xEndzoneLeft + 10) {
+                    world.getFootballEntity().transform.pos.x -= 10;
+                } else {
+                    world.getFootballEntity().transform.pos.x -= (world.getFootballEntity().transform.pos.x-xEndzoneLeft)/2;
+                }
+                down--; // prevents down increment
+                Entity.incompletePass = true;
                 timePlayEnd = Timer.getTime();
                 appliedPenalty = true;
+            }
+
+            if (timePlayEnd + 2 < Timer.getTime() && timePlayEnd != 0) {
+                world.initReset();
             }
 
             Entity.playStart = true;
