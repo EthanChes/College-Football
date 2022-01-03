@@ -191,19 +191,34 @@ public class Scoreboard {
             }
         }
 
-        // Render Quarter
-        mat.translate(1.8f,0,0);
-        shader.setUniform("projection",mat);
-        pointer = GameManager.quarter;
-        numbers.bindTile(shader,pointer);
-        Assets.getModel().render();
+        if (GameManager.quarter <= 4) {
+            // Render Quarter
+            mat.translate(1.8f, 0, 0);
+            shader.setUniform("projection", mat);
+            pointer = GameManager.quarter;
+            numbers.bindTile(shader, pointer);
+            Assets.getModel().render();
 
-        // Renders Quarter's following letters
-        mat.translate(1.6f,0,0);
-        shader.setUniform("projection",mat);
-        pointer = GameManager.quarter + 11;
-        numbers.bindTile(shader,pointer);
-        Assets.getModel().render();
+            // Renders Quarter's following letters
+            mat.translate(1.6f, 0, 0);
+            shader.setUniform("projection", mat);
+            pointer = GameManager.quarter + 11;
+            numbers.bindTile(shader, pointer);
+            Assets.getModel().render();
+        } else {
+            mat.translate(1.8f,0,0); // O
+            shader.setUniform("projection", mat);
+            pointer = 14;
+            letters.bindTile(shader, pointer);
+            Assets.getModel().render();
+
+            mat.translate(1.8f,0,0); // T
+            shader.setUniform("projection",mat);
+            pointer = 19;
+            letters.bindTile(shader,pointer);
+            Assets.getModel().render();
+            mat.translate(-.2f,0,0);
+        }
 
         // Render Time in Game - 1st Digit Minutes
         mat.translate(2,0,0);
