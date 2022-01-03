@@ -256,7 +256,7 @@ public class Football extends Entity {
 
                 if (GameManager.userHome && GameManager.userOffense) {
                     if (! GameManager.pat) {
-                        GameManager.homeScore += 3; GameManager.kickoff = true;
+                        GameManager.homeScore += 3;
                     } else {
                         GameManager.homeScore += 1;
                     }
@@ -264,7 +264,7 @@ public class Football extends Entity {
                 }
                 else if (! GameManager.userHome && ! GameManager.userOffense) {
                     if (! GameManager.pat) {
-                        GameManager.homeScore += 3; GameManager.kickoff = true;
+                        GameManager.homeScore += 3;
                     } else {
                         GameManager.homeScore += 1;
                     }
@@ -272,7 +272,7 @@ public class Football extends Entity {
                 }
                 else {
                     if (! GameManager.pat) {
-                        GameManager.awayScore += 3; GameManager.kickoff = true;
+                        GameManager.awayScore += 3;
                     } else {
                         GameManager.awayScore += 1;
                     }

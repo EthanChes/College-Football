@@ -66,7 +66,7 @@ public class main {
             int frames = 0; // Total Number of frames that have occured. When frame_time = 1s, this will output the frames produced in 1s (fps) and will set to 0.
 
             // While loop for frame to stay open while it should not close.
-            world.initReset();
+            world.initReset(window);
             Away away = new Away(2);
             while (!window.shouldClose()) {
 

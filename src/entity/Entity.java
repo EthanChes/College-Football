@@ -194,7 +194,7 @@ public abstract class Entity {
     }
 
     public static void selectDefensivePlayer(Window win, World world) {
-        if (!GameManager.userOffense && GameManager.offenseBall && win.getInput().isKeyPressed(GLFW_KEY_Z) && selectPlayerCooldown + .05f < Timer.getTime()) {
+        if (!GameManager.userOffense && GameManager.offenseBall && win.getInput().isKeyPressed(GLFW_KEY_Z) && selectPlayerCooldown + .05f < Timer.getTime() && GameManager.hasEntities) {
             // Enabled to select new player
 
             selectPlayerCooldown = Timer.getTime();
@@ -240,7 +240,7 @@ public abstract class Entity {
 
     public static void selectOffensivePlayer(Window win, World world) {
         // Upon Key Press, Switch Player
-        if (win.getInput().isKeyPressed(GLFW_KEY_Z) && GameManager.userOffense && ! GameManager.offenseBall && selectPlayerCooldown + .3f < Timer.getTime()) {
+        if (win.getInput().isKeyPressed(GLFW_KEY_Z) && GameManager.userOffense && ! GameManager.offenseBall && selectPlayerCooldown + .3f < Timer.getTime() && GameManager.hasEntities) {
             selectPlayerCooldown = Timer.getTime();
 
             // Sort To Find New Closest Player
@@ -459,9 +459,47 @@ public abstract class Entity {
         this.route = (byte) index;
     }
 
+    public boolean kickSnap(Window window, World world) {
+        if (GameManager.userOffense) {
+            if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && !playStart && GameManager.selectedPlay) {
+                world.getCountingUpEntity(14).useAnimation(6);
+                timeSnapped = Timer.getTime();
+                canPlay = true;
+                playStart = true;
+                return true;
+            }
+        } else {
+            int preferredSnapTime = 10;
+            if (GameManager.userHome) {
+                switch (GameManager.awayTimeStrategy) {
+                    case 0 : preferredSnapTime = 10; break;
+                    case 1 : preferredSnapTime = 15; break;
+                    case 2 : preferredSnapTime = 3; break;
+                }
+            } else {
+                switch (GameManager.homeTimeStrategy) {
+                    case 0 : preferredSnapTime = 10; break;
+                    case 1 : preferredSnapTime = 15; break;
+                    case 2 : preferredSnapTime = 3; break;
+                }
+            }
+
+            if (GameManager.playClock <= preferredSnapTime) {
+                world.getCountingUpEntity(14).useAnimation(6);
+                timeSnapped = Timer.getTime();
+                canPlay = true;
+                playStart = true;
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
     public boolean snap(Window window, World world) {
         if (GameManager.userOffense) {
-            if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && !playStart && GameManager.selectedPlay && timeEntities + 3 < Timer.getTime()) {
+            if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && !playStart && GameManager.selectedPlay && timeEntities + .5f < Timer.getTime()) {
                 world.getCountingUpEntity(14).useAnimation(6);
                 timeSnapped = Timer.getTime();
                 canPlay = true;

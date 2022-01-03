@@ -251,7 +251,7 @@ public class World {
         }
 
         if (GameManager.timePlayEnd + 2 < Timer.getTime() && GameManager.timePlayEnd != 0) {
-            this.initReset();
+            this.initReset(window);
             camera.setProjection(640,480);
             camera.setProjMultiplierX(1);
             camera.setProjMultiplierY(1);
@@ -375,7 +375,7 @@ public class World {
 
         // World Resets after 1 second to prevent weird fazes to initReset.
         if (GameManager.callingTimeout + 1 < Timer.getTime() && GameManager.callingTimeout != 0) {
-            initReset();
+            initReset(window);
         }
     }
 
@@ -481,14 +481,14 @@ public class World {
 
     public Entity getBallCarrier() { return ballCarrier; }
 
-    public void initReset() {
+    public void initReset(Window window) {
         GameManager.callingTimeout = 0;
         Entity.timeEntities = Timer.getTime();
         GameManager.updatedQuarter = false;
         GameManager.appliedTimeCut = false;
         GameManager.appliedPenalty = false;
         Kicker.timeKicked = 0;
-        gameManager.setBallPosX(this);
+        gameManager.setBallPosX(this, window);
         gameManager.setBallPosY(this);
         GameManager.scoreAway = false;
         GameManager.scoreHome = false;
@@ -546,6 +546,7 @@ public class World {
              offense.addAll(randomOffensivePlay());
              entities.addAll(selectDefensivePlay(SelectPlay.getPlayID()));
              entities.addAll(offense);
+             System.out.println("WORK");
         }
         setBallCarrier(this.getFootballEntity());
     }

@@ -203,7 +203,7 @@ public class Kicker extends Entity {
                         if (canStart) {
                             if (! hasKicked) {
                                 if (! playStart)
-                                    snap(window, world);
+                                    kickSnap(window, world);
                                 if (world.getQuarterbackEntity().hasBall) {
                                     movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
                                 }
@@ -227,7 +227,7 @@ public class Kicker extends Entity {
                         if (canStart) {
                             if (! hasKicked) {
                                 if (! playStart)
-                                    snap(window, world);
+                                    kickSnap(window, world);
 
                                 if (this.transform.pos.distance(world.getFootballEntity().transform.pos) < .5f) {
                                     kickoffSnap();

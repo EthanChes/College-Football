@@ -26,11 +26,11 @@ public class GameManager {
     public static double timePlayEnd = 0;
     public static int homeID = 2;
     public static int awayID = 4;
-    public static float timeLeft = 45; // seconds
+    public static float timeLeft = 3; // seconds
     public static float playClock = 20; // seconds
     public static int quarter = 4;
     public static boolean userHome = false;
-    public static int homeScore = 0;
+    public static int homeScore = 14;
     public static int awayScore = 14;
     public static double previousKnownTime = Timer.getTime();
     public static boolean runClock = false;
@@ -52,6 +52,8 @@ public class GameManager {
     public static int timeoutsHome = 3;
     public static int timeOutsAway = 3;
     public static double callingTimeout = 0;
+    public static int overtime = 0;
+    public static boolean firstTouchOT = false;
 
     public GameManager(float yMax, float yMin, float xMax, float xMin, float xEndzoneLeft, float xEndzoneRight) {
         this.yMax = yMax;
@@ -201,103 +203,186 @@ public class GameManager {
         return false;
     }
 
-    public void setBallPosX(World world) {
+    public void setBallPosX(World world, Window win) {
         // Controls start of game functions
-        if (! gameStarted) {
-            gameStarted = true;
+        if (overtime == 0) {
+            if (!gameStarted) {
+                gameStarted = true;
 
-            if (homeDefer) {
-                // Set user Offense
-                if (userHome) {
-                    userOffense = true;
-                } else {
-                    userOffense = false;
-                }
+                if (homeDefer) {
+                    // Set user Offense
+                    if (userHome) {
+                        userOffense = true;
+                    } else {
+                        userOffense = false;
+                    }
 
-                kickoff = true;
-            } else {
-                if (userHome) {
-                    userOffense = false;
+                    kickoff = true;
                 } else {
-                    userOffense = true;
+                    if (userHome) {
+                        userOffense = false;
+                    } else {
+                        userOffense = true;
+                    }
                 }
             }
-        }
 
-        down++;
+            down++;
 
-        if (kickoff) {
-            GameManager.ballPosX = 223;
-            System.out.println("KICKOFF");
-            GameManager.ballPosY = -250;
-        }
-
-        if (pat) {
-            GameManager.ballPosX = 350;
-            System.out.println("PAT");
-            GameManager.ballPosY = -250;
-        }
-
-        if (down > 4 && (firstDownLine + .6f > world.getFootballEntity().transform.pos.x || Entity.incompletePass))
-            Entity.turnover = true;
-
-        if (! Entity.turnover && ! pat && ! kickoff) {
-            if (world.getBallCarrier() != null && !Entity.incompletePass && hasEntities) {
-                this.ballPosX = world.getFootballEntity().transform.pos.x - .6f;
-                System.out.println(pat);
+            if (kickoff) {
+                GameManager.ballPosX = 223;
+                System.out.println("KICKOFF");
+                GameManager.ballPosY = -250;
             }
 
-            if (ballPosX > firstDownLine) {
+            if (pat) {
+                GameManager.ballPosX = 350;
+                System.out.println("PAT");
+                GameManager.ballPosY = -250;
+            }
+
+            if (down > 4 && (firstDownLine + .6f > world.getFootballEntity().transform.pos.x || Entity.incompletePass))
+                Entity.turnover = true;
+
+            if (!Entity.turnover && !pat && !kickoff) {
+                if (world.getBallCarrier() != null && !Entity.incompletePass && hasEntities) {
+                    this.ballPosX = world.getFootballEntity().transform.pos.x - .6f;
+                    System.out.println(pat);
+                }
+
+                if (ballPosX > firstDownLine) {
+                    down = 1;
+                    firstDownLine = ballPosX + 20;
+                    System.out.println("FIRST DOWN");
+                }
+            } else if (!pat && !kickoff) {
+                // Set Ball Pos
+                System.out.println(world.getFootballEntity().transform.pos.x);
+                if (!Entity.incompletePass)
+                    this.ballPosX = (507 - world.getFootballEntity().transform.pos.x);
+                else
+                    this.ballPosX = (507 - ballPosX);
+
+
+
+                // Set Vars
+                Entity.turnover = false;
                 down = 1;
+
                 firstDownLine = ballPosX + 20;
-                System.out.println("FIRST DOWN");
-            }
-        } else if (! pat && ! kickoff) {
-            // Set Ball Pos
-            System.out.println(world.getFootballEntity().transform.pos.x);
-            if (! Entity.incompletePass)
-                this.ballPosX = (507 - world.getFootballEntity().transform.pos.x);
-            else
-                this.ballPosX = (507 - ballPosX);
 
-
-            // Set Vars
-            Entity.turnover = false;
-            down = 1;
-
-            firstDownLine = ballPosX + 20;
-
-            if (! pat && ! kickoff) {
-                if (userOffense) {
-                    userOffense = false;
-                } else {
-                    userOffense = true;
+                if (!pat && !kickoff) {
+                    if (userOffense) {
+                        userOffense = false;
+                    } else {
+                        userOffense = true;
+                    }
                 }
+
+
             }
 
+            if (touchback) {
+                Entity.incompletePass = true;
+                GameManager.ballPosX = 203;
+                GameManager.ballPosY = -250f;
 
-        }
+                firstDownLine = 223;
 
-        if (touchback) {
-            Entity.incompletePass = true;
-            GameManager.ballPosX = 203;
-            GameManager.ballPosY = -250f;
-
-            firstDownLine = 223;
-        }
-
-        if (ballPosX < 153f) {
-            if (((GameManager.userOffense && GameManager.userHome) || (!GameManager.userOffense && !GameManager.userHome)) && ! touchback) {
-                scoreHome = true; awayScore += 2; kickoff = true;
-            } else {
-                scoreAway = true; homeScore += 2; kickoff = true;
+                if (down > 4 && (firstDownLine + .6f > world.getFootballEntity().transform.pos.x || Entity.incompletePass))
+                    Entity.turnover = true;
             }
 
-            GameManager.ballPosX = 223;
-            System.out.println("KICKOFF");
-            GameManager.ballPosY = -250;
+            if (ballPosX < 153f) {
+                if (((GameManager.userOffense && GameManager.userHome) || (!GameManager.userOffense && !GameManager.userHome)) && !touchback) {
+                    scoreHome = true;
+                    awayScore += 2;
+                    kickoff = true;
+                } else {
+                    scoreAway = true;
+                    homeScore += 2;
+                    kickoff = true;
+                }
 
-        }
+                GameManager.ballPosX = 223;
+                System.out.println("KICKOFF");
+                GameManager.ballPosY = -250;
+
+            }
+        } else { // Overtime capabilities
+            if (firstTouchOT) {
+                down++;
+
+                if (pat) {
+                    GameManager.ballPosX = 350;
+                    System.out.println("PAT");
+                    GameManager.ballPosY = -250;
+                }
+
+                if (down > 4 && (firstDownLine + .6f > world.getFootballEntity().transform.pos.x || Entity.incompletePass)) {
+                    Entity.turnover = true;
+                }
+
+                if (!Entity.turnover && !pat && !kickoff) {
+                    if (world.getBallCarrier() != null && !Entity.incompletePass && hasEntities) {
+                        this.ballPosX = world.getFootballEntity().transform.pos.x - .6f;
+                    }
+
+                    if (ballPosX > firstDownLine) {
+                        down = 1;
+                        firstDownLine = ballPosX + 20;
+                        System.out.println("FIRST DOWN");
+                    }
+                } else if (!pat && !kickoff) {
+                    // Set Ball Pos
+                    ballPosX = xEndzoneRight - 50;
+
+
+                    overtime++;
+
+                    if (overtime % 2 == 1) {  // Check scores
+                        if (homeScore != awayScore) {
+                            endGame(win);
+                        }
+                    }
+
+
+                    // Set Vars
+                    Entity.turnover = false;
+                    down = 1;
+
+                    firstDownLine = ballPosX + 20;
+
+                    if (!pat && !kickoff) {
+                        if (userOffense) {
+                            userOffense = false;
+                        } else {
+                            userOffense = true;
+                        }
+                    }
+
+
+                }
+
+                if (ballPosX < 153f) {
+                    if (((GameManager.userOffense && GameManager.userHome) || (!GameManager.userOffense && !GameManager.userHome)) && !touchback) {
+                        if (! homeDefer)
+                            overtime++;
+
+                        scoreHome = true;
+                        awayScore += 2;
+                    } else {
+                        homeScore += 2;
+                        scoreAway = true;
+
+                        if (homeDefer)
+                            overtime++;
+                    }
+                }
+            } else { firstTouchOT = true; System.out.println("ILLEGAL 2"); }
+
+        } // End OT
+
 
     }
     public void setBallPosY(World world) {
@@ -313,69 +398,89 @@ public class GameManager {
     }
 
     public static void postUpdate(Window win, World world) {
-        if (!hasUpdated) {
-            hasUpdated = true;
+        if (overtime == 0) {
+            if (!hasUpdated) {
+                hasUpdated = true;
 
-            if (kickoff) {
-                kickoff = false;
-            }
-
-            if (pat) {
-                System.out.println("RAN");
-                pat = false;
-                kickoff = true;
-            }
-
-            if (shouldPAT) {
-                pat = true;
-                shouldPAT = false;
-            }
-
-            if (scoreHome) {
-                kickoff = true;
-                if ((GameManager.userHome && GameManager.userOffense) || (!GameManager.userHome && !GameManager.userOffense))
-                    GameManager.userOffense = true;
-                else {
-                    GameManager.userOffense = false;
+                if (kickoff) {
+                    kickoff = false;
                 }
-            }
-            if (scoreAway) {
-                kickoff = true;
-                if ((!GameManager.userHome && GameManager.userOffense) || (GameManager.userHome && !GameManager.userOffense)) {
-                    GameManager.userOffense = false;
+
+                if (pat) {
+                    System.out.println("RAN");
+                    pat = false;
+                    kickoff = true;
+                }
+
+                if (shouldPAT) {
+                    pat = true;
+                    shouldPAT = false;
+                }
+
+                if (scoreHome) {
+                    kickoff = true;
+                    if ((GameManager.userHome && GameManager.userOffense) || (!GameManager.userHome && !GameManager.userOffense))
+                        GameManager.userOffense = true;
+                    else {
+                        GameManager.userOffense = false;
+                    }
+                }
+                if (scoreAway) {
+                    kickoff = true;
+                    if ((!GameManager.userHome && GameManager.userOffense) || (GameManager.userHome && !GameManager.userOffense)) {
+                        GameManager.userOffense = false;
+                    } else {
+                        GameManager.userOffense = true;
+                    }
+                }
+
+                if (Entity.incompletePass || Entity.turnover) {
+                    GameManager.runClock = false;
                 } else {
-                    GameManager.userOffense = true;
+                    GameManager.runClock = true;
+                }
+
+                if (timePlayEnd + 2 < Timer.getTime() && timePlayEnd != 0)
+                    updateQuarter(win, world);
+
+                // Set Time Strategies throughout game
+                if (homeScore > awayScore && quarter == 4 && timeLeft <= 90) {
+                    homeTimeStrategy = 2;
+                    awayTimeStrategy = 1;
+                } else if (homeScore < awayScore && quarter == 4 && timeLeft <= 90) {
+                    homeTimeStrategy = 1;
+                    awayTimeStrategy = 2;
+                } else {
+                    homeTimeStrategy = 1;
+                    awayTimeStrategy = 1;
+                }
+
+
+            }
+        } else { // Overtime post update
+            if (! hasUpdated) {
+                hasUpdated = true;
+
+                if (pat) {
+                    pat = false;
+                    Entity.turnover = true;
+                }
+
+                if (shouldPAT) {
+                    pat = true;
+                    shouldPAT = false;
+                }
+
+                if (scoreHome || scoreAway) {
+                    Entity.turnover = true;
                 }
             }
-
-            if (Entity.incompletePass || Entity.turnover) {
-                GameManager.runClock = false;
-            } else {
-                GameManager.runClock = true;
-            }
-
-            if (timePlayEnd + 2 < Timer.getTime() && timePlayEnd != 0)
-                updateQuarter(win,world);
-
-            // Set Time Strategies throughout game
-            if (homeScore > awayScore && quarter == 4 && timeLeft <= 90) {
-                homeTimeStrategy = 2;
-                awayTimeStrategy = 1;
-            } else if (homeScore < awayScore && quarter == 4 && timeLeft <= 90) {
-                homeTimeStrategy = 1;
-                awayTimeStrategy = 2;
-            } else {
-                homeTimeStrategy = 1;
-                awayTimeStrategy = 1;
-            }
-
-
         }
     }
 
     public static void updateTimer(double time, World world, Window win) {
         // Update Timer if Clock should be running
-        if (runClock && hasEntities && ! pat) {
+        if (runClock && hasEntities && ! pat && overtime == 0) {
 
             timeLeft -= (time - previousKnownTime);
 
@@ -435,7 +540,7 @@ public class GameManager {
             }
 
             if (timePlayEnd + 2 < Timer.getTime() && timePlayEnd != 0) {
-                world.initReset();
+                world.initReset(win);
             }
 
             Entity.playStart = true;
@@ -454,7 +559,7 @@ public class GameManager {
         if (! updatedQuarter) {
             updatedQuarter = true;
             if (!pat) {
-                if (timeLeft <= 0) {
+                if (timeLeft <= 0 && overtime == 0) {
                     // Update Next Quarter
                     runClock = false;
                     System.out.println(timeLeft + " Seconds");
@@ -472,6 +577,26 @@ public class GameManager {
                                 userOffense = true;
                         }
                     } else {
+                        if (homeScore == awayScore) {
+                            System.out.println("DOESWORK");
+                            quarter = 5;
+                            overtime = 1;
+
+                            timeoutsHome = 1;
+                            timeOutsAway = 1;
+
+                            ballPosX = xEndzoneRight - 50;
+                            ballPosY = -251;
+                            firstDownLine = ballPosX + 20;
+                            down = 1;
+
+
+                            if ((userHome && homeDefer) || (! userHome && ! homeDefer))
+                                userOffense = false;
+                            else
+                                userOffense = true;
+                        }
+                        else
                         endGame(win);
                         // Add End of Game Stuff Here
                     }
@@ -479,7 +604,7 @@ public class GameManager {
                     if (quarter == 2 || quarter == 4) // Prevents Down Increment From InitReset
                         down--;
 
-                    world.initReset();
+                    world.initReset(win);
                 }
             }
         }
