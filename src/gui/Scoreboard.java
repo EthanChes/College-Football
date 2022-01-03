@@ -16,6 +16,8 @@ public class Scoreboard {
     private static TileSheet numbers;
     private static TileSheet yellowNumbers;
     private static TileSheet invisNumbers;
+    private static TileSheet letters;
+    private static TileSheet timeouts;
 
     private static float translateX;
     private static float translateY;
@@ -31,6 +33,8 @@ public class Scoreboard {
         numbers = new TileSheet("NUMBERS.png",4);
         yellowNumbers = new TileSheet("YELLOWNUMBERS.png",4);
         invisNumbers = new TileSheet("INVISIBLENUMBERS.png",4);
+        letters = new TileSheet("LETTERS.png",6);
+        timeouts = new TileSheet("TIMEOUTS.png", 2);
 
         translateX = transX;
         translateY = transY;
@@ -64,60 +68,157 @@ public class Scoreboard {
         // New Camera scale for yardage to 1st down & time in Game
         camera.getUntransformedProjection().scale(10,mat);
 
-        // Render Down & Yardage to 1st Down
-        mat.translate(-31,-13,0);
-        shader.setUniform("projection",mat);
-        pointer = GameManager.down;
-        numbers.bindTile(shader, pointer);
-        Assets.getModel().render();
+        if (GameManager.pat) {
+            mat.translate(-31,-13,0); // P
+            shader.setUniform("projection", mat);
+            pointer = 15;
+            letters.bindTile(shader,pointer);
+            Assets.getModel().render();
 
-        // Render letters in accordance with down
-        mat.translate(1.6f,0,0);
-        shader.setUniform("projection",mat);
-        pointer = GameManager.down + 11;
-        numbers.bindTile(shader,pointer);
-        Assets.getModel().render();
+            mat.translate(2f,0,0); // A
+            shader.setUniform("projection", mat);
+            pointer = 0;
+            letters.bindTile(shader,pointer);
+            Assets.getModel().render();
 
-        // Render ampersand
-        mat.translate(2f,0,0);
-        shader.setUniform("projection",mat);
-        pointer = 11;
-        numbers.bindTile(shader,pointer);
-        Assets.getModel().render();
+            mat.translate(2f,0,0); // T
+            shader.setUniform("projection", mat);
+            pointer = 19;
+            letters.bindTile(shader,pointer);
+            Assets.getModel().render();
 
-        // Render yards to first down
-        mat.translate(2f,0,0);
-        shader.setUniform("projection",mat);
-        pointer = (int) Math.ceil(GameManager.firstDownLine - GameManager.ballPosX)/20;
-        numbers.bindTile(shader,pointer);
-        if (pointer == 0) {
-            yellowNumbers.bindTile(shader,15);
+            mat.translate(2f,0,0); // BLANK
+            shader.setUniform("projection", mat);
+            pointer = 35;
+            letters.bindTile(shader,pointer);
+            Assets.getModel().render();
+
+            mat.translate(1f,0,0); // BLANK
+            shader.setUniform("projection", mat);
+            pointer = 35;
+            letters.bindTile(shader,pointer);
+            Assets.getModel().render();
         }
-        Assets.getModel().render();
+        else if (GameManager.kickoff) { // Render "KICKOFF"
+            mat.translate(-31,-13,0); // K
+            shader.setUniform("projection", mat);
+            pointer = 10;
+            letters.bindTile(shader,pointer);
+            Assets.getModel().render();
 
-        mat.translate(1.4f,0,0);
-        shader.setUniform("projection",mat);
-        pointer = (int) Math.ceil(GameManager.firstDownLine - GameManager.ballPosX)%20/2;
+            mat.translate(2f,0,0); // I
+            shader.setUniform("projection", mat);
+            pointer = 8;
+            letters.bindTile(shader,pointer);
+            Assets.getModel().render();
 
-        if (pointer == 0 && (int) Math.ceil(GameManager.firstDownLine - GameManager.ballPosX)/20 == 0)// Replace with inches in future, prevents 2nd & 0
-            pointer++;
+            mat.translate(2f,0,0); // C
+            shader.setUniform("projection", mat);
+            pointer = 2;
+            letters.bindTile(shader,pointer);
+            Assets.getModel().render();
 
-        numbers.bindTile(shader,pointer);
-        Assets.getModel().render();
+            mat.translate(4,0,0); // BLANK
+            shader.setUniform("projection", mat);
+            pointer = 35;
+            letters.bindTile(shader,pointer);
+            Assets.getModel().render();
 
-        // Render Quarter
-        mat.translate(1.8f,0,0);
-        shader.setUniform("projection",mat);
-        pointer = GameManager.quarter;
-        numbers.bindTile(shader,pointer);
-        Assets.getModel().render();
+            mat.translate(-2,0,0); // K
+            shader.setUniform("projection", mat);
+            pointer = 10;
+            letters.bindTile(shader,pointer);
+            Assets.getModel().render();
 
-        // Renders Quarter's following letters
-        mat.translate(1.6f,0,0);
-        shader.setUniform("projection",mat);
-        pointer = GameManager.quarter + 11;
-        numbers.bindTile(shader,pointer);
-        Assets.getModel().render();
+            mat.translate(1,0,0); // Pushes 1 Unit Right
+        }
+        else {
+            // Render Down & Yardage to 1st Down
+            mat.translate(-31, -13, 0);
+            shader.setUniform("projection", mat);
+            pointer = GameManager.down;
+            numbers.bindTile(shader, pointer);
+            Assets.getModel().render();
+
+            // Render letters in accordance with down
+            mat.translate(1.6f, 0, 0);
+            shader.setUniform("projection", mat);
+            pointer = GameManager.down + 11;
+            numbers.bindTile(shader, pointer);
+            Assets.getModel().render();
+
+            // Render ampersand
+            mat.translate(2f, 0, 0);
+            shader.setUniform("projection", mat);
+            pointer = 11;
+            numbers.bindTile(shader, pointer);
+            Assets.getModel().render();
+
+            // Render yards to first down
+            if (GameManager.firstDownLine >= GameManager.xEndzoneRight) {
+                mat.translate(2,0,0);
+                shader.setUniform("projection", mat);
+                pointer = 26;
+                letters.bindTile(shader, pointer);
+                Assets.getModel().render();
+
+                mat.translate(2f,0,0);
+                shader.setUniform("projection", mat);
+                pointer = 35;
+                letters.bindTile(shader,pointer);
+                Assets.getModel().render();
+
+                mat.translate(-.6f,0,0);
+            } else {
+                mat.translate(2f, 0, 0);
+                shader.setUniform("projection", mat);
+                pointer = (int) Math.ceil(GameManager.firstDownLine - GameManager.ballPosX) / 20;
+                numbers.bindTile(shader, pointer);
+                if (pointer == 0) {
+                    yellowNumbers.bindTile(shader, 15);
+                }
+                Assets.getModel().render();
+
+                mat.translate(1.4f, 0, 0);
+                shader.setUniform("projection", mat);
+                pointer = (int) Math.ceil(GameManager.firstDownLine - GameManager.ballPosX) % 20 / 2;
+
+                if (pointer == 0 && (int) Math.ceil(GameManager.firstDownLine - GameManager.ballPosX) / 20 == 0)// Replace with inches in future, prevents 2nd & 0
+                    pointer++;
+
+                numbers.bindTile(shader, pointer);
+                Assets.getModel().render();
+            }
+        }
+
+        if (GameManager.quarter <= 4) {
+            // Render Quarter
+            mat.translate(1.8f, 0, 0);
+            shader.setUniform("projection", mat);
+            pointer = GameManager.quarter;
+            numbers.bindTile(shader, pointer);
+            Assets.getModel().render();
+
+            // Renders Quarter's following letters
+            mat.translate(1.6f, 0, 0);
+            shader.setUniform("projection", mat);
+            pointer = GameManager.quarter + 11;
+            numbers.bindTile(shader, pointer);
+            Assets.getModel().render();
+        } else {
+            mat.translate(1.8f,0,0); // O
+            shader.setUniform("projection", mat);
+            pointer = 14;
+            letters.bindTile(shader, pointer);
+            Assets.getModel().render();
+
+            mat.translate(1.8f,0,0); // T
+            shader.setUniform("projection",mat);
+            pointer = 19;
+            letters.bindTile(shader,pointer);
+            Assets.getModel().render();
+            mat.translate(-.2f,0,0);
+        }
 
         // Render Time in Game - 1st Digit Minutes
         mat.translate(2,0,0);
@@ -201,6 +302,80 @@ public class Scoreboard {
         pointer = GameManager.awayScore%10;
         invisNumbers.bindTile(shader,pointer);
         Assets.getModel().render();
+
+        // Render Away Timeouts
+        camera.getUntransformedProjection().scale(10,mat);
+        mat.translate(-17,-18.55f,0);
+        shader.setUniform("projection",mat);
+
+        if (GameManager.timeOutsAway >= 3)
+            pointer = 0;
+        else
+            pointer = 1;
+
+        timeouts.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Render 2nd Timeout
+        mat.translate(-2,0,0);
+        shader.setUniform("projection",mat);
+
+        if (GameManager.timeOutsAway >= 2)
+            pointer = 0;
+        else
+            pointer = 1;
+
+        timeouts.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Render 3rd Timeout
+        mat.translate(-2,0,0);
+        shader.setUniform("projection",mat);
+
+        if (GameManager.timeOutsAway >= 1)
+            pointer = 0;
+        else
+            pointer = 1;
+
+        timeouts.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Render Home Timeouts
+        mat.translate(-6,0,0);
+        shader.setUniform("projection",mat);
+
+        if (GameManager.timeoutsHome >= 3)
+            pointer = 0;
+        else
+            pointer = 1;
+
+        timeouts.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Render 2nd Timeout
+        mat.translate(-2,0,0);
+        shader.setUniform("projection",mat);
+
+        if (GameManager.timeoutsHome >= 2)
+            pointer = 0;
+        else
+            pointer = 1;
+
+        timeouts.bindTile(shader,pointer);
+        Assets.getModel().render();
+
+        // Render 3rd Timeout
+        mat.translate(-2,0,0);
+        shader.setUniform("projection",mat);
+
+        if (GameManager.timeoutsHome >= 1)
+            pointer = 0;
+        else
+            pointer = 1;
+
+        timeouts.bindTile(shader,pointer);
+        Assets.getModel().render();
+
 
 
 

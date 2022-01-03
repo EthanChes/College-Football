@@ -48,13 +48,13 @@ public class Kicker extends Entity {
         else {
             int preferredSnapTime = 10;
             if (GameManager.userHome) {
-                switch (GameManager.homeTimeStrategy) {
+                switch (GameManager.awayTimeStrategy) {
                     case 0 : preferredSnapTime = 10; break;
                     case 1 : preferredSnapTime = 15; break;
                     case 2 : preferredSnapTime = 3; break;
                 }
             } else {
-                switch (GameManager.awayTimeStrategy) {
+                switch (GameManager.homeTimeStrategy) {
                     case 0 : preferredSnapTime = 10; break;
                     case 1 : preferredSnapTime = 15; break;
                     case 2 : preferredSnapTime = 3; break;
@@ -203,7 +203,7 @@ public class Kicker extends Entity {
                         if (canStart) {
                             if (! hasKicked) {
                                 if (! playStart)
-                                    snap(window, world);
+                                    kickSnap(window, world);
                                 if (world.getQuarterbackEntity().hasBall) {
                                     movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
                                 }
@@ -227,7 +227,7 @@ public class Kicker extends Entity {
                         if (canStart) {
                             if (! hasKicked) {
                                 if (! playStart)
-                                    snap(window, world);
+                                    kickSnap(window, world);
 
                                 if (this.transform.pos.distance(world.getFootballEntity().transform.pos) < .5f) {
                                     kickoffSnap();

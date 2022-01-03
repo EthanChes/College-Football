@@ -23,6 +23,7 @@ public abstract class Entity {
 
     // Game booleans
     public static boolean turnover = false;
+    public static double timeEntities = Timer.getTime();
     public boolean normalAssets = true;
     public static float throw_height;
     public static int totalReceivers = 0;
@@ -31,7 +32,7 @@ public abstract class Entity {
     public boolean forceUserControl = false;
     public double timeUserControl;
     protected boolean canCollide = true;
-    protected boolean pass = false;
+    public boolean pass = false;
     public boolean hasBall = false;
     public boolean reachedEndOfRoute = false;
     public boolean userControl = false;
@@ -193,7 +194,7 @@ public abstract class Entity {
     }
 
     public static void selectDefensivePlayer(Window win, World world) {
-        if (!GameManager.userOffense && GameManager.offenseBall && win.getInput().isKeyPressed(GLFW_KEY_Z) && selectPlayerCooldown + .05f < Timer.getTime()) {
+        if (!GameManager.userOffense && GameManager.offenseBall && win.getInput().isKeyPressed(GLFW_KEY_Z) && selectPlayerCooldown + .05f < Timer.getTime() && GameManager.hasEntities) {
             // Enabled to select new player
 
             selectPlayerCooldown = Timer.getTime();
@@ -239,7 +240,7 @@ public abstract class Entity {
 
     public static void selectOffensivePlayer(Window win, World world) {
         // Upon Key Press, Switch Player
-        if (win.getInput().isKeyPressed(GLFW_KEY_Z) && GameManager.userOffense && ! GameManager.offenseBall && selectPlayerCooldown + .3f < Timer.getTime()) {
+        if (win.getInput().isKeyPressed(GLFW_KEY_Z) && GameManager.userOffense && ! GameManager.offenseBall && selectPlayerCooldown + .3f < Timer.getTime() && GameManager.hasEntities) {
             selectPlayerCooldown = Timer.getTime();
 
             // Sort To Find New Closest Player
@@ -458,7 +459,7 @@ public abstract class Entity {
         this.route = (byte) index;
     }
 
-    public boolean snap(Window window, World world) {
+    public boolean kickSnap(Window window, World world) {
         if (GameManager.userOffense) {
             if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && !playStart && GameManager.selectedPlay) {
                 world.getCountingUpEntity(14).useAnimation(6);
@@ -470,13 +471,51 @@ public abstract class Entity {
         } else {
             int preferredSnapTime = 10;
             if (GameManager.userHome) {
-                switch (GameManager.homeTimeStrategy) {
+                switch (GameManager.awayTimeStrategy) {
                     case 0 : preferredSnapTime = 10; break;
                     case 1 : preferredSnapTime = 15; break;
                     case 2 : preferredSnapTime = 3; break;
                 }
             } else {
+                switch (GameManager.homeTimeStrategy) {
+                    case 0 : preferredSnapTime = 10; break;
+                    case 1 : preferredSnapTime = 15; break;
+                    case 2 : preferredSnapTime = 3; break;
+                }
+            }
+
+            if (GameManager.playClock <= preferredSnapTime) {
+                world.getCountingUpEntity(14).useAnimation(6);
+                timeSnapped = Timer.getTime();
+                canPlay = true;
+                playStart = true;
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
+    public boolean snap(Window window, World world) {
+        if (GameManager.userOffense) {
+            if (window.getInput().isKeyPressed(GLFW_KEY_SPACE) && !playStart && GameManager.selectedPlay && timeEntities + .5f < Timer.getTime()) {
+                world.getCountingUpEntity(14).useAnimation(6);
+                timeSnapped = Timer.getTime();
+                canPlay = true;
+                playStart = true;
+                return true;
+            }
+        } else {
+            int preferredSnapTime = 10;
+            if (GameManager.userHome) {
                 switch (GameManager.awayTimeStrategy) {
+                    case 0 : preferredSnapTime = 10; break;
+                    case 1 : preferredSnapTime = 15; break;
+                    case 2 : preferredSnapTime = 3; break;
+                }
+            } else {
+                switch (GameManager.homeTimeStrategy) {
                     case 0 : preferredSnapTime = 10; break;
                     case 1 : preferredSnapTime = 15; break;
                     case 2 : preferredSnapTime = 3; break;
@@ -762,5 +801,9 @@ public abstract class Entity {
                 }
             }
         }
+    }
+
+    public void addY(float y) {
+        this.transform.pos.y += y;
     }
 }

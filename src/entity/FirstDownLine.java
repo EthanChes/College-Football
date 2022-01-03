@@ -18,6 +18,8 @@ public class FirstDownLine extends Entity {
 
     @Override
     public void update(float delta, Window window, Camera camera, World world) {
-        // Nothing Required
+        if (GameManager.pat || GameManager.kickoff || GameManager.firstDownLine >= GameManager.xEndzoneRight) { // Place The first down marker in unseeable location in the event of a pat, kickoff ,or goal line play
+            this.transform.pos.set(0,0,0);
+        }
     }
 }
