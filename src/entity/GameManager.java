@@ -431,6 +431,7 @@ public class GameManager {
 
             if (! appliedPenalty) {
                 world.getFootballEntity().transform.pos.x -= 10;
+                runClock = false;
                 timePlayEnd = Timer.getTime();
                 appliedPenalty = true;
             }

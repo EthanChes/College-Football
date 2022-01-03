@@ -5,6 +5,7 @@ import entity.*;
 import gameplay.Timer;
 import graphics.*;
 import gui.SelectPlay;
+import load.Away;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -66,6 +67,7 @@ public class main {
 
             // While loop for frame to stay open while it should not close.
             world.initReset();
+            Away away = new Away(2);
             while (!window.shouldClose()) {
 
                 // Add Loop Code Here
