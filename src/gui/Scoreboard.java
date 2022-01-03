@@ -153,24 +153,40 @@ public class Scoreboard {
             Assets.getModel().render();
 
             // Render yards to first down
-            mat.translate(2f, 0, 0);
-            shader.setUniform("projection", mat);
-            pointer = (int) Math.ceil(GameManager.firstDownLine - GameManager.ballPosX) / 20;
-            numbers.bindTile(shader, pointer);
-            if (pointer == 0) {
-                yellowNumbers.bindTile(shader, 15);
+            if (GameManager.firstDownLine >= GameManager.xEndzoneRight) {
+                mat.translate(2,0,0);
+                shader.setUniform("projection", mat);
+                pointer = 26;
+                letters.bindTile(shader, pointer);
+                Assets.getModel().render();
+
+                mat.translate(2f,0,0);
+                shader.setUniform("projection", mat);
+                pointer = 35;
+                letters.bindTile(shader,pointer);
+                Assets.getModel().render();
+
+                mat.translate(-.6f,0,0);
+            } else {
+                mat.translate(2f, 0, 0);
+                shader.setUniform("projection", mat);
+                pointer = (int) Math.ceil(GameManager.firstDownLine - GameManager.ballPosX) / 20;
+                numbers.bindTile(shader, pointer);
+                if (pointer == 0) {
+                    yellowNumbers.bindTile(shader, 15);
+                }
+                Assets.getModel().render();
+
+                mat.translate(1.4f, 0, 0);
+                shader.setUniform("projection", mat);
+                pointer = (int) Math.ceil(GameManager.firstDownLine - GameManager.ballPosX) % 20 / 2;
+
+                if (pointer == 0 && (int) Math.ceil(GameManager.firstDownLine - GameManager.ballPosX) / 20 == 0)// Replace with inches in future, prevents 2nd & 0
+                    pointer++;
+
+                numbers.bindTile(shader, pointer);
+                Assets.getModel().render();
             }
-            Assets.getModel().render();
-
-            mat.translate(1.4f, 0, 0);
-            shader.setUniform("projection", mat);
-            pointer = (int) Math.ceil(GameManager.firstDownLine - GameManager.ballPosX) % 20 / 2;
-
-            if (pointer == 0 && (int) Math.ceil(GameManager.firstDownLine - GameManager.ballPosX) / 20 == 0)// Replace with inches in future, prevents 2nd & 0
-                pointer++;
-
-            numbers.bindTile(shader, pointer);
-            Assets.getModel().render();
         }
 
         // Render Quarter
