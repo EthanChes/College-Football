@@ -25,7 +25,7 @@ public class GameManager {
     public static boolean hasEntities = false;
     public static double timePlayEnd = 0;
     public static int homeID = 2;
-    public static int awayID = 7;
+    public static int awayID = 4;
     public static float timeLeft = 300; // seconds
     public static float playClock = 20; // seconds
     public static int quarter = 1;
