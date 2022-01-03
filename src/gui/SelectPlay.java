@@ -7,7 +7,6 @@ import graphics.Shader;
 import graphics.TileSheet;
 import graphics.Window;
 import org.joml.Matrix4f;
-import org.joml.Vector4f;
 
 public class SelectPlay {
     private static Shader shader;
@@ -15,6 +14,7 @@ public class SelectPlay {
     private static TileSheet sheet;
     private static TileSheet special;
     private static TileSheet numbers;
+    private static TileSheet recommended;
 
     private float x;
     private int tileID;
@@ -44,6 +44,7 @@ public class SelectPlay {
         }
 
         numbers = new TileSheet("INVISIBLENUMBERS.png",4);
+        recommended = new TileSheet("RECOMMENDED.png",2);
 
         this.x = x;
         this.tileID = tileID;
@@ -99,6 +100,29 @@ public class SelectPlay {
             special.bindTile(shader, 0);
             Assets.getModel().render();
         }
+
+        camera.getUntransformedProjection().scale(75,mat);
+        mat.translate(0,-2.4f,0);
+        shader.setUniform("projection",mat);
+        int pointer = 0;
+
+        int scoreDiff;
+        if (GameManager.userHome) {
+            scoreDiff = GameManager.awayScore - GameManager.homeScore;
+        } else {
+            scoreDiff = GameManager.homeScore - GameManager.awayScore;
+        }
+
+        if ((GameManager.ballPosX > GameManager.xEndzoneRight - 70 && GameManager.down == 4 && true) || (GameManager.pat && ! (GameManager.quarter == 4 && (scoreDiff == -2 || scoreDiff == -5 || scoreDiff == 1))))
+            pointer = 1;
+        else if (GameManager.down == 4 && true)
+            pointer = 2;
+        else
+            pointer = 0;
+
+
+        recommended.bindTile(shader, pointer);
+        Assets.getModel().render();
 
         //shader.setUniform("color", new Vector4f(0,0,0,.4f));
     }

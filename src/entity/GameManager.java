@@ -537,7 +537,7 @@ public class GameManager {
                 appliedPenalty = true;
             }
 
-            if (timePlayEnd + 2 < Timer.getTime() && timePlayEnd != 0) {
+            if (timePlayEnd + 3 < Timer.getTime() && timePlayEnd != 0) {
                 world.initReset(win);
             }
 
