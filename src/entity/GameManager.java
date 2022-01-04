@@ -32,7 +32,7 @@ public class GameManager {
     public static double timePlayEnd = 0;
     public static int homeID = 0;
     public static int awayID = 1;
-    public static float timeLeft = 300; // seconds
+    public static float timeLeft = 180; // seconds
     public static float playClock = 20; // seconds
     public static int quarter = 1;
     public static boolean userHome = true;
@@ -77,7 +77,7 @@ public class GameManager {
         selectedPlay = false;
         hasEntities = false;
         timePlayEnd = 0;
-        timeLeft = 300; // seconds
+        timeLeft = 180; // seconds
         playClock = 20; // seconds
         quarter = 1;
 
@@ -614,7 +614,7 @@ public class GameManager {
                     System.out.println(timeLeft + " Seconds");
                     if (quarter <= 3) {
                         quarter++;
-                        timeLeft = 300;
+                        timeLeft = 180;
                         if (quarter == 3) {
                             kickoff = true;
                             runClock = false;
