@@ -619,13 +619,13 @@ public class World {
 
         // Set Timer on Playclock accordingly to play strategy
         int playTimeNew = 20;
-        if ((GameManager.userHome && ! GameManager.userOffense) || (! GameManager.userHome && GameManager.userOffense)) {
+        if (GameManager.userHome) {
             switch (GameManager.awayTimeStrategy) {
                 case 0 : playTimeNew = 15; break;
                 case 1 : playTimeNew = 20; break;
                 case 2 : playTimeNew = 10; break;
             }
-        } else if ((! GameManager.userOffense && ! GameManager.userHome) || (GameManager.userHome && GameManager.userOffense)) {
+        } else if (! GameManager.userHome) {
             switch (GameManager.homeTimeStrategy) {
                 case 0 : playTimeNew = 15; break;
                 case 1 : playTimeNew = 20; break;
@@ -693,6 +693,23 @@ public class World {
 
     public List<Entity> selectOffensivePlay(int caseInput) {
         List<Entity> offense = new ArrayList<Entity>();
+
+        int playTimeNew = 20;
+        if (! GameManager.userHome) {
+            switch (GameManager.awayTimeStrategy) {
+                case 0 : playTimeNew = 15; break;
+                case 1 : playTimeNew = 20; break;
+                case 2 : playTimeNew = 10; break;
+            }
+        } else if (GameManager.userHome) {
+            switch (GameManager.homeTimeStrategy) {
+                case 0 : playTimeNew = 15; break;
+                case 1 : playTimeNew = 20; break;
+                case 2 : playTimeNew = 10; break;
+            }
+        }
+
+        GameManager.playClock = playTimeNew;
 
         if (GameManager.kickoff) {
             switch (caseInput) {
