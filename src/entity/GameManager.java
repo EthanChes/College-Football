@@ -504,8 +504,8 @@ public class GameManager {
                     homeTimeStrategy = 1;
                     awayTimeStrategy = 2;
                 } else {
-                    homeTimeStrategy = 1;
-                    awayTimeStrategy = 1;
+                    homeTimeStrategy = 0;
+                    awayTimeStrategy = 0;
                 }
 
 
