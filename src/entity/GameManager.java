@@ -582,8 +582,8 @@ public class GameManager {
                 } else {
                     world.getFootballEntity().transform.pos.x -= (world.getFootballEntity().transform.pos.x-xEndzoneLeft)/2;
                 }
+
                 down--; // prevents down increment
-                Entity.incompletePass = true;
                 timePlayEnd = Timer.getTime();
                 appliedPenalty = true;
             }
