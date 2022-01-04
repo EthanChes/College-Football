@@ -849,7 +849,7 @@ public class World {
                     GameManager.runClock = false;
                     GameManager.callingTimeout = Timer.getTime();
                 }
-            } else if ((GameManager.quarter == 4 && GameManager.runClock && GameManager.timeLeft < 75 && GameManager.awayScore > GameManager.homeScore && GameManager.awayScore - GameManager.homeScore < 16)) {
+            } else if (! GameManager.userHome && (GameManager.quarter == 4 && GameManager.runClock && GameManager.timeLeft < 75 && GameManager.awayScore > GameManager.homeScore && GameManager.awayScore - GameManager.homeScore < 16)) {
                 if (GameManager.timeoutsHome > 0) {
                     // Only After the play, can a down be subtracted, or else down will stay at 1.
                     if (! Entity.playStart && ! Entity.canPlay)
