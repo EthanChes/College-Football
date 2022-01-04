@@ -539,29 +539,25 @@ public class GameManager {
 
             if (! appliedTimeCut && ! Entity.canPlay && ! Entity.playStart) {
                 appliedTimeCut = true;
-                if (! GameManager.userOffense) {
-                    if (userHome) {
-                        System.out.println(homeTimeStrategy);
-                        switch (awayTimeStrategy) {
-                            case 0:
-                                timeLeft -= 5;
-                                break;
-                            case 2:
-                                timeLeft -= 10;
-                                break;
-                        }
-                    } else {
-                        switch (homeTimeStrategy) {
-                            case 0:
-                                timeLeft -= 5;
-                                break;
-                            case 2:
-                                timeLeft -= 10;
-                                break;
-                        }
+                if ((GameManager.userOffense && userHome) || (! GameManager.userHome && ! GameManager.userOffense)) {
+                    switch (awayTimeStrategy) {
+                        case 0:
+                            timeLeft -= 5;
+                            break;
+                        case 2:
+                            timeLeft -= 10;
+                            break;
+                    }
+                } else if ((GameManager.userOffense && !GameManager.userHome) || (GameManager.userHome && !GameManager.userOffense)) {
+                    switch (awayTimeStrategy) {
+                        case 0:
+                            timeLeft -= 5;
+                            break;
+                        case 2:
+                            timeLeft -= 10;
+                            break;
                     }
                 }
-
             }
         }
 
