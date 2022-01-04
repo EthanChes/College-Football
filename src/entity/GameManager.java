@@ -1,11 +1,15 @@
 package entity;
 
+import com.sun.tools.javac.Main;
 import entity.Entity;
 import gameplay.Timer;
 import graphics.Window;
+import gui.SelectPlay;
 import org.joml.Vector2f;
+import world.SelectTeam;
 import world.World;
 
+import static main.main.endWorld;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 
 public class GameManager {
@@ -24,8 +28,8 @@ public class GameManager {
     public static boolean selectedPlay = false;
     public static boolean hasEntities = false;
     public static double timePlayEnd = 0;
-    public static int homeID = 2;
-    public static int awayID = 4;
+    public static int homeID = 0;
+    public static int awayID = 1;
     public static float timeLeft = 300; // seconds
     public static float playClock = 20; // seconds
     public static int quarter = 1;
@@ -62,6 +66,48 @@ public class GameManager {
         this.xMin = xMin;
         this.xEndzoneLeft = xEndzoneLeft;
         this.xEndzoneRight = xEndzoneRight;
+
+        ballPosX = 300; // 223
+        ballPosY = -250f;
+        down = 0;
+        offenseBall = true;
+        userOffense = true;
+        selectedPlay = false;
+        hasEntities = false;
+        timePlayEnd = 0;
+        timeLeft = 300; // seconds
+        playClock = 20; // seconds
+        quarter = 1;
+
+        if (SelectTeam.controlHome) // Properly assign user to proper team
+            userHome = true;
+        else
+            userHome = false;
+
+        homeScore = 0;
+        awayScore = 0;
+        previousKnownTime = Timer.getTime();
+        runClock = false;
+        homeDefer = false;
+        kickoff = true;
+        pat = false;
+        scoreHome = false;
+        scoreAway = false;
+        touchback = false;
+        gameStarted = false;
+        touchDown = false;
+        hasUpdated = false;
+        updatedQuarter = false;
+        shouldPAT = false;
+        homeTimeStrategy = 0;
+        awayTimeStrategy = 0;
+        appliedPenalty = false;
+        appliedTimeCut = false;
+        timeoutsHome = 3;
+        timeOutsAway = 3;
+        callingTimeout = 0;
+        overtime = 0;
+        firstTouchOT = false;
     }
 
     public boolean ballCarrierOutOfBounds(World world) { // Check if Out of Bounds (ALL)
@@ -610,7 +656,8 @@ public class GameManager {
 
     public static void endGame(Window win) {
         System.out.println("GAME OVER");
-        win.closeWindow();
+
+        endWorld();
     }
 
     public float getBallPosX() { return ballPosX; }

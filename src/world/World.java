@@ -35,6 +35,7 @@ public class World {
     private int width;
     private int height;
     private int scale;
+    public static boolean canRun = false;
 
     private Matrix4f world;
 
