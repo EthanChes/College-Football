@@ -9,6 +9,8 @@ import org.joml.Vector2f;
 import world.SelectTeam;
 import world.World;
 
+import java.util.Random;
+
 import static main.main.endWorld;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 
@@ -88,7 +90,14 @@ public class GameManager {
         awayScore = 0;
         previousKnownTime = Timer.getTime();
         runClock = false;
-        homeDefer = false;
+
+        Random rand = new Random();
+        boolean coinToss = rand.nextBoolean();
+        if (coinToss)
+            homeDefer = true;
+        else
+            homeDefer = false;
+
         kickoff = true;
         pat = false;
         scoreHome = false;
