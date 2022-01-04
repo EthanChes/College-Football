@@ -499,7 +499,7 @@ public class GameManager {
                         GameManager.userOffense = true;
                 }
 
-                if (Entity.incompletePass || Entity.turnover) {
+                if (Entity.incompletePass || Entity.turnover || pat || kickoff) {
                     GameManager.runClock = false;
                 } else {
                     GameManager.runClock = true;

@@ -343,6 +343,13 @@ public class World {
                 } else if (!Entity.canPlay && getCountingUpEntity(i) == getBallCarrier()) {
                     getCountingUpEntity(i).preventBallGlitchAfterPlay(getFootballEntity());
                 }
+
+                if (getCountingUpEntity(i).hasBall && getCountingUpEntity(i) == getBallCarrier() && getBallCarrier().getPosition().distance(getFootballEntity().getPosition()) > 5) { // Bug Fix Random Interception
+                    Entity.turnover = false;
+                    getCountingUpEntity(i).hasBall = false;
+                    Entity.incompletePass = true;
+                    setBallCarrier(getFootballEntity());
+                }
             }
 
             for (int count = 0; count < entities.size(); count++) {

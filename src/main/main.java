@@ -165,6 +165,8 @@ public class main {
 
 
     public static void main(String[] args) {
+        //System.setProperty("org.lwjgl.librarypath", PATH_TO_DIRECTORY_CONTAINING_LIBRARIES);
+
         Window.setCallbacks(); // Provides Better Error Codes
 
         if (glfwInit() != true) {
