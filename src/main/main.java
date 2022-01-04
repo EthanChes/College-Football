@@ -193,7 +193,16 @@ public class main {
 
     public static void selectTeamUpdate(Window window, Camera camera) {
         if (window.getInput().isKeyPressed(GLFW_KEY_SPACE)) {
-            world = new World("test", window);
+            switch (GameManager.homeID) {
+                case 0 : world = new World("alabama", window); break;
+                case 1 : world = new World("baylor", window); break;
+                case 2 : world = new World("clemson", window); break;
+                case 3 : world = new World("georgia", window); break;
+                case 4 : world = new World("psu", window); break;
+                case 5 : world = new World("osu", window);break;
+                case 6 : world = new World("oregon", window); break;
+                case 7 : world = new World("ou", window); break;
+            }
             world.canRun = true;
             selectTeam.canRun = false;
             world.calculateView(window, camera);

@@ -9,6 +9,8 @@ import org.joml.Vector2f;
 import world.SelectTeam;
 import world.World;
 
+import java.util.Random;
+
 import static main.main.endWorld;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 
@@ -30,7 +32,7 @@ public class GameManager {
     public static double timePlayEnd = 0;
     public static int homeID = 0;
     public static int awayID = 1;
-    public static float timeLeft = 300; // seconds
+    public static float timeLeft = 180; // seconds
     public static float playClock = 20; // seconds
     public static int quarter = 1;
     public static boolean userHome = true;
@@ -75,7 +77,7 @@ public class GameManager {
         selectedPlay = false;
         hasEntities = false;
         timePlayEnd = 0;
-        timeLeft = 300; // seconds
+        timeLeft = 180; // seconds
         playClock = 20; // seconds
         quarter = 1;
 
@@ -88,7 +90,14 @@ public class GameManager {
         awayScore = 0;
         previousKnownTime = Timer.getTime();
         runClock = false;
-        homeDefer = false;
+
+        Random rand = new Random();
+        boolean coinToss = rand.nextBoolean();
+        if (coinToss)
+            homeDefer = true;
+        else
+            homeDefer = false;
+
         kickoff = true;
         pat = false;
         scoreHome = false;
@@ -495,8 +504,8 @@ public class GameManager {
                     homeTimeStrategy = 1;
                     awayTimeStrategy = 2;
                 } else {
-                    homeTimeStrategy = 1;
-                    awayTimeStrategy = 1;
+                    homeTimeStrategy = 0;
+                    awayTimeStrategy = 0;
                 }
 
 
@@ -530,29 +539,25 @@ public class GameManager {
 
             if (! appliedTimeCut && ! Entity.canPlay && ! Entity.playStart) {
                 appliedTimeCut = true;
-                if (! GameManager.userOffense) {
-                    if (userHome) {
-                        System.out.println(homeTimeStrategy);
-                        switch (awayTimeStrategy) {
-                            case 0:
-                                timeLeft -= 5;
-                                break;
-                            case 2:
-                                timeLeft -= 10;
-                                break;
-                        }
-                    } else {
-                        switch (homeTimeStrategy) {
-                            case 0:
-                                timeLeft -= 5;
-                                break;
-                            case 2:
-                                timeLeft -= 10;
-                                break;
-                        }
+                if ((GameManager.userOffense && userHome) || (! GameManager.userHome && ! GameManager.userOffense)) {
+                    switch (awayTimeStrategy) {
+                        case 0:
+                            timeLeft -= 5;
+                            break;
+                        case 2:
+                            timeLeft -= 10;
+                            break;
+                    }
+                } else if ((GameManager.userOffense && !GameManager.userHome) || (GameManager.userHome && !GameManager.userOffense)) {
+                    switch (awayTimeStrategy) {
+                        case 0:
+                            timeLeft -= 5;
+                            break;
+                        case 2:
+                            timeLeft -= 10;
+                            break;
                     }
                 }
-
             }
         }
 
@@ -609,7 +614,7 @@ public class GameManager {
                     System.out.println(timeLeft + " Seconds");
                     if (quarter <= 3) {
                         quarter++;
-                        timeLeft = 300;
+                        timeLeft = 180;
                         if (quarter == 3) {
                             kickoff = true;
                             runClock = false;

@@ -49,7 +49,7 @@ public class World {
     public World(String stadium, Window window) { // Load world from file
 
         try {
-             BufferedImage tile_sheet = ImageIO.read(new File("res/stadiums/" + stadium + "_tiles.png"));
+             BufferedImage tile_sheet = ImageIO.read(new File("res/stadiums/" + stadium + ".png"));
 
              width = tile_sheet.getWidth();
              height = tile_sheet.getHeight();
@@ -229,13 +229,13 @@ public class World {
 
             for (Entity entity : entities) {
                 if (entity == getFootballEntity() && (Football.fieldGoal || Football.punt || Football.kickoff)) {
-                    getFootballEntity().addY(Entity.throw_height/2);
+                    getFootballEntity().addY(Entity.throw_height*2);
                 }
 
                 entity.render(shader, camera, window, this);
 
                 if (entity == getFootballEntity() && (Football.fieldGoal || Football.punt || Football.kickoff)) {
-                    getFootballEntity().addY(-Entity.throw_height/2);
+                    getFootballEntity().addY(-Entity.throw_height*2);
                 }
             }
 
@@ -327,11 +327,11 @@ public class World {
             }
 
             if (window.getInput().isKeyPressed(GLFW_KEY_DOWN)) {
-                SelectPlay.incrementNextTileID();
+                //SelectPlay.incrementNextTileID();
             }
 
             if (window.getInput().isKeyPressed(GLFW_KEY_UP)) {
-                SelectPlay.decrementNextTileID();
+                //SelectPlay.decrementNextTileID();
             }
 
         }
@@ -619,13 +619,13 @@ public class World {
 
         // Set Timer on Playclock accordingly to play strategy
         int playTimeNew = 20;
-        if (GameManager.userHome) {
-            switch (GameManager.homeTimeStrategy) {
+        if ((GameManager.userHome && ! GameManager.userOffense) || (! GameManager.userHome && GameManager.userOffense)) {
+            switch (GameManager.awayTimeStrategy) {
                 case 0 : playTimeNew = 15; break;
                 case 1 : playTimeNew = 20; break;
                 case 2 : playTimeNew = 10; break;
             }
-        } else {
+        } else if ((! GameManager.userOffense && ! GameManager.userHome) || (GameManager.userHome && GameManager.userOffense)) {
             switch (GameManager.homeTimeStrategy) {
                 case 0 : playTimeNew = 15; break;
                 case 1 : playTimeNew = 20; break;
@@ -849,7 +849,7 @@ public class World {
                     GameManager.runClock = false;
                     GameManager.callingTimeout = Timer.getTime();
                 }
-            } else if ((GameManager.quarter == 4 && GameManager.runClock && GameManager.timeLeft < 75 && GameManager.awayScore > GameManager.homeScore && GameManager.awayScore - GameManager.homeScore < 16)) {
+            } else if (! GameManager.userHome && (GameManager.quarter == 4 && GameManager.runClock && GameManager.timeLeft < 75 && GameManager.awayScore > GameManager.homeScore && GameManager.awayScore - GameManager.homeScore < 16)) {
                 if (GameManager.timeoutsHome > 0) {
                     // Only After the play, can a down be subtracted, or else down will stay at 1.
                     if (! Entity.playStart && ! Entity.canPlay)
