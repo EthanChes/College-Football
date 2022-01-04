@@ -836,7 +836,7 @@ public class World {
     }
 
     public void timeOutUser(Window window, World world) {
-        if (window.getInput().isKeyPressed(GLFW_KEY_LEFT) && ((! Entity.playStart && ! Entity.canPlay) || (Entity.playStart && ! Entity.canPlay))) {
+        if (window.getInput().isKeyPressed(GLFW_KEY_LEFT) && GameManager.lastKnownTimeout + 3 < Timer.getTime() && ((! Entity.playStart && ! Entity.canPlay) || (Entity.playStart && ! Entity.canPlay))) {
             if (GameManager.userHome) {
                 if (GameManager.timeoutsHome > 0) {
                     // Only After the play, can a down be subtracted, or else down will stay at 1.
@@ -846,6 +846,7 @@ public class World {
                     GameManager.timeoutsHome--;
                     GameManager.runClock = false;
                     GameManager.callingTimeout = Timer.getTime();
+                    GameManager.lastKnownTimeout = Timer.getTime();
                 }
             } else {
                 if (GameManager.timeOutsAway > 0) {
@@ -856,6 +857,7 @@ public class World {
                     GameManager.timeOutsAway--;
                     GameManager.runClock = false;
                     GameManager.callingTimeout = Timer.getTime();
+                    GameManager.lastKnownTimeout = Timer.getTime();
                 }
             }
         }
@@ -863,7 +865,7 @@ public class World {
 
     public void timeOutAI(Window window, World world) {
         if (((! Entity.playStart && ! Entity.canPlay) || (Entity.playStart && ! Entity.canPlay))) {
-            if (GameManager.userHome && GameManager.runClock && (GameManager.quarter == 4 && GameManager.timeLeft < 75 && GameManager.awayScore < GameManager.homeScore && GameManager.homeScore - GameManager.awayScore < 16)) {
+            if (GameManager.userHome && GameManager.runClock && GameManager.lastKnownTimeout + 3 < Timer.getTime() && (GameManager.quarter == 4 && GameManager.timeLeft < 75 && GameManager.awayScore < GameManager.homeScore && GameManager.homeScore - GameManager.awayScore < 16)) {
                 if (GameManager.timeOutsAway > 0) {
                     // Only After the play, can a down be subtracted, or else down will stay at 1.
                     if (! Entity.playStart && ! Entity.canPlay)
@@ -872,6 +874,7 @@ public class World {
                     GameManager.timeOutsAway--;
                     GameManager.runClock = false;
                     GameManager.callingTimeout = Timer.getTime();
+                    GameManager.lastKnownTimeout = Timer.getTime();
                 }
             } else if (! GameManager.userHome && (GameManager.quarter == 4 && GameManager.runClock && GameManager.timeLeft < 75 && GameManager.awayScore > GameManager.homeScore && GameManager.awayScore - GameManager.homeScore < 16)) {
                 if (GameManager.timeoutsHome > 0) {
@@ -882,6 +885,7 @@ public class World {
                     GameManager.timeoutsHome--;
                     GameManager.runClock = false;
                     GameManager.callingTimeout = Timer.getTime();
+                    GameManager.lastKnownTimeout = Timer.getTime();
                 }
             }
         }

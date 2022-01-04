@@ -58,6 +58,7 @@ public class GameManager {
     public static int timeoutsHome = 3;
     public static int timeOutsAway = 3;
     public static double callingTimeout = 0;
+    public static double lastKnownTimeout = 0;
     public static int overtime = 0;
     public static boolean firstTouchOT = false;
 
