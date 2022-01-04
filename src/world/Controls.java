@@ -1,19 +1,18 @@
 package world;
+
 import assets.Assets;
 import graphics.Camera;
 import graphics.Shader;
 import graphics.Texture;
-import graphics.Window;
 import org.joml.Matrix4f;
-import org.lwjgl.glfw.GLFW;
 
-public class Home {
+public class Controls {
     private Texture texture;
     private Matrix4f scale;
     private Matrix4f translation;
-    public static boolean canRun = true;
+    public static boolean canRun = false;
 
-    public Home(String texture) {
+    public Controls(String texture) {
         this.texture = new Texture( "/interface/" + texture);
 
         scale = new Matrix4f();

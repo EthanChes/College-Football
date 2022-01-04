@@ -12,10 +12,7 @@ import org.joml.Vector3f;
 import org.lwjgl.*;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.*;
-import world.Home;
-import world.Tile;
-import world.TileRenderer;
-import world.World;
+import world.*;
 
 import java.util.Vector;
 
@@ -27,6 +24,7 @@ public class main {
 
         public static Home home;
         public static World world;
+        public static Controls controls;
 
 
 
@@ -97,6 +95,10 @@ public class main {
                         world.correctCamera(camera, window);
                     }
 
+                    if (controls.canRun) {
+                        controlsUpdate(window);
+                    }
+
 
                     // updates keys
                     window.update();
@@ -119,6 +121,10 @@ public class main {
 
                     if (world.canRun) {
                         world.render(tiles, shader, camera, window);
+                    }
+
+                    if (controls.canRun) {
+                        controls.render(shader, camera);
                     }
 
                     frames++; // total frames increases when 1 frame render is performed
@@ -161,8 +167,18 @@ public class main {
             home.canRun = false;
             world.calculateView(window,camera);
             world.initReset(window);
-            System.out.println("RUNNING");
+        } else if (window.getInput().isKeyPressed(GLFW_KEY_LEFT_CONTROL) || window.getInput().isKeyPressed(GLFW_KEY_RIGHT_CONTROL)) {
+            controls = new Controls("CONTROLS.png");
+            controls.canRun = true;
+            home.canRun = false;
         }
+    }
+
+    public static void controlsUpdate(Window window) {
+            if (window.getInput().isKeyPressed(GLFW_KEY_ENTER)) {
+                controls.canRun = false;
+                home.canRun = true;
+            }
     }
 
     public static void endWorld() {
