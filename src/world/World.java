@@ -619,13 +619,13 @@ public class World {
 
         // Set Timer on Playclock accordingly to play strategy
         int playTimeNew = 20;
-        if (GameManager.userHome) {
-            switch (GameManager.homeTimeStrategy) {
+        if (GameManager.userHome && ! GameManager.userOffense) {
+            switch (GameManager.awayTimeStrategy) {
                 case 0 : playTimeNew = 15; break;
                 case 1 : playTimeNew = 20; break;
                 case 2 : playTimeNew = 10; break;
             }
-        } else {
+        } else if (! GameManager.userOffense && ! GameManager.userHome){
             switch (GameManager.homeTimeStrategy) {
                 case 0 : playTimeNew = 15; break;
                 case 1 : playTimeNew = 20; break;
