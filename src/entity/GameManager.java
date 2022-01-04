@@ -363,6 +363,11 @@ public class GameManager {
                 System.out.println("KICKOFF");
                 GameManager.ballPosY = -250;
 
+                if (ballPosX > xEndzoneRight) { // Set Kickoff to true and reset ballPos in case of weird fg glitch where ball starts in defensive endzone
+                    kickoff = true;
+                    setBallPosX(world,win);
+                }
+
             }
         } else { // Overtime capabilities
             if (firstTouchOT) {
@@ -434,6 +439,13 @@ public class GameManager {
                             overtime++;
                     }
                 }
+
+                if (ballPosX > xEndzoneRight) {
+                    Entity.turnover = true;
+                    setBallPosX(world,win);
+                }
+
+
             } else { firstTouchOT = true; System.out.println("ILLEGAL 2"); }
 
         } // End OT
@@ -540,7 +552,7 @@ public class GameManager {
             if (! appliedTimeCut && ! Entity.canPlay && ! Entity.playStart) {
                 appliedTimeCut = true;
                 if ((GameManager.userOffense && userHome) || (! GameManager.userHome && ! GameManager.userOffense)) {
-                    switch (awayTimeStrategy) {
+                    switch (homeTimeStrategy) {
                         case 0:
                             timeLeft -= 5;
                             break;
@@ -629,6 +641,10 @@ public class GameManager {
                         if (homeScore == awayScore) {
                             System.out.println("DOESWORK");
                             quarter = 5;
+
+                            // Buzzer beaters result in kickoffs being played
+                            kickoff = false;
+
                             overtime = 1;
 
                             timeoutsHome = 1;
