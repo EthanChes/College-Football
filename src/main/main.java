@@ -25,6 +25,8 @@ public class main {
         public static Home home;
         public static World world;
         public static Controls controls;
+        public static SelectTeam selectTeam;
+        public static FinalScore finalScore;
 
 
 
@@ -99,6 +101,15 @@ public class main {
                         controlsUpdate(window);
                     }
 
+                    if (selectTeam.canRun) {
+                        selectTeamUpdate(window, camera);
+                        selectTeam.update(window);
+                    }
+
+                    if (finalScore.canRun) {
+                        finalScoreUpdate(window);
+                    }
+
 
                     // updates keys
                     window.update();
@@ -125,6 +136,14 @@ public class main {
 
                     if (controls.canRun) {
                         controls.render(shader, camera);
+                    }
+
+                    if (selectTeam.canRun) {
+                        selectTeam.render(shader, camera);
+                    }
+
+                    if (finalScore.canRun) {
+                        finalScore.render(shader, camera);
                     }
 
                     frames++; // total frames increases when 1 frame render is performed
@@ -162,15 +181,23 @@ public class main {
 
     public static void homeUpdate(Window window, Camera camera) {
         if (window.getInput().isKeyPressed(GLFW.GLFW_KEY_ENTER)) { // Proceed with game tasks
-            world = new World("test", window);
-            world.canRun = true;
+            selectTeam = new SelectTeam("SELECTTEAM.png");
+            selectTeam.canRun = true;
             home.canRun = false;
-            world.calculateView(window,camera);
-            world.initReset(window);
         } else if (window.getInput().isKeyPressed(GLFW_KEY_LEFT_CONTROL) || window.getInput().isKeyPressed(GLFW_KEY_RIGHT_CONTROL)) {
             controls = new Controls("CONTROLS.png");
             controls.canRun = true;
             home.canRun = false;
+        }
+    }
+
+    public static void selectTeamUpdate(Window window, Camera camera) {
+        if (window.getInput().isKeyPressed(GLFW_KEY_SPACE)) {
+            world = new World("test", window);
+            world.canRun = true;
+            selectTeam.canRun = false;
+            world.calculateView(window, camera);
+            world.initReset(window);
         }
     }
 
@@ -181,8 +208,16 @@ public class main {
             }
     }
 
+    public static void finalScoreUpdate(Window window) {
+            if (window.getInput().isKeyPressed(GLFW_KEY_ENTER)) {
+                home.canRun = true;
+                finalScore.canRun = false;
+            }
+    }
+
     public static void endWorld() {
             world.canRun = false;
-            home.canRun = true;
+            finalScore = new FinalScore("FINALSCORE.png");
+            finalScore.canRun = true;
     }
 }

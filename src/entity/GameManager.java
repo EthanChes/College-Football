@@ -4,7 +4,9 @@ import com.sun.tools.javac.Main;
 import entity.Entity;
 import gameplay.Timer;
 import graphics.Window;
+import gui.SelectPlay;
 import org.joml.Vector2f;
+import world.SelectTeam;
 import world.World;
 
 import static main.main.endWorld;
@@ -26,8 +28,8 @@ public class GameManager {
     public static boolean selectedPlay = false;
     public static boolean hasEntities = false;
     public static double timePlayEnd = 0;
-    public static int homeID = 2;
-    public static int awayID = 4;
+    public static int homeID = 0;
+    public static int awayID = 1;
     public static float timeLeft = 300; // seconds
     public static float playClock = 20; // seconds
     public static int quarter = 1;
@@ -73,12 +75,15 @@ public class GameManager {
         selectedPlay = false;
         hasEntities = false;
         timePlayEnd = 0;
-        homeID = 2;
-        awayID = 4;
         timeLeft = 300; // seconds
         playClock = 20; // seconds
         quarter = 1;
-        userHome = true;
+
+        if (SelectTeam.controlHome) // Properly assign user to proper team
+            userHome = true;
+        else
+            userHome = false;
+
         homeScore = 0;
         awayScore = 0;
         previousKnownTime = Timer.getTime();
