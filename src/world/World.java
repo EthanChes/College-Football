@@ -327,11 +327,11 @@ public class World {
             }
 
             if (window.getInput().isKeyPressed(GLFW_KEY_DOWN)) {
-                SelectPlay.incrementNextTileID();
+                //SelectPlay.incrementNextTileID();
             }
 
             if (window.getInput().isKeyPressed(GLFW_KEY_UP)) {
-                SelectPlay.decrementNextTileID();
+                //SelectPlay.decrementNextTileID();
             }
 
         }
