@@ -49,7 +49,7 @@ public class World {
     public World(String stadium, Window window) { // Load world from file
 
         try {
-             BufferedImage tile_sheet = ImageIO.read(new File("res/stadiums/" + stadium + "_tiles.png"));
+             BufferedImage tile_sheet = ImageIO.read(new File("res/stadiums/" + stadium + ".png"));
 
              width = tile_sheet.getWidth();
              height = tile_sheet.getHeight();

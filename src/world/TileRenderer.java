@@ -55,6 +55,10 @@ public class TileRenderer {
     public void renderTile(Tile tile, int x, int y, Shader shader, Matrix4f world, Camera camera, Tile auto, World w) { // puts tiles in correct spot
         shader.bind();
 
+        if (tile.getId() >= 38 && tile.getId() <= 100) {
+            renderTile(Tile.normalGrass,x,y,shader,world,camera,null,w);
+        }
+
         if (tile.getTexture() == Tile.boyfan.getTexture() || tile.getTexture()== Tile.girlfan.getTexture()) {
 
             byte total = 0;
