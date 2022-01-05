@@ -217,7 +217,7 @@ public class Quarterback extends Entity {
                 camera.setProjMultiplierY(1);
                 camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), 1f);
                 pass = false;
-            } else if (timePass + 3 < Timer.getTime() && pass && getAnimationIndex() != 3) {
+            } else if (timePass + 1 < Timer.getTime() && pass && getAnimationIndex() != 3) {
                 football.startPass();
                 camera.setProjection(640,480);
                 camera.setProjMultiplierX(1);
