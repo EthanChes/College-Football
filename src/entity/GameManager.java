@@ -351,13 +351,23 @@ public class GameManager {
 
             if (ballPosX < 153f) {
                 if (((GameManager.userOffense && GameManager.userHome) || (!GameManager.userOffense && !GameManager.userHome)) && !touchback) {
-                    scoreHome = true;
-                    awayScore += 2;
-                    kickoff = true;
+                    if (Entity.turnover) {
+                        touchback = true;
+                        setBallPosX(world,win);
+                    } else {
+                        scoreHome = true;
+                        awayScore += 2;
+                        kickoff = true;
+                    }
                 } else {
-                    scoreAway = true;
-                    homeScore += 2;
-                    kickoff = true;
+                    if (Entity.turnover) {
+                        touchback = true;
+                        setBallPosX(world,win);
+                    } else {
+                        scoreAway = true;
+                        homeScore += 2;
+                        kickoff = true;
+                    }
                 }
 
                 GameManager.ballPosX = 223;
