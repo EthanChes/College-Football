@@ -846,7 +846,11 @@ public class World {
                     GameManager.timeoutsHome--;
                     GameManager.runClock = false;
                     GameManager.callingTimeout = Timer.getTime();
-                    GameManager.lastKnownTimeout = Timer.getTime();
+
+                    if (! Entity.playStart && ! Entity.canPlay)
+                        GameManager.callingTimeout -= 3;
+
+                        GameManager.lastKnownTimeout = Timer.getTime();
                 }
             } else {
                 if (GameManager.timeOutsAway > 0) {
@@ -857,6 +861,10 @@ public class World {
                     GameManager.timeOutsAway--;
                     GameManager.runClock = false;
                     GameManager.callingTimeout = Timer.getTime();
+
+                    if (! Entity.playStart && ! Entity.canPlay)
+                        GameManager.callingTimeout -= 3;
+
                     GameManager.lastKnownTimeout = Timer.getTime();
                 }
             }
@@ -874,6 +882,10 @@ public class World {
                     GameManager.timeOutsAway--;
                     GameManager.runClock = false;
                     GameManager.callingTimeout = Timer.getTime();
+
+                    if (! Entity.playStart && ! Entity.canPlay)
+                        GameManager.callingTimeout -= 3;
+
                     GameManager.lastKnownTimeout = Timer.getTime();
                 }
             } else if (! GameManager.userHome && (GameManager.quarter == 4 && GameManager.runClock && GameManager.timeLeft < 75 && GameManager.awayScore > GameManager.homeScore && GameManager.awayScore - GameManager.homeScore < 16)) {
@@ -885,6 +897,10 @@ public class World {
                     GameManager.timeoutsHome--;
                     GameManager.runClock = false;
                     GameManager.callingTimeout = Timer.getTime();
+
+                    if (! Entity.playStart && ! Entity.canPlay)
+                        GameManager.callingTimeout -= 3;
+
                     GameManager.lastKnownTimeout = Timer.getTime();
                 }
             }
