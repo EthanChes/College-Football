@@ -343,6 +343,13 @@ public class World {
                 } else if (!Entity.canPlay && getCountingUpEntity(i) == getBallCarrier()) {
                     getCountingUpEntity(i).preventBallGlitchAfterPlay(getFootballEntity());
                 }
+
+                if (getCountingUpEntity(i).hasBall && getCountingUpEntity(i) == getBallCarrier() && getBallCarrier().getPosition().distance(getFootballEntity().getPosition()) > 5) { // Bug Fix Random Interception
+                    Entity.turnover = false;
+                    getCountingUpEntity(i).hasBall = false;
+                    Entity.incompletePass = true;
+                    setBallCarrier(getFootballEntity());
+                }
             }
 
             for (int count = 0; count < entities.size(); count++) {
@@ -371,13 +378,13 @@ public class World {
         Entity.selectOffensivePlayer(window, this);
         Entity.selectDefensivePlayer(window, this);
 
+        if (Entity.canPlay && ! GameManager.kickoff && ! GameManager.pat) // Run before updating timer or else timeStrategies on DOG are bugged
+            GameManager.runClock = true;
+
         GameManager.updateTimer(Timer.getTime(), this, window);
 
         if (Entity.playStart && ! Entity.canPlay)
             GameManager.postUpdate(window, this);
-
-        if (Entity.canPlay && ! GameManager.kickoff && ! GameManager.pat)
-            GameManager.runClock = true;
 
         timeOutUser(window, this);
         timeOutAI(window, this);
@@ -619,13 +626,13 @@ public class World {
 
         // Set Timer on Playclock accordingly to play strategy
         int playTimeNew = 20;
-        if ((GameManager.userHome && ! GameManager.userOffense) || (! GameManager.userHome && GameManager.userOffense)) {
+        if (GameManager.userHome) {
             switch (GameManager.awayTimeStrategy) {
                 case 0 : playTimeNew = 15; break;
                 case 1 : playTimeNew = 20; break;
                 case 2 : playTimeNew = 10; break;
             }
-        } else if ((! GameManager.userOffense && ! GameManager.userHome) || (GameManager.userHome && GameManager.userOffense)) {
+        } else if (! GameManager.userHome) {
             switch (GameManager.homeTimeStrategy) {
                 case 0 : playTimeNew = 15; break;
                 case 1 : playTimeNew = 20; break;
@@ -693,6 +700,23 @@ public class World {
 
     public List<Entity> selectOffensivePlay(int caseInput) {
         List<Entity> offense = new ArrayList<Entity>();
+
+        int playTimeNew = 20;
+        if (! GameManager.userHome) {
+            switch (GameManager.awayTimeStrategy) {
+                case 0 : playTimeNew = 15; break;
+                case 1 : playTimeNew = 20; break;
+                case 2 : playTimeNew = 10; break;
+            }
+        } else if (GameManager.userHome) {
+            switch (GameManager.homeTimeStrategy) {
+                case 0 : playTimeNew = 15; break;
+                case 1 : playTimeNew = 20; break;
+                case 2 : playTimeNew = 10; break;
+            }
+        }
+
+        GameManager.playClock = playTimeNew;
 
         if (GameManager.kickoff) {
             switch (caseInput) {
@@ -812,7 +836,7 @@ public class World {
     }
 
     public void timeOutUser(Window window, World world) {
-        if (window.getInput().isKeyPressed(GLFW_KEY_LEFT) && ((! Entity.playStart && ! Entity.canPlay) || (Entity.playStart && ! Entity.canPlay))) {
+        if (window.getInput().isKeyPressed(GLFW_KEY_LEFT) && GameManager.lastKnownTimeout + 3 < Timer.getTime() && ((! Entity.playStart && ! Entity.canPlay) || (Entity.playStart && ! Entity.canPlay))) {
             if (GameManager.userHome) {
                 if (GameManager.timeoutsHome > 0) {
                     // Only After the play, can a down be subtracted, or else down will stay at 1.
@@ -822,6 +846,7 @@ public class World {
                     GameManager.timeoutsHome--;
                     GameManager.runClock = false;
                     GameManager.callingTimeout = Timer.getTime();
+                    GameManager.lastKnownTimeout = Timer.getTime();
                 }
             } else {
                 if (GameManager.timeOutsAway > 0) {
@@ -832,6 +857,7 @@ public class World {
                     GameManager.timeOutsAway--;
                     GameManager.runClock = false;
                     GameManager.callingTimeout = Timer.getTime();
+                    GameManager.lastKnownTimeout = Timer.getTime();
                 }
             }
         }
@@ -839,7 +865,7 @@ public class World {
 
     public void timeOutAI(Window window, World world) {
         if (((! Entity.playStart && ! Entity.canPlay) || (Entity.playStart && ! Entity.canPlay))) {
-            if (GameManager.userHome && GameManager.runClock && (GameManager.quarter == 4 && GameManager.timeLeft < 75 && GameManager.awayScore < GameManager.homeScore && GameManager.homeScore - GameManager.awayScore < 16)) {
+            if (GameManager.userHome && GameManager.runClock && GameManager.lastKnownTimeout + 3 < Timer.getTime() && (GameManager.quarter == 4 && GameManager.timeLeft < 75 && GameManager.awayScore < GameManager.homeScore && GameManager.homeScore - GameManager.awayScore < 16)) {
                 if (GameManager.timeOutsAway > 0) {
                     // Only After the play, can a down be subtracted, or else down will stay at 1.
                     if (! Entity.playStart && ! Entity.canPlay)
@@ -848,6 +874,7 @@ public class World {
                     GameManager.timeOutsAway--;
                     GameManager.runClock = false;
                     GameManager.callingTimeout = Timer.getTime();
+                    GameManager.lastKnownTimeout = Timer.getTime();
                 }
             } else if (! GameManager.userHome && (GameManager.quarter == 4 && GameManager.runClock && GameManager.timeLeft < 75 && GameManager.awayScore > GameManager.homeScore && GameManager.awayScore - GameManager.homeScore < 16)) {
                 if (GameManager.timeoutsHome > 0) {
@@ -858,6 +885,7 @@ public class World {
                     GameManager.timeoutsHome--;
                     GameManager.runClock = false;
                     GameManager.callingTimeout = Timer.getTime();
+                    GameManager.lastKnownTimeout = Timer.getTime();
                 }
             }
         }
