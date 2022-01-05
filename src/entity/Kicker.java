@@ -219,7 +219,10 @@ public class Kicker extends Entity {
                                 if (! playStart)
                                     kickSnap(window, world);
 
-                                if (this.transform.pos.distance(world.getFootballEntity().transform.pos) < .5f) {
+                                if (timeSnapped + 5 < Timer.getTime()) // In case the ball stops prior to reaching Kicker bug fix
+                                    world.getFootballEntity().transform.pos.set(this.transform.pos);
+
+                                if (this.transform.pos.distance(world.getFootballEntity().transform.pos) < 1) {
                                     kickoffSnap();
                                     timeKicked = Timer.getTime();
                                     hasKicked = true;

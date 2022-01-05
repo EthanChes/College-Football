@@ -378,13 +378,13 @@ public class World {
         Entity.selectOffensivePlayer(window, this);
         Entity.selectDefensivePlayer(window, this);
 
+        if (Entity.canPlay && ! GameManager.kickoff && ! GameManager.pat) // Run before updating timer or else timeStrategies on DOG are bugged
+            GameManager.runClock = true;
+
         GameManager.updateTimer(Timer.getTime(), this, window);
 
         if (Entity.playStart && ! Entity.canPlay)
             GameManager.postUpdate(window, this);
-
-        if (Entity.canPlay && ! GameManager.kickoff && ! GameManager.pat)
-            GameManager.runClock = true;
 
         timeOutUser(window, this);
         timeOutAI(window, this);

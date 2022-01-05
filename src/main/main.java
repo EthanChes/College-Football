@@ -19,6 +19,9 @@ import java.util.Vector;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
+// Use following command in terminal to run as jar application
+//java -XstartOnFirstThread -Dfile.encoding=UTF-8 -jar /Users/charleschesney/IdeaProjects/College-Football/out/artifacts/College_Football_jar/College-Football.jar
+
 public class main {
 // Note 10 Spaces Indicates New Function/End of Previous Function ONLY in Main
 

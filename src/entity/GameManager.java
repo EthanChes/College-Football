@@ -502,8 +502,6 @@ public class GameManager {
 
                 if (Entity.incompletePass || Entity.turnover || pat || kickoff) {
                     GameManager.runClock = false;
-                } else {
-                    GameManager.runClock = true;
                 }
 
                 if (timePlayEnd + 2 < Timer.getTime() && timePlayEnd != 0)
@@ -599,6 +597,7 @@ public class GameManager {
                 down--; // prevents down increment
                 timePlayEnd = Timer.getTime();
                 appliedPenalty = true;
+                runClock = false;
             }
 
             if (timePlayEnd + 3 < Timer.getTime() && timePlayEnd != 0) {

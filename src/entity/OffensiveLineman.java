@@ -36,7 +36,7 @@ public class OffensiveLineman extends Entity {
         setAnimation(ANIM_PRESNAP, new Animation(1,1, "presnap/offensiveline",true));
         setAnimation(ANIM_CENTER, new Animation(2, 4, "presnap/center",true));
         setAnimation(ANIM_PLACE_HOLDER, new Animation(1,1, "placeholder",true));
-        speed = 3f;
+        speed = 6f;
         strength = 10f;
     }
 

@@ -150,6 +150,8 @@
       <element id="library" level="project" name="joml" />
       <element id="library" level="project" name="lwjgl-release-3.2" />
       <element id="archive" name="archive.jar" />
+      <element id="dir-copy" path="$PROJECT_DIR$/res" />
+      <element id="dir-copy" path="$PROJECT_DIR$/shaders" />
     </root>
   </artifact>
 </component>
