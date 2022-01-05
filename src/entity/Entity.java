@@ -787,7 +787,7 @@ public abstract class Entity {
     }
 
     public void userTackle(Window window, Entity user, Entity ballCarrier, World world) {
-        if (window.getInput().isKeyPressed(GLFW_KEY_T) && world.getBallCarrier() != world.getFootballEntity()) {
+        if (window.getInput().isKeyPressed(GLFW_KEY_T) && world.getBallCarrier() != world.getFootballEntity() && ! pancaked && ! isBeingMovedExternally) {
             if (user.transform.pos.distance(ballCarrier.transform.pos) < 3) {
                 if (timeSinceLastTackleAttempt + 1.5 < Timer.getTime()) {
                     timeSinceLastTackleAttempt = Timer.getTime();
