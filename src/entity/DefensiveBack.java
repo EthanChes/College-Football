@@ -570,6 +570,10 @@ public class DefensiveBack extends Entity {
                             this.timeCatch = Timer.getTime();
                             GameManager.offenseBall = false;
                             incompletePass = false;
+
+                            if (this.transform.pos.x > GameManager.xMax || this.transform.pos.y > GameManager.yMax || this.transform.pos.y < GameManager.yMin)
+                                incompletePass = true;
+
                         } else {
                             world.getFootballEntity().pass = false;
                             incompletePass = true;
@@ -589,6 +593,10 @@ public class DefensiveBack extends Entity {
 
 
                         incompletePass = false;
+
+                        if (this.transform.pos.x > GameManager.xMax || this.transform.pos.y > GameManager.yMax || this.transform.pos.y < GameManager.yMin)
+                            incompletePass = true;
+
                         for (int i = 0; i < 22; i++) {
                             world.getCountingUpEntity(i).timeSinceLastTackleAttempt = Timer.getTime() - 1;
                         }

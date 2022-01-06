@@ -498,6 +498,7 @@ public class World {
     public Entity getBallCarrier() { return ballCarrier; }
 
     public void initReset(Window window) {
+        Quarterback.timePass = 0;
         GameManager.callingTimeout = 0;
         Entity.timeEntities = Timer.getTime();
         GameManager.updatedQuarter = false;

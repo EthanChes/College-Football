@@ -76,6 +76,10 @@ public class WideReceiver extends Entity {
                 if (rand_output <= this.catching * 100) {
                     this.inCatch = true;
                     incompletePass = false;
+
+                    if (this.transform.pos.x > GameManager.xMax || this.transform.pos.y > GameManager.yMax || this.transform.pos.y < GameManager.yMin)
+                        incompletePass = true;
+
                     this.timeCatch = Timer.getTime();
                     for (int i = 0; i < 22; i++) {
                         world.getCountingUpEntity(i).timeSinceLastTackleAttempt = Timer.getTime() - 1;
@@ -88,7 +92,12 @@ public class WideReceiver extends Entity {
                 }
             } else if (catchAttempt) {
                 this.inCatch = true;
+
                 incompletePass = false;
+
+                if (this.transform.pos.x > GameManager.xMax || this.transform.pos.y > GameManager.yMax || this.transform.pos.y < GameManager.yMin)
+                    incompletePass = true;
+
                 for (int i = 0; i < 22; i++) {
                     world.getCountingUpEntity(i).timeSinceLastTackleAttempt = Timer.getTime() - 1;
                 }

@@ -193,6 +193,8 @@ public class Quarterback extends Entity {
 
             }
 
+             passOptions(window);
+
             if ((hasBall && GameManager.userOffense) || forceUserControl) userControl = true; // change && true to gamemanger user is on team on offense
             else userControl = false;
 
@@ -200,7 +202,7 @@ public class Quarterback extends Entity {
                  userTackle(window, this, world.getBallCarrier(), world);
              }
 
-            if (time_current - timePass < .35) {
+            if (time_current - timePass < .35 && canPlay) {
                 pass = true;
                 world.setBallCarrier(world.getFootballEntity());
 
@@ -210,14 +212,7 @@ public class Quarterback extends Entity {
                 } else {
                     football.transform.pos.set(transform.pos.x + .125f, transform.pos.y + .125f, 0);
                 }
-            } else if (time_current - timePass > .35 && time_current - timePass < .40 && canPlay) {
-                football.startPass();
-                camera.setProjection(640,480);
-                camera.setProjMultiplierX(1);
-                camera.setProjMultiplierY(1);
-                camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), 1f);
-                pass = false;
-            } else if (timePass + 1 < Timer.getTime() && pass && getAnimationIndex() != 3) {
+            } else if (time_current - timePass > .35 && time_current - timePass < .45 && canPlay) {
                 football.startPass();
                 camera.setProjection(640,480);
                 camera.setProjMultiplierX(1);
@@ -225,8 +220,6 @@ public class Quarterback extends Entity {
                 camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), 1f);
                 pass = false;
             }
-
-            passOptions(window);
 
             // Moves Player using various WASD directions using vectors.
             if (canPlay) {

@@ -121,7 +121,7 @@ public class Football extends Entity {
 
             movement.add(-speed,0);
         }
-        else if (timeSnapped + .27 > Timer.getTime()) {
+        else if (timeSnapped + .3f > Timer.getTime()) {
             this.speed = 0;
             gotWideReceiverPos = true;
             world.getQuarterbackEntity().hasBall = true;
