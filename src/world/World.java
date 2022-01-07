@@ -572,6 +572,24 @@ public class World {
         GameManager.hasEntities = true;
         List<Entity> offense = new ArrayList<Entity>();
 
+        int playTimeNew = 20;
+        if (! GameManager.userHome) {
+            switch (GameManager.awayTimeStrategy) {
+                case 0 : playTimeNew = 15; break;
+                case 1 : playTimeNew = 20; break;
+                case 2 : playTimeNew = 10; break;
+            }
+        } else {
+            switch (GameManager.homeTimeStrategy) {
+                case 0 : playTimeNew = 15; break;
+                case 1 : playTimeNew = 20; break;
+                case 2 : playTimeNew = 10; break;
+            }
+        }
+
+        GameManager.playClock = playTimeNew;
+
+
         if (GameManager.userOffense) {
             switch (SelectPlay.getPlayID()) {
                 case -1 : // FG
@@ -633,7 +651,7 @@ public class World {
                 case 1 : playTimeNew = 20; break;
                 case 2 : playTimeNew = 10; break;
             }
-        } else if (! GameManager.userHome) {
+        } else {
             switch (GameManager.homeTimeStrategy) {
                 case 0 : playTimeNew = 15; break;
                 case 1 : playTimeNew = 20; break;
@@ -709,7 +727,7 @@ public class World {
                 case 1 : playTimeNew = 20; break;
                 case 2 : playTimeNew = 10; break;
             }
-        } else if (GameManager.userHome) {
+        } else {
             switch (GameManager.homeTimeStrategy) {
                 case 0 : playTimeNew = 15; break;
                 case 1 : playTimeNew = 20; break;
