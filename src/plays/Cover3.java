@@ -49,7 +49,9 @@ public class Cover3 {
             entities.get(9).setRoute(3);
             entities.get(10).setRoute(6);
 
-
+            for (int i = 0; i < 11; i++) {
+                entities.get(i).noCollision();
+            }
         }
 
         public List getEntities() { return entities; }

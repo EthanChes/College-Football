@@ -101,7 +101,7 @@ public class SelectPlay {
             Assets.getModel().render();
         }
 
-        camera.getUntransformedProjection().scale(75,mat);
+        camera.getUntransformedProjection().scale(75,mat); // Recommend A Play
         mat.translate(0,-2.4f,0);
         shader.setUniform("projection",mat);
         int pointer = 0;
@@ -113,12 +113,14 @@ public class SelectPlay {
             scoreDiff = GameManager.homeScore - GameManager.awayScore;
         }
 
-        if ((GameManager.ballPosX > GameManager.xEndzoneRight - 70 && GameManager.down == 4 && true) || (GameManager.pat && ! (GameManager.quarter == 4 && (scoreDiff == -2 || scoreDiff == -5 || scoreDiff == 1))))
-            pointer = 1;
-        else if (GameManager.down == 4 && true)
-            pointer = 2;
-        else
-            pointer = 0;
+        if (! GameManager.kickoff) {
+            if ((GameManager.ballPosX > GameManager.xEndzoneRight - 70 && GameManager.down == 4 && true) || (GameManager.pat && !(GameManager.quarter == 4 && (scoreDiff == -2 || scoreDiff == -5 || scoreDiff == 1))))
+                pointer = 1;
+            else if (GameManager.down == 4 && true)
+                pointer = 2;
+            else
+                pointer = 0;
+        }
 
 
         recommended.bindTile(shader, pointer);

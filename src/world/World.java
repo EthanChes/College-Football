@@ -255,10 +255,6 @@ public class World {
 
 
     public void update(float delta, Window window, Camera camera) {
-        if (! Entity.canPlay && Entity.playStart && GameManager.timePlayEnd == 0) {
-            GameManager.timePlayEnd = Timer.getTime();
-        }
-
         if (GameManager.timePlayEnd + 2 < Timer.getTime() && GameManager.timePlayEnd != 0) {
             this.initReset(window);
             camera.setProjection(640,480);
@@ -392,6 +388,11 @@ public class World {
         // World Resets after 1 second to prevent weird fazes to initReset.
         if (GameManager.callingTimeout + 1 < Timer.getTime() && GameManager.callingTimeout != 0) {
             initReset(window);
+        }
+
+        if (! Entity.canPlay && Entity.playStart && GameManager.timePlayEnd == 0) {
+            System.out.println("THIS");
+            GameManager.timePlayEnd = Timer.getTime();
         }
     }
 

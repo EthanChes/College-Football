@@ -148,6 +148,10 @@ public class DefensiveBack extends Entity {
             this.setLoc = false;
         }
 
+        // Must Collide if within 2 yards of line of scrimmage.
+        if (this.transform.pos.x - 10 <= GameManager.ballPosX && ! pancaked && playStart)
+            canCollide = true;
+
 
         if (! userControl) {
             // Cornerback Plays Off Ball Defense in Man-Man or Blitzes
@@ -520,7 +524,8 @@ public class DefensiveBack extends Entity {
         }
         else if (getAnimationIndex() == 3 && ! canPlay) {
             useAnimation(ANIM_FALL);
-            world.getFootballEntity().transform.pos.set(this.transform.pos);
+            if (hasBall)
+                world.getFootballEntity().transform.pos.set(this.transform.pos);
         }
         else if (movement.x != 0 || movement.y != 0) {
             useAnimation(ANIM_MOVE);

@@ -200,8 +200,10 @@ public class GameManager {
     }
 
     public boolean touchDown(World world) { // Check If TD (Offense)
-        if (world.getBallCarrier().transform.pos.x > xEndzoneRight && world.getBallCarrier().transform.pos.x < xMax && world.getBallCarrier() != world.getFootballEntity() && ! world.getBallCarrier().defender) {
+        if (world.getBallCarrier().transform.pos.x > xEndzoneRight && world.getBallCarrier().transform.pos.x <= xMax && world.getBallCarrier() != world.getFootballEntity() && ! world.getBallCarrier().defender) {
+            System.out.println("PLAY END - " + timePlayEnd);
             if (timePlayEnd == 0) {
+                System.out.println("RUNNINGS");
                 timePlayEnd = Timer.getTime();
                 if ((GameManager.userHome && GameManager.userOffense) || (!GameManager.userHome && !GameManager.userOffense)) {
                     if (! pat) {
@@ -479,6 +481,9 @@ public class GameManager {
         if (overtime == 0) {
             if (!hasUpdated) {
                 hasUpdated = true;
+
+                if (world.getBallCarrier().defender && world.getBallCarrier().transform.pos.x > xEndzoneRight && ! Entity.incompletePass)
+                    touchback = true;
 
                 if (kickoff) {
                     kickoff = false;

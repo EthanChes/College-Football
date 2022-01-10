@@ -12,7 +12,8 @@ import java.util.Random;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Kicker extends Entity {
-    public static int ANIM_SIZE = 3;
+    public static int ANIM_SIZE = 4;
+    public static int ANIM_FALL = 3;
     public static int ANIM_KICK = 2;
     public static int ANIM_MOVE = 1;
     public static int ANIM_IDLE = 0;
@@ -28,6 +29,7 @@ public class Kicker extends Entity {
         setAnimation(ANIM_IDLE, new Animation(1,1,"widereceiveridle",true));
         setAnimation(ANIM_MOVE, new Animation(4,16,"widereceiverrouterun",true));
         setAnimation(ANIM_KICK, new Animation(2,2, "kick",true));
+        setAnimation(ANIM_FALL, new Animation(1,1,"offensivefall",true));
     }
 
     public Vector2f runToBall(World world, float delta) {
@@ -285,7 +287,20 @@ public class Kicker extends Entity {
         if (notMovingAlready && canPlay)
             move(movement);
 
-        if (timeKicked + 1 > Timer.getTime())
+        if (pancaked) {
+            useAnimation(ANIM_FALL);
+            canCollide = false;
+            if (Timer.getTime() > timePancaked + 3) {
+                pancaked = false;
+                canCollide = true;
+            }
+        }
+        else if (getAnimationIndex() == 3 && ! canPlay) {
+            useAnimation(ANIM_FALL);
+            if (hasBall)
+                world.getFootballEntity().transform.pos.set(this.transform.pos);
+        }
+        else if (timeKicked + 1 > Timer.getTime())
             useAnimation(ANIM_KICK);
         else if (movement.x != 0 || movement.y != 0) {
             useAnimation(ANIM_MOVE);

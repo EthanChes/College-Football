@@ -85,7 +85,7 @@ public class Football extends Entity {
             keepMoving = true;
 
 
-            if (this.transform.pos.x >= GameManager.xEndzoneRight) {
+            if (this.transform.pos.x >= GameManager.xMax) {
                 incompletePass = true;
                 canPlay = false;
             }
@@ -245,6 +245,9 @@ public class Football extends Entity {
 
                 gotWideReceiverPos = false;
             }
+
+            if (world.getCountingUpEntity(1).getAnimationIndex() == 3)
+                throw_height = 0;
 
             useAnimation(ANIM_QB_THROW);
 
