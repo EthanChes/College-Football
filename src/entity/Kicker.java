@@ -192,13 +192,13 @@ public class Kicker extends Entity {
                             if (! hasKicked) {
                                 if (! playStart)
                                     kickSnap(window, world);
-                                if (world.getQuarterbackEntity().hasBall) {
+                                if (world.getQuarterbackEntity().hasBall && canPlay) {
                                     movement.add(moveToward(world.getFootballEntity().transform.pos.x, world.getFootballEntity().transform.pos.y, delta));
                                     move(movement);
                                     notMovingAlready = false;
                                 }
 
-                                if (this.transform.pos.distance(world.getFootballEntity().transform.pos) < .5f) {
+                                if (this.transform.pos.distance(world.getFootballEntity().transform.pos) < .5f && canPlay) {
                                     kickoffSnap();
                                     world.getQuarterbackEntity().hasBall = false;
                                     world.setBallCarrier(world.getFootballEntity());
@@ -206,7 +206,7 @@ public class Kicker extends Entity {
                                     timeKicked = Timer.getTime();
                                 }
                             } else {
-                                if (preventDoubleKick) {
+                                if (preventDoubleKick && canPlay) {
                                     fieldGoal(world);
                                     preventDoubleKick = false;
                                 }
