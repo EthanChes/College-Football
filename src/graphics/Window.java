@@ -79,8 +79,8 @@ public class Window {
                 setSizeWhileRunning(640, 480);
                 setSize(640, 480);
             } else {
-                setSizeWhileRunning(vid.width(), vid.height());
-                setSize(vid.width(), vid.height());
+                setSizeWhileRunning(vid.width(), vid.height() - 48);
+                setSize(vid.width(), vid.height() - 48);
             }
 
             glfwSetWindowPos(window, (vid.width() - width) / 2, (vid.height() - height) / 2);

@@ -288,7 +288,7 @@ public class GameManager {
             down++;
 
             if (kickoff) {
-                GameManager.ballPosX = 223;
+                GameManager.ballPosX = 241;
                 System.out.println("KICKOFF");
                 GameManager.ballPosY = -250;
             }
