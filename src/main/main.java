@@ -39,7 +39,7 @@ public class main {
         public static void loop() {
             // Create window object
             Window window = new Window();
-            glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+            glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
             window.createWindow("CFB WIP"); // Creates window using window object
             // Imperative this is at the top, sets capabilities so window can make squares, textures etc.
             GL.createCapabilities();
@@ -122,10 +122,6 @@ public class main {
                     if (frame_time >= 1.0) { // When Frame_time = 1.0, reset frame_time and print frames as well as set frames to 0.
                         frame_time = 0;
                         System.out.println("FPS: " + frames); // Thus, this prints fps
-                        if (frames < 48) { // On some computers, fullscreen results in fps fails
-                            window.setSizeWhileRunning(640, 480);
-                            window.setSize(640,480);
-                        }
                         frames = 0;
                     }
                 }
