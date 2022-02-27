@@ -67,7 +67,28 @@ public class Window {
         this.height = height;
     }
 
+    public void setSizeWhileRunning(int width, int height) {
+        glfwSetWindowSize(window, width, height);
+    }
+
+    public void setSizeOnCMDF() { // Goes in update method
+        if (this.getInput().isKeyDown(GLFW_KEY_LEFT_SUPER) && this.getInput().isKeyPressed(GLFW_KEY_F)) {
+            GLFWVidMode vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
+            System.out.println("THIS");
+            if (width == vid.width()) {
+                setSizeWhileRunning(640, 480);
+                setSize(640, 480);
+            } else {
+                setSizeWhileRunning(vid.width(), vid.height());
+                setSize(vid.width(), vid.height());
+            }
+
+            glfwSetWindowPos(window, (vid.width() - width) / 2, (vid.height() - height) / 2);
+        }
+    }
+
     public void update() { // Updates keys pressed and checks if an event occurs
+        setSizeOnCMDF();
         input.update();
         glfwPollEvents();
     }

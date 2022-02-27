@@ -39,6 +39,7 @@ public class main {
         public static void loop() {
             // Create window object
             Window window = new Window();
+            glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
             window.createWindow("CFB WIP"); // Creates window using window object
             // Imperative this is at the top, sets capabilities so window can make squares, textures etc.
             GL.createCapabilities();
